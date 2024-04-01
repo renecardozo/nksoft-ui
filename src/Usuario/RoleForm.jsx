@@ -3,11 +3,11 @@ import React, { useState } from "react";
 const permisos = [
   {
     id: 1,
-    name: "Leer",
+    name: "Visualizar",
   },
   {
     id: 2,
-    name: "Escribir",
+    name: "Editar",
   },
   {
     id: 3,
@@ -29,10 +29,7 @@ const permisos = [
     id: 7,
     name: "Feriados",
   },
-  {
-    id: 8,
-    name: "Auxiliar",
-  },
+  
 
 ];
 

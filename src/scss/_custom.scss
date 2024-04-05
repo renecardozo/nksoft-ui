@@ -1,0 +1,14 @@
+// Here you can add other styles
+#background-div {
+  /* Set the dimensions of the div */
+  width: 100%;
+  height: 400px; /* Adjust height as needed */
+
+  /* Set the background image */
+  background-image: url('src/assets/brand/Decanato_fcyt.jpg');
+
+  /* Optional: Control how the image is positioned and repeated */
+  background-position: center; /* Center the image */
+  background-size: cover; /* Cover the entire div */
+  background-repeat: no-repeat; /* Do not repeat the image */
+}

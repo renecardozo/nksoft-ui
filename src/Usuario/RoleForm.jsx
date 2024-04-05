@@ -1,72 +1,70 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
 const permisos = [
   {
     id: 1,
-    name: "Visualizar",
+    name: 'Visualizar',
   },
   {
     id: 2,
-    name: "Editar",
+    name: 'Editar',
   },
   {
     id: 3,
-    name: "Eliminar",
+    name: 'Eliminar',
   },
   {
     id: 4,
-    name: "Actualizar",
+    name: 'Actualizar',
   },
   {
     id: 5,
-    name: "Mover",
+    name: 'Mover',
   },
   {
     id: 6,
-    name: "Registrar",
+    name: 'Registrar',
   },
   {
     id: 7,
-    name: "Feriados",
+    name: 'Feriados',
   },
-  
-
-];
+]
 
 const initialValues = {
-  roleName: "",
+  roleName: '',
   permissions: permisos.reduce((acc, permiso) => {
-    acc[permiso.name.toLowerCase()] = false;
-    return acc;
+    acc[permiso.name.toLowerCase()] = false
+    return acc
   }, {}),
-};
+}
 
 export default function RoleForm() {
-  const [formData, setFormData] = useState(initialValues);
+  const [formData, setFormData] = useState(initialValues)
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
+    const { name, value, type, checked } = e.target
+    if (type === 'checkbox') {
       setFormData({
         ...formData,
         permissions: {
           ...formData.permissions,
           [name]: checked,
         },
-      });
+      })
     } else {
       setFormData({
         ...formData,
         [name]: value,
-      });
+      })
     }
-  };
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
+    e.preventDefault()
+    console.log(formData)
     // enviamos datos al backend
-  };
+  }
 
   return (
     <div className="container mt-5">
@@ -98,14 +96,14 @@ export default function RoleForm() {
                     <input
                       className="form-check-input"
                       type="checkbox"
-                      id={permiso.name.toLowerCase() + "Permission"}
+                      id={permiso.name.toLowerCase() + 'Permission'}
                       name={permiso.name.toLowerCase()}
                       checked={formData.permissions[permiso.name.toLowerCase()]}
                       onChange={handleChange}
                     />
                     <label
                       className="form-check-label"
-                      htmlFor={permiso.name.toLowerCase() + "Permission"}
+                      htmlFor={permiso.name.toLowerCase() + 'Permission'}
                     >
                       {permiso.name}
                     </label>
@@ -124,5 +122,5 @@ export default function RoleForm() {
         </div>
       </form>
     </div>
-  );
+  )
 }

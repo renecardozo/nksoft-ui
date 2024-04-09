@@ -15,7 +15,7 @@ import { initialState, reducer } from './store'
 import Context from './CreateContext'
 
 import 'bootstrap/dist/css/bootstrap.css'
-import { Docente } from './Docente'
+/*import { Docente } from './Docente'  */
 import RoleForm from './Usuario/RoleForm'
 
 function App() {
@@ -50,7 +50,7 @@ function App() {
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
             <Route path="/role" element={<RoleForm />} />
-            <Route path="/reservacion" element={<Docente />} />
+           
             <Route path="*" name="Home" element={<DefaultLayout />} />
           </Routes>
         </Suspense>

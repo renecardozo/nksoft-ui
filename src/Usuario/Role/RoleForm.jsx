@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
 export default function RoleForm({permissions,createRole}) {
   const initialValues = {
@@ -10,8 +10,8 @@ export default function RoleForm({permissions,createRole}) {
 
   
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
+    const { name, value, type, checked } = e.target
+    if (type === 'checkbox') {
       setFormData({
         ...formData,
         permissions: [...formData.permissions,name]
@@ -20,9 +20,9 @@ export default function RoleForm({permissions,createRole}) {
       setFormData({
         ...formData,
         [name]: value,
-      });
+      })
     }
-  };
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -58,14 +58,14 @@ export default function RoleForm({permissions,createRole}) {
                     <input
                       className="form-check-input"
                       type="checkbox"
-                      id={permiso.name.toLowerCase() + "Permission"}
+                      id={permiso.name.toLowerCase() + 'Permission'}
                       name={permiso.name.toLowerCase()}
                       checked={formData.permissions[permiso.name.toLowerCase()]}
                       onChange={handleChange}
                     />
                     <label
                       className="form-check-label"
-                      htmlFor={permiso.name.toLowerCase() + "Permission"}
+                      htmlFor={permiso.name.toLowerCase() + 'Permission'}
                     >
                       {permiso.name}
                     </label>
@@ -84,5 +84,5 @@ export default function RoleForm({permissions,createRole}) {
         </div>
       </form>
     </div>
-  );
+  )
 }

@@ -1,16 +1,20 @@
 import {CTableHead,CTableRow,CTableHeaderCell} from '@coreui/react'
 const columns = [
   {
-    title: "Name",
+    title: "#",
     id: 1,
   },
   {
-    title: "State",
+    title: "Name",
     id: 2,
   },
   {
-    title: "Acciones",
+    title: "State",
     id: 3,
+  },
+  {
+    title: "Acciones",
+    id: 4,
   },
 ];
 export default function RoleTableHeader() {

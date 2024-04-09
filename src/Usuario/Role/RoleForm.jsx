@@ -1,61 +1,20 @@
 import React, { useState } from "react";
 
-const permisos = [
-  {
-    id: 1,
-    name: "Leer",
-  },
-  {
-    id: 2,
-    name: "Escribir",
-  },
-  {
-    id: 3,
-    name: "Eliminar",
-  },
-  {
-    id: 4,
-    name: "Actualizar",
-  },
-  {
-    id: 5,
-    name: "Mover",
-  },
-  {
-    id: 6,
-    name: "Registrar",
-  },
-  {
-    id: 7,
-    name: "Feriados",
-  },
-  {
-    id: 8,
-    name: "Auxiliar",
-  },
-
-];
-
-const initialValues = {
-  roleName: "",
-  permissions: permisos.reduce((acc, permiso) => {
-    acc[permiso.name.toLowerCase()] = false;
-    return acc;
-  }, {}),
-};
-
-export default function RoleForm() {
+export default function RoleForm({permissions,createRole}) {
+  const initialValues = {
+    roleName: "",
+    permissions: [],
+  };
   const [formData, setFormData] = useState(initialValues);
 
+
+  
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
       setFormData({
         ...formData,
-        permissions: {
-          ...formData.permissions,
-          [name]: checked,
-        },
+        permissions: [...formData.permissions,name]
       });
     } else {
       setFormData({
@@ -67,10 +26,8 @@ export default function RoleForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
-    // enviamos datos al backend
+    createRole(formData)
   };
-
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Crear Nuevo Rol</h2>
@@ -95,8 +52,8 @@ export default function RoleForm() {
           <div className="col-md-6">
             <p>Permisos:</p>
             <div className="row">
-              {permisos?.map((permiso, index) => (
-                <div className="col-md-6 mb-2" key={index}>
+              {permissions?.map((permiso) => (
+                <div className="col-md-6 mb-2" key={permiso.id}>
                   <div className="form-check">
                     <input
                       className="form-check-input"

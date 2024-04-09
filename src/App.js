@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Docente } from './Docente';
 import { Home } from './Home';
 import { NotFound } from './NotFound';
-import RoleForm from './Usuario/RoleForm';
+import Role from './Usuario/Role/Role';
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Route exact path="/" element={<Home />} />
         <Route path="/reservacion" element={<Docente />} />
         <Route element={<NotFound />} />
-        <Route path='/role' element={<RoleForm/>}/>
+        <Route path='/roles' element={<Role/>}/>
       </Routes>
     </BrowserRouter>
   );

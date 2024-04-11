@@ -1,20 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { APISERVICE } from '../../../../services/api.service';
-import { CToaster, CToast, CToastHeader,CToastBody } from '@coreui/react';
-
+import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { APISERVICE } from '../../../../services/api.service'
+import { CToaster, CToast, CToastHeader, CToastBody } from '@coreui/react'
 
 export default function RoleForm() {
   const initialValues = {
     roleName: '',
     permissions: [],
   }
-  const [formData, setFormData] = useState(initialValues);
-  const [permissions, setPermissions] = useState([]);
-  const navigate = useNavigate();
-  const [toast, addToast] = useState(0);
-  const toaster = useRef();
-  const [validationError, setValidationError] = useState({roleName:'',permiso:''});
+  const [formData, setFormData] = useState(initialValues)
+  const [permissions, setPermissions] = useState([])
+  const navigate = useNavigate()
+  const [toast, addToast] = useState(0)
+  const toaster = useRef()
+  const [validationError, setValidationError] = useState({ roleName: '', permiso: '' })
 
   const getPermissions = async () => {
     let url = 'api/permissions'
@@ -27,7 +26,7 @@ export default function RoleForm() {
     if (response.success) {
       navigate('/configurar/roles')
     } else {
-      addToast(mesageToast(response.error));
+      addToast(mesageToast(response.error))
     }
   }
   const handleChange = (e) => {
@@ -47,25 +46,24 @@ export default function RoleForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const errors = {};
+    const errors = {}
     if (formData.roleName.trim() === '') {
-      errors.roleName = 'El nombre de rol es requerido';
+      errors.roleName = 'El nombre de rol es requerido'
     }
     if (formData.permissions.length === 0) {
-      errors.permiso = 'Seleccione al menos un permiso';
+      errors.permiso = 'Seleccione al menos un permiso'
     }
 
-    setValidationError(errors); // Update validationErrors
+    setValidationError(errors) // Update validationErrors
 
     if (Object.keys(errors).length === 0) {
-      createRole(formData);
+      createRole(formData)
     }
-  
-  };
-const cancel=()=>{
-  navigate('/configurar/roles')
-}
-  const mesageToast=(message) => (
+  }
+  const cancel = () => {
+    navigate('/configurar/roles')
+  }
+  const mesageToast = (message) => (
     <CToast>
       <CToastBody>{message}</CToastBody>
     </CToast>
@@ -76,7 +74,7 @@ const cancel=()=>{
 
   return (
     <div className="container">
-       <CToaster ref={toaster} push={toast} placement="bottom-end" />
+      <CToaster ref={toaster} push={toast} placement="bottom-end" />
       <h2 className="text-center mb-4">Crear Nuevo Rol</h2>
       <form onSubmit={handleSubmit}>
         <div className="row">
@@ -91,11 +89,8 @@ const cancel=()=>{
               name="roleName"
               value={formData.roleName}
               onChange={handleChange}
-              
             />
-              {validationError && (
-              <div className="text-danger">{validationError.roleName}</div>
-            )}
+            {validationError && <div className="text-danger">{validationError.roleName}</div>}
           </div>
         </div>
         <div className="row mt-3">
@@ -120,13 +115,10 @@ const cancel=()=>{
                       {permiso.name}
                     </label>
                   </div>
-
                 </div>
               ))}
             </div>
-            {validationError && (
-              <div className="text-danger">{validationError.permiso}</div>
-            )}
+            {validationError && <div className="text-danger">{validationError.permiso}</div>}
           </div>
         </div>
         <div className="row mt-3">
@@ -134,7 +126,7 @@ const cancel=()=>{
             <button type="submit" className="btn btn-primary me-5">
               Guardar
             </button>
-            <button  className="btn btn-danger text-light" onClick={cancel}>
+            <button className="btn btn-danger text-light" onClick={cancel}>
               Cancelar
             </button>
           </div>

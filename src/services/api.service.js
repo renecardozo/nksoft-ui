@@ -1,4 +1,4 @@
-const APIURL = process.env.REACT_APP_API_URL;
+const APIURL = 'http://localhost:8000/';
 export const APISERVICE = {
   get: async (url) => {
     try {
@@ -13,7 +13,7 @@ export const APISERVICE = {
     }
   },
   post: async (url, body) => {
-    try{
+    try {
       const response = await fetch(`${APIURL + url}`, {
         method: "POST",
         headers: {
@@ -23,18 +23,18 @@ export const APISERVICE = {
       });
       const data = await response.json();
       return data;
-    }catch (error) {      
+    } catch (error) {
       console.error(error);
     }
   },
   delete: async (url) => {
-    try{
+    try {
       const response = await fetch(`${APIURL + url}`, {
         method: "DELETE",
       });
       const data = await response.json();
       return data;
-    }catch (error) {      
+    } catch (error) {
       console.error(error);
     }
   },

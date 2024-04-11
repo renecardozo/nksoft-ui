@@ -1,37 +1,43 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  CCard,
-  CCardBody,
-  CCardHeader,
   CCol,
   CRow,
   CTable,
   CTableBody,
-  CTableCaption,
   CTableDataCell,
   CTableHead,
   CTableHeaderCell,
   CTableRow,
   CContainer,
-  CButton,
 } from '@coreui/react'
-import { useAppContext } from '../../../hooks'
+import { useAppContext } from '../../../../hooks'
+import { getFeriados } from '../service'
 
 function Feriados() {
-  const {
-    state: { feriados },
-  } = useAppContext()
+  // const { state } = useAppContext()
+  // console.log(state)
+  const [feriados, setFeriados] = useState([])
   const describirFeriado = (codigo) => {
     switch (codigo) {
-      case 'COD-001':
-        return 'Navidad'
-      case 'COD-002':
+      case 'COD_001':
+        return 'Nacional'
+      case 'COD_002':
         return 'Halloween'
-      case 'COD-003':
+      case 'COD_003':
         return 'San Valentin'
     }
   }
+  const findAll = async () => {
+    const response = await getFeriados()
+    console.log(response)
+    setFeriados(response)
+  }
+
+  useEffect(() => {
+    findAll()
+  }, [])
+
   return (
     <CContainer className="px-4">
       <CRow>
@@ -61,27 +67,9 @@ function Feriados() {
                 <CTableHeaderCell scope="row">{feriado.id}</CTableHeaderCell>
                 <CTableDataCell>{feriado.fecha}</CTableDataCell>
                 <CTableDataCell>{describirFeriado(feriado.codigo)}</CTableDataCell>
-                <CTableDataCell>{feriado.description}</CTableDataCell>
+                <CTableDataCell>{feriado.descripcion}</CTableDataCell>
               </CTableRow>
             ))}
-            {/* <CTableRow>
-              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-              <CTableDataCell>Mark</CTableDataCell>
-              <CTableDataCell>Otto</CTableDataCell>
-              <CTableDataCell>@mdo</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">2</CTableHeaderCell>
-              <CTableDataCell>Jacob</CTableDataCell>
-              <CTableDataCell>Thornton</CTableDataCell>
-              <CTableDataCell>@fat</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">3</CTableHeaderCell>
-              <CTableDataCell>Larry the Bird</CTableDataCell>
-              <CTableDataCell>Thornton</CTableDataCell>
-              <CTableDataCell>@twitter</CTableDataCell>
-            </CTableRow> */}
           </CTableBody>
         </CTable>
         <nav aria-label="Page navigation example">

@@ -16,7 +16,7 @@ import Context from './CreateContext'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import Role from './views/pages/usuarios/roles/Role'
-import RoleForm from './Usuario/RoleForm'
+// import RoleForm from './Usuario/RoleForm'
 import { LISTAR_FERIADO } from './actions'
 
 function App() {
@@ -50,7 +50,7 @@ function App() {
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
-            <Route path="/role" element={<RoleForm />} />
+            {/* <Route path="/role" element={<RoleForm />} /> */}
             <Route path="/reservacion" element={<Page500 />} />
             <Route path="*" name="Home" element={<DefaultLayout />} />
           </Routes>

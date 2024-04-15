@@ -64,6 +64,13 @@ const _nav = [
     to: '/administracion/feriados',
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
+
+  {
+    component: CNavItem,
+    name: 'Agregar Materia',
+    to: '/administracion/agregar-materia',
+    icon: <CIcon icon={cilNoteAdd} customClassName="nav-icon" />,
+  },
 ]
 
 export default _nav

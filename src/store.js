@@ -1,5 +1,5 @@
 import { legacy_createStore as createStore } from 'redux'
-import { AGREGAR_FERIADO, EDITAR_FERIADO, LISTAR_FERIADO, BORRAR_FERIADO } from './actions'
+import { AGREGAR_FERIADO, EDITAR_FERIADO, LISTAR_FERIADO, BORRAR_FERIADO,AGREGAR_MATERIA,LISTAR_MATERIA } from './actions'
 import { getFeriados } from './views/pages/module-feriados/service'
 
 export const initialState = {
@@ -17,6 +17,14 @@ export const reducer = (state = initialState, { type, ...rest }) => {
         ...state,
         feriados: [...state.feriados, rest.payload],
       }
+    case AGREGAR_MATERIA:{
+      console.log(" agregarrr")
+      return {
+        ...state,
+        materias: [...state.materias, rest.payload],
+      }
+    }
+        
     case EDITAR_FERIADO: {
       const index = state.feriados.findIndex((feriado) => feriado.id === action.payload.id)
       if (index !== -1) {

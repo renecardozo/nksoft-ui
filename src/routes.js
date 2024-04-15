@@ -8,6 +8,7 @@ const Solicitudes = React.lazy(() => import('./views/pages/solicitudes/Solicitud
 const Administrar = React.lazy(() => import('./views/pages/administrar/Administrar'))
 const Roles = React.lazy(() => import('./views/pages/usuarios/roles/Role'))
 const CrearRoles = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
+const EditarRole = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
 const Calendario = React.lazy(() => import('./components/calendario/Calendario'))
 const Feriados = React.lazy(() => import('./views/pages/feriados/Feriados'))
 // const CrearFeriados = React.lazy(() => import('./views/pages/crear-feriados/CreateFeriados'))
@@ -20,7 +21,8 @@ const routes = [
   { path: '/configurar/solicitudes', name: 'Solicitudes', element: Solicitudes },
   { path: '/configurar/administrar', name: 'Administrar', element: Administrar },
   { path: '/configurar/roles', name: 'Roles', element: Roles },
-  { path: '/configurar/crear-roles', name: 'Crear Roles', element: CrearRoles },
+  { path: '/configurar/crear-roles', name: 'Crear Role', element: CrearRoles },
+  { path: '/configurar/editar-role/:id', name: 'Editar Role', element: EditarRole },
   { path: '/administracion/calendario', name: 'Calendario', element: Calendario },
   { path: '/administracion/feriados', name: 'Feriados', element: Feriados },
   { path: '/administracion/crear-feriados', name: 'Crear Feriado', element: CrearFeriados },

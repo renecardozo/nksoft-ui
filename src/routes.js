@@ -10,9 +10,13 @@ const Roles = React.lazy(() => import('./views/pages/usuarios/roles/Role'))
 const CrearRoles = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
 const EditarRole = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
 const Calendario = React.lazy(() => import('./components/calendario/Calendario'))
-const Feriados = React.lazy(() => import('./views/pages/feriados/Feriados'))
-// const CrearFeriados = React.lazy(() => import('./views/pages/crear-feriados/CreateFeriados'))
-import CrearFeriados from './views/pages/crear-feriados/CreateFeriados'
+const Feriados = React.lazy(() => import('./views/pages/module-feriados/feriados/Feriados'))
+const AgregarMateria = React.lazy(() => import('./views/pages/agregar-materia/AgregarMateria'))
+const registrarMateria = React.lazy(() => import('./views/pages/registrar-materias/registrarMateria'))
+const CrearFeriados = React.lazy(
+  () => import('./views/pages/module-feriados/crear-feriados/CreateFeriados'),
+)
+// import CrearFeriados from './views/pages/crear-feriados/CreateFeriados'
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -26,6 +30,8 @@ const routes = [
   { path: '/administracion/calendario', name: 'Calendario', element: Calendario },
   { path: '/administracion/feriados', name: 'Feriados', element: Feriados },
   { path: '/administracion/crear-feriados', name: 'Crear Feriado', element: CrearFeriados },
+  { path: '/administracion/agregar-materia', name: 'Agregar Materia', element: AgregarMateria },
+  { path: '/administracion/registrar-materias', name: 'Agregar Materia', element: registrarMateria },
 ]
 
 export default routes

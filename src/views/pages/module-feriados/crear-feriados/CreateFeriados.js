@@ -50,7 +50,7 @@ const CrearFeriados = () => {
   return (
     <div className="container">
       <CContainer>
-        <CRow className="jus<tify-content-center">
+        <CRow className="justify-content-center">
           <CCol md={9} lg={7} xl={6}>
             <CCard className="mx-4">
               <CCardBody className="p-4">
@@ -99,7 +99,7 @@ const CrearFeriados = () => {
           <CCol md={3} lg={5} xl={6}>
             {codes.map((item) => (
               <h5 key={item.code}>
-                {item.name} <CBadge color={item.color}>COD_001</CBadge>
+                {item.name} <CBadge color={item.color}>{item.code}</CBadge>
               </h5>
             ))}
           </CCol>

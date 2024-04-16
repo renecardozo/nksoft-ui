@@ -50,7 +50,11 @@ function Feriados() {
                 <tr key={item.id}>
                   <th scope="row">{item.id}</th>
                   <td>{item.fecha}</td>
-                  <td>{describirFeriado(item.codigo)}</td>
+                  <td>
+                    <Link to={`/administracion/feriados/${item.id}/details`}>
+                      {describirFeriado(item.codigo)}
+                    </Link>
+                  </td>
                   <td>{item.descripcion}</td>
                 </tr>
               ))

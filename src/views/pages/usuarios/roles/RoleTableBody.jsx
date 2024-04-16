@@ -1,9 +1,8 @@
-import { CTableBody, CTableRow, CTableDataCell,CButton } from '@coreui/react'
+import { CTableBody, CTableRow, CTableDataCell, CButton } from '@coreui/react'
+import { Link } from 'react-router-dom'
 
 export default function RoleTableBody({ roles, updateStateRole }) {
-  const onEdit = () => {
-    console.log('edited')
-  }
+  const onEdit = (id) => {}
   const onDelete = (id) => {
     updateStateRole(id)
   }
@@ -16,28 +15,19 @@ export default function RoleTableBody({ roles, updateStateRole }) {
             <CTableDataCell className="col-4">{role.name}</CTableDataCell>
             <CTableDataCell className="col-2">
               {role.state ? (
-                
-                <CButton
-                  color="success"
-                  variant="ghost"
-                  onClick={() => onDelete(role.id)}
-                >
+                <CButton color="success" variant="ghost" onClick={() => onDelete(role.id)}>
                   Activo
                 </CButton>
               ) : (
-                <CButton
-                  color="danger"
-                  variant="ghost"
-                  onClick={() => onDelete(role.id)}
-                >
+                <CButton color="danger" variant="ghost" onClick={() => onDelete(role.id)}>
                   Inactivo
                 </CButton>
               )}
             </CTableDataCell>
             <CTableDataCell className="col-1">
-              <CButton color='warning' variant='outline' onClick={() => onEdit(role)}>
+              <Link to={`/configurar/editar-role/${role.id}`} className="btn btn-outline-warning mb-2">
                 Editar
-              </CButton>
+              </Link>
             </CTableDataCell>
           </CTableRow>
         ))}

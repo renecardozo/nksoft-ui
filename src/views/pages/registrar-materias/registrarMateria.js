@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 import {
   CButton,
@@ -27,31 +27,27 @@ import { useNavigate } from 'react-router-dom'
 import { crearMaterias } from '../agregar-materia/servicios'
 
 const registrarMateria = () => {
-
   const navigate = useNavigate()
   const [departamento, setDepartamento] = useState('')
   const [codigo, setCodigo] = useState('')
   const [grupo, setGrupo] = useState('')
   const [materia, setMateria] = useState('')
-  
-  
+
   const {
-   state: { materias },
+    state: { materias },
     dispatch,
   } = useAppContext()
 
- 
   const guardarMateria = async (e) => {
     console.log('guardar Materia')
     e.preventDefault()
-    var cantDig = codigo.replace(/[^0-9]/g,"").length;
+    var cantDig = codigo.replace(/[^0-9]/g, '').length
     console.log(departamento)
-    if(departamento != '' && codigo != '' && materia != 0){
-      if(cantDig == 7){
+    if (departamento != '' && codigo != '' && materia != 0) {
+      if (cantDig == 7) {
         console.log(departamento)
-      
+
         const nuevaMateria = {
-          id: materias.length + 1, 
           codigo,
           materia,
           grupo,
@@ -60,14 +56,12 @@ const registrarMateria = () => {
         await crearMaterias(nuevaMateria)
         //dispatch({ type: AGREGAR_MATERIA, payload: nuevaMateria })
         navigate('/administracion/agregar-materia')
-  
-      }else{
-        alert("El codigo es incorrecto");
+      } else {
+        alert('El codigo es incorrecto')
       }
-    }else{
-      alert("Llenar todos los campos");
+    } else {
+      alert('Llenar todos los campos')
     }
-
   }
 
   return (
@@ -80,7 +74,6 @@ const registrarMateria = () => {
                 <CForm>
                   <h1>Agregar Materia</h1>
                   <p className="text-body-secondary">Registrar una Materia</p>
-                 
 
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
@@ -92,7 +85,6 @@ const registrarMateria = () => {
                       onChange={(e) => setCodigo(e.target.value)}
                     />
                   </CInputGroup>
-
 
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
@@ -116,31 +108,31 @@ const registrarMateria = () => {
                     />
                   </CInputGroup>
 
-
                   <CInputGroup className="mb-3">
-                  <CInputGroupText>
-                        <CIcon icon={cilText} />
-                  </CInputGroupText>
-                  <CFormSelect
-                      onChange={(e) => setDepartamento(e.target.value)}
-                      >
+                    <CInputGroupText>
+                      <CIcon icon={cilText} />
+                    </CInputGroupText>
+                    <CFormSelect onChange={(e) => setDepartamento(e.target.value)}>
                       <option value="">Seleccione un departamento</option>
                       <option value="Industrias">Departamento de Industrias</option>
                       <option value="Química">Departamento de Química</option>
                       <option value="Física">Departamento de Física</option>
                       <option value="Matemítica">Departamento de Matemática</option>
-                      <option value="Informática-Sistemas">Departamento de Informática-Sistemas</option>
+                      <option value="Informática-Sistemas">
+                        Departamento de Informática-Sistemas
+                      </option>
                       <option value="Civil">Departamento de Civil</option>
-                      <option value="Eléctrica-Electrónica">Departamento de Eléctrica-Electrónica</option>
+                      <option value="Eléctrica-Electrónica">
+                        Departamento de Eléctrica-Electrónica
+                      </option>
                       <option value="Mecínica">Departamento de Mecánica</option>
-                       {}
-                      </CFormSelect>
-                      </CInputGroup>
-
+                      {}
+                    </CFormSelect>
+                  </CInputGroup>
 
                   <div className="d-grid">
                     <CButton color="primary" onClick={(e) => guardarMateria(e)}>
-                        Registrar
+                      Registrar
                     </CButton>
                   </div>
                 </CForm>

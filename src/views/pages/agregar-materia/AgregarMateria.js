@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CCard,
@@ -19,12 +19,11 @@ import {
 import { useAppContext } from '../../../hooks'
 import { getMaterias } from '../agregar-materia/servicios'
 
-
 function Materias() {
   const {
-    state: { materia}
+    state: { materia },
   } = useAppContext()
-  const[materias, setMaterias] = useState([])
+  const [materias, setMaterias] = useState([])
   const findAll = async () => {
     const response = await getMaterias()
     console.log(response)
@@ -35,7 +34,6 @@ function Materias() {
     findAll()
   }, [])
 
- 
   return (
     <CContainer className="px-4">
       <CRow>
@@ -64,14 +62,11 @@ function Materias() {
           <CTableBody>
             {materias.map((materia) => (
               <CTableRow key={materia.id}>
-                
                 <CTableHeaderCell scope="row">{materia.id}</CTableHeaderCell>
                 <CTableDataCell>{materia.codigo}</CTableDataCell>
                 <CTableDataCell>{materia.materia}</CTableDataCell>
                 <CTableDataCell>{materia.grupo}</CTableDataCell>
                 <CTableDataCell>{materia.departamento}</CTableDataCell>
-                
-     
               </CTableRow>
             ))}
             {}

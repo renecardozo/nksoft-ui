@@ -17,7 +17,6 @@ const registrarMateria = React.lazy(
 )
 const ListUser = React.lazy(() => import('./views/pages/usuarios/users/List.jsx'))
 const FormUser = React.lazy(() => import('./views/pages/usuarios/users/Form.jsx'))
-// const Feriados = React.lazy(() => import('./views/pages/module-feriados/feriados/Feriados'))
 import Feriados from './views/pages/module-feriados/feriados/Feriados'
 const CrearFeriados = React.lazy(
   () => import('./views/pages/module-feriados/crear-feriados/CreateFeriados'),

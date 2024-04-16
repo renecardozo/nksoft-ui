@@ -60,7 +60,7 @@ export const APISERVICE = {
       const data = await response.json()
       return data
     } catch (error) {
-      throw new Error(error)
+      return Promise.reject(error)
     }
   },
 }

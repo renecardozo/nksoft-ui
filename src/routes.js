@@ -12,6 +12,8 @@ const Calendario = React.lazy(() => import('./components/calendario/Calendario')
 const Feriados = React.lazy(() => import('./views/pages/module-feriados/feriados/Feriados'))
 const AgregarMateria = React.lazy(() => import('./views/pages/agregar-materia/AgregarMateria'))
 const registrarMateria = React.lazy(() => import('./views/pages/registrar-materias/registrarMateria'))
+const ListUser = React.lazy(() => import('./views/pages/usuarios/users/List.jsx'))
+const FormUser = React.lazy(() => import('./views/pages/usuarios/users/Form.jsx'))
 const CrearFeriados = React.lazy(
   () => import('./views/pages/module-feriados/crear-feriados/CreateFeriados'),
 )
@@ -30,6 +32,10 @@ const routes = [
   { path: '/administracion/crear-feriados', name: 'Crear Feriado', element: CrearFeriados },
   { path: '/administracion/agregar-materia', name: 'Agregar Materia', element: AgregarMateria },
   { path: '/administracion/registrar-materias', name: 'Agregar Materia', element: registrarMateria },
+  //USUARIOS
+  { path: '/users', name: 'Usuarios', element: ListUser },
+  { path: '/users/create', name: 'Crear Usuario', element: FormUser },
+  { path: '/users/:id/edit', name: 'Editar Usuario', element: FormUser },
 ]
 
 export default routes

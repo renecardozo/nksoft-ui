@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CButton,
   CCard,
@@ -13,36 +13,37 @@ import {
   CBadge,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser, cilText } from '@coreui/icons'
+import { cilText } from '@coreui/icons'
 import { cilCalendar } from '@coreui/icons'
 import 'react-datepicker/dist/react-datepicker.css'
 //https://github.com/Hacker0x01/react-datepicker
 import DatePicker from 'react-datepicker'
-import { useAppContext } from '../../../../hooks'
-import { start } from '@popperjs/core'
-import { AGREGAR_FERIADO } from '../../../../actions'
 import { useNavigate } from 'react-router-dom'
-import { crearFeriados } from '../service'
+import { crearFeriados, getListCodeDates } from '../service'
 
 const CrearFeriados = () => {
   const [startDate, setStartDate] = useState(new Date())
   const navigate = useNavigate()
-  const [codigo, setCodigo] = useState('')
+  const [codes, setCodes] = useState([])
   const [descripcion, setSescripcion] = useState('')
-  // const {
-  //   state: { feriados },
-  //   dispatch,
-  // } = useAppContext()
-  const guardarFeriado = async (e) => {
+  const [codeSelected, setCodeSelected] = useState('')
+  const getCodes = async () => {
+    const response = await getListCodeDates()
+    setCodes(response)
+  }
+
+  useEffect(() => {
+    getCodes()
+  }, [])
+  const save = async (e) => {
     e.preventDefault()
     console.log('guardar feriado')
     const nuevoFeriado = {
       descripcion,
-      codigo,
+      codigo: codeSelected,
       fecha: startDate.toISOString(),
     }
     await crearFeriados(nuevoFeriado)
-    // dispatch({ type: AGREGAR_FERIADO, payload: nuevoFeriado })
     navigate('/administracion/feriados')
   }
 
@@ -60,7 +61,6 @@ const CrearFeriados = () => {
                     <CInputGroupText>
                       <CIcon icon={cilCalendar} />
                     </CInputGroupText>
-                    {/* <CFormInput placeholder="Fecha" autoComplete="fecha" /> */}
                     <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -74,17 +74,21 @@ const CrearFeriados = () => {
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon={cilText} />
-                    </CInputGroupText>
-                    <CFormInput
-                      placeholder="Codigo"
-                      autoComplete="Codigo"
-                      onChange={(e) => setCodigo(e.target.value)}
-                    />
+                    <select
+                      className="form-select"
+                      value={codeSelected}
+                      onChange={(e) => setCodeSelected(e.target.value)}
+                    >
+                      <option value="">Seleccionar un Feriado</option>
+                      {codes.map((code, index) => (
+                        <option key={index} value={code.code}>
+                          {code.name}
+                        </option>
+                      ))}
+                    </select>
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton color="primary" onClick={(e) => guardarFeriado(e)}>
+                    <CButton color="primary" onClick={(e) => save(e)}>
                       Crear
                     </CButton>
                   </div>
@@ -93,15 +97,11 @@ const CrearFeriados = () => {
             </CCard>
           </CCol>
           <CCol md={3} lg={5} xl={6}>
-            <h5>
-              Feriados Locales <CBadge color="primary">COD_001</CBadge>
-            </h5>
-            <h5>
-              Feriados Nacionales <CBadge color="info">COD_002</CBadge>
-            </h5>
-            <h5>
-              Feriados Foraneos <CBadge color="secondary">COD_003</CBadge>
-            </h5>
+            {codes.map((item) => (
+              <h5 key={item.code}>
+                {item.name} <CBadge color={item.color}>COD_001</CBadge>
+              </h5>
+            ))}
           </CCol>
         </CRow>
       </CContainer>

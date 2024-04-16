@@ -22,7 +22,7 @@ export const APISERVICE = {
         body: JSON.stringify(body),
       })
       if (!response.ok) {
-       // throw new Error(response)
+        // throw new Error(response)
         let err = new Error('HTTP status code: ' + response.status)
         err.response = response
         err.status = response.status

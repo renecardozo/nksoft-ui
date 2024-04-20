@@ -70,62 +70,37 @@ function Unidades() {
 
                 <CTableDataCell>{unidad.horaAperturaUnidades}</CTableDataCell>
                 <CTableDataCell>{unidad.horaCierreUnidades}</CTableDataCell>
-                
-                
-     
+
+
               </CTableRow>
-              
-            ))
             
+          ))
+
             }
             {}
           </CTableBody>
           
         </CTable>
+
         <CRow >
-        <CCol sm={6} md={8}></CCol>
-        <CCol xs={6} md={4} >
-          <div className="d-grid">
-            <Link to="/administracion/registrar-unidades" className="btn btn-primary">
-              Agregar
-            </Link>
-          </div>
-        </CCol>
+         <CCol sm={6} md={8}></CCol>
+           <CCol xs={6} md={4}>
+             <div className="d-grid">
+           <Link to="/administracion/registrar-unidad" className="btn btn-primary">
+              Agregar unidades
+           </Link>
+             </div>
+           </CCol>
+          
+       </CRow>
+
       </CRow>
 
-
-        <nav aria-label="Page navigation example">
-          <ul className="pagination justify-content-end">
-            <li className="page-item disabled">
-              <a className="page-link" href="#" tabIndex="-1" aria-disabled="true">
-                Previous
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-            
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                2
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                3
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                Siguiente
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </CRow>
     </CContainer>
+
+
   )
+
 }
 
 export default Unidades

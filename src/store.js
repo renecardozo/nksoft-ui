@@ -146,47 +146,7 @@ export const initialState = {
     horaCierreUnidades: "14:15",
     departamento: "Ninguno"
   },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  }
-],
+]
 }
 
 export const reducer = (state = initialState, { type, ...rest }) => {

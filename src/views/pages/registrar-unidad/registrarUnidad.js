@@ -71,8 +71,7 @@ const registrarMateria = () => {
                         <CCard className="mx-4">
                             <CCardBody className="p-4">
                                 <CForm>
-                                    <h1>Agregar Unidad</h1>
-                                    <p className="text-body-secondary">Registrar unidad</p>
+                                    <h1>Registrar unidad nueva</h1>
 
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>
@@ -93,7 +92,7 @@ const registrarMateria = () => {
                                             className="form-select"
                                             onChange={(e) => setDepartamento(e.target.value)}
                                         >
-                                            <option value="">Seleccionar departamento</option>
+                                            <option value="">Ninguno</option>
                                             <option value="1">Quimica</option>
                                             <option value="2">Fisica</option>
                                             <option value="3">Industrial</option>
@@ -154,4 +153,6 @@ const registrarMateria = () => {
         </div>
     )
 }
+
+
 export default registrarMateria

@@ -71,6 +71,12 @@ const _nav = [
     to: '/administracion/agregar-unidad',
     icon: <CIcon icon={cilBuilding} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: 'Departamentos',
+    to: '/administracion/Departamentos',
+    icon: <CIcon icon={cilBuilding} customClassName="nav-icon" />,
+  }
 ]
 
 export default _nav

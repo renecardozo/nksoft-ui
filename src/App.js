@@ -5,7 +5,7 @@ import { CSpinner, useColorModes } from '@coreui/react'
 
 // Containers
 // const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
-const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
+import DefaultLayout from './layout/DefaultLayout'
 // Pages
 const Login = React.lazy(() => import('./views/pages/login/Login'))
 const Register = React.lazy(() => import('./views/pages/register/Register'))
@@ -44,7 +44,7 @@ function App() {
               <CSpinner color="primary" variant="grow" />
             </div>
           }
-          >
+        >
           <Routes>
             <Route exact path="/login" name="Login Page" element={<Login />} />
             <Route exact path="/register" name="Register Page" element={<Register />} />

@@ -1,39 +1,20 @@
 import { legacy_createStore as createStore } from 'redux'
-import { AGREGAR_FERIADO, EDITAR_FERIADO, LISTAR_FERIADO, BORRAR_FERIADO, AGREGAR_MATERIA,LISTAR_MATERIA, AGREGAR_UNIDAD, LISTAR_UNIDAD} from './actions'
+import {
+  AGREGAR_FERIADO,
+  EDITAR_FERIADO,
+  LISTAR_FERIADO,
+  BORRAR_FERIADO,
+  AGREGAR_MATERIA,
+  LISTAR_MATERIA,
+  AGREGAR_UNIDAD, 
+  LISTAR_UNIDAD
+} from './actions'
+import { getFeriados } from './views/pages/module-feriados/service'
 
 export const initialState = {
   sidebarShow: true,
   theme: 'light',
-  feriados: [
-    {
-      id: 1,
-      fecha: '13/4/2024',
-      codigo: 'COD-001',
-      description: 'Lorem Ipsum has been the industrys',
-    },
-    {
-      id: 2,
-      fecha: '13/4/2024',
-      codigo: 'COD-002',
-      description: 'Lorem Ipsum has been the industrys',
-    },
-    {
-      id: 3,
-      fecha: '13/4/2024',
-      codigo: 'COD-003',
-      description: 'Lorem Ipsum has been the industrys',
-    },
-  ],
-
-  materias: [
-    {
-      id: 1,
-      departamento: "Sistemas",
-      materia:"Elementos",
-      codigo: 20100013,
-      
-    }
-  ],
+  feriados: [],
   unidades: [{
     id: 1,
     nombreUnidades: "Edificio academico II",
@@ -50,6 +31,7 @@ export const initialState = {
     horaCierreUnidades: "14:15",
     departamento: "Ninguno"
   },
+ 
   {
     id: 1,
     nombreUnidades: "Edificio academico II",
@@ -73,80 +55,7 @@ export const initialState = {
     horaAperturaUnidades:"6:45",
     horaCierreUnidades: "14:15",
     departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-  {
-    id: 1,
-    nombreUnidades: "Edificio academico II",
-    ubicacionUnidades: "ala este",
-    horaAperturaUnidades:"6:45",
-    horaCierreUnidades: "14:15",
-    departamento: "Ninguno"
-  },
-]
+  }]
 }
 
 export const reducer = (state = initialState, { type, ...rest }) => {
@@ -158,13 +67,14 @@ export const reducer = (state = initialState, { type, ...rest }) => {
         ...state,
         feriados: [...state.feriados, rest.payload],
       }
-    case AGREGAR_MATERIA:{
-      console.log(" agregarrr")
+    case AGREGAR_MATERIA: {
+      console.log(' agregarrr')
       return {
         ...state,
         materias: [...state.materias, rest.payload],
       }
-    }case AGREGAR_UNIDAD:{
+    }
+    case AGREGAR_UNIDAD:{
       console.log(" agregarrr")
       return {
         ...state,
@@ -181,18 +91,22 @@ export const reducer = (state = initialState, { type, ...rest }) => {
         ...state,
       }
     }
-    case LISTAR_FERIADO:
+    case LISTAR_FERIADO: {
+      getFeriados().then((response) => {
+        console.log(response)
+      })
       return state
-
-      case LISTAR_MATERIA:
-        return state
-      case LISTAR_UNIDAD:
-        return state
+    }
     case BORRAR_FERIADO:
       return {
         ...state,
         feriados: [...state.postList.filter((feriado) => feriado.id !== action.id)],
       }
+
+      case LISTAR_UNIDAD:
+        return state
+   
+       
     default:
       return state
   }

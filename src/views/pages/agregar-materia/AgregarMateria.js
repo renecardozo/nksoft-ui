@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CCard,
@@ -17,32 +17,23 @@ import {
   CButton,
 } from '@coreui/react'
 import { useAppContext } from '../../../hooks'
+import { getMaterias } from '../agregar-materia/servicios'
 
 function Materias() {
   const {
-    state: { materias },
+    state: { materia },
   } = useAppContext()
-  const nombreMateria = (codigo) => {
-    switch (codigo) {
-      case 'COD-001':
-        return 'Calculo I'
-      case 'COD-002':
-        return 'Algebra II'
-      case 'COD-003':
-        return 'Sistemas I'
-    }
+  const [materias, setMaterias] = useState([])
+  const findAll = async () => {
+    const response = await getMaterias()
+    console.log(response)
+    setMaterias(response)
   }
 
-  const nombreDepartamento = (fecha) => {
-    switch (fecha) {
-      case 'COD-001':
-        return 'Matematicas'
-      case 'COD-002':
-        return 'Matematicas'
-      case 'COD-003':
-        return 'Sistemas'
-    }
-  }
+  useEffect(() => {
+    findAll()
+  }, [])
+
   return (
     <CContainer className="px-4">
       <CRow>
@@ -61,20 +52,21 @@ function Materias() {
           <CTableHead>
             <CTableRow>
               <CTableHeaderCell scope="col">No</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Departamento</CTableHeaderCell>
+
               <CTableHeaderCell scope="col">Código</CTableHeaderCell>
               <CTableHeaderCell scope="col">Materia</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Grupo</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Departamento</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
             {materias.map((materia) => (
               <CTableRow key={materia.id}>
                 <CTableHeaderCell scope="row">{materia.id}</CTableHeaderCell>
-                <CTableDataCell>{materia.departamento}</CTableDataCell>
                 <CTableDataCell>{materia.codigo}</CTableDataCell>
                 <CTableDataCell>{materia.materia}</CTableDataCell>
-                
-     
+                <CTableDataCell>{materia.grupo}</CTableDataCell>
+                <CTableDataCell>{materia.departamento}</CTableDataCell>
               </CTableRow>
             ))}
             {}
@@ -84,7 +76,7 @@ function Materias() {
           <ul className="pagination justify-content-end">
             <li className="page-item disabled">
               <a className="page-link" href="#" tabIndex="-1" aria-disabled="true">
-                Previous
+                Anterior
               </a>
             </li>
             <li className="page-item">

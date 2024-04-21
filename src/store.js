@@ -82,6 +82,7 @@ export const reducer = (state = initialState, { type, ...rest }) => {
       }
     }
         
+
     case EDITAR_FERIADO: {
       const index = state.feriados.findIndex((feriado) => feriado.id === action.payload.id)
       if (index !== -1) {

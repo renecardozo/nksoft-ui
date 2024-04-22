@@ -1,106 +1,74 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CRow,
-  CTable,
-  CTableBody,
-  CTableCaption,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-  CContainer,
-  CButton,
-} from '@coreui/react'
-import { useAppContext } from '../../../hooks'
+import React, { useState, useEffect } from 'react';
+import { CListGroup, CListGroupItem, CCol, CRow, CCard, CCardBody, CCardHeader, CButton } from '@coreui/react';
+import { getUnidad } from './servicios';
+import { Link } from 'react-router-dom';
+import { getAulasPorUnidad } from './serviciosAulas';
 
-function Unidades() {
-  const {
-    state: { unidades },
-  } = useAppContext()
+const Unidades = () => {
+    const [unidades, setUnidades] = useState([]);
 
-  const nombreUnidades = (codigo) => {
-    switch (codigo) {
-      case 'COD-001':
-        return 'Calculo I'
-      case 'COD-002':
-        return 'Algebra II'
-      case 'COD-003':
-        return 'Sistemas I'
-    }
-  }
-
-  const nombreDepartamento = (fecha) => {
-    switch (fecha) {
-      case 'COD-001':
-        return 'Matematicas'
-      case 'COD-002':
-        return 'Matematicas'
-      case 'COD-003':
-        return 'Sistemas'
-    }
-  }
-  return (
-    <CContainer className="px-4">
-      
-      <br></br>
-      <CRow>
-        <CTable>
-          <CTableHead>
-            <CTableRow>
-              <CTableHeaderCell scope="col">No</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Nombre</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Ubicacion</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Departamento</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Hora de apertura</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Hora de cierre</CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            {unidades.map((unidad) => (
-              <CTableRow key={unidad.id}>
-                <CTableHeaderCell scope="row">{unidad.id}</CTableHeaderCell>
-                <CTableDataCell>{unidad.nombreUnidades}</CTableDataCell>
-                <CTableDataCell>{unidad.ubicacionUnidades}</CTableDataCell>
-                <CTableDataCell>{unidad.departamento}</CTableDataCell>
-
-                <CTableDataCell>{unidad.horaAperturaUnidades}</CTableDataCell>
-                <CTableDataCell>{unidad.horaCierreUnidades}</CTableDataCell>
-
-
-              </CTableRow>
-            
-          ))
-
+    useEffect(() => {
+        const obtenerUnidades = async () => {
+            try {
+                const unidadesData = await getUnidad();
+                setUnidades(unidadesData);
+            } catch (error) {
+                console.error('Error al obtener las unidades:', error);
             }
-            {}
-          </CTableBody>
-          
-        </CTable>
+        };
+        obtenerUnidades();
+    }, []);
 
-        <CRow >
-         <CCol sm={6} md={8}></CCol>
-           <CCol xs={6} md={4}>
-             <div className="d-grid">
-           <Link to="/administracion/registrar-unidad" className="btn btn-primary">
-              Agregar unidades
-           </Link>
-             </div>
-           </CCol>
-          
-       </CRow>
+    const handleVerAulas = async (unidadId) => {
+        try {
+            const aulasData = await getAulasPorUnidad(unidadId); 
+            console.log('Aulas asociadas a la unidad:', aulasData);
+        } catch (error) {
+            console.error('Error al obtener las aulas asociadas:', error);
+        }
+    };
 
-      </CRow>
+    return (
+        <div className="container">
+            <CRow>
+                <CCol sm={6} md={8}></CCol>
+                <CCol xs={6} md={4}>
+                    <div className="d-grid">
+                        <Link to="/administracion/registrar-unidad" className="btn btn-primary">
+                            Unidad nueva
+                        </Link>
+                    </div>
+                </CCol>
+            </CRow>
+            <CRow className="justify-content-center">
+                <CCol>
+                    <CCard>
+                        <CCardHeader>
+                            <h3>Lista de Unidades</h3>
+                        </CCardHeader>
+                        <CCardBody>
+                            <CListGroup flush>
+                                {unidades.map((unidad) => (
+                                    <CListGroupItem key={unidad.id} className="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>Nombre:</strong> {unidad.nombreUnidades}
+                                            <br />
+                                            <strong>Hora de Apertura:</strong> {unidad.horaAperturaUnidades}
+                                            <br />
+                                            <strong>Hora de Cierre:</strong> {unidad.horaCierreUnidades}
+                                            <br />
+                                            <strong>Departamento:</strong> {unidad.departamento_id}
+                                        </div>
+                                        <CButton color="primary" onClick={() => handleVerAulas(unidad.id)}>Ver Aulas</CButton>
+                                    </CListGroupItem>
+                                ))}
+                            </CListGroup>
+                        </CCardBody>
+                    </CCard>
+                </CCol>
+            </CRow>
+        </div>
+    );
+};
 
-    </CContainer>
-
-
-  )
-
-}
-
-export default Unidades
+export default Unidades;

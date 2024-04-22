@@ -8,6 +8,7 @@ import {
   cilList,
   cilPeople,
   cilNoteAdd,
+  cilBuilding
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
 

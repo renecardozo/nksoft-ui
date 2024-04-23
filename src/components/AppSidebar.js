@@ -45,7 +45,7 @@ const AppSidebar = () => {
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
           <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} />
-          <CImage rounded thumbnail src="src/assets/images/fcyt.png" width={250} height={200} />
+          <CImage rounded thumbnail src="src/assets/images/fcyt.jpg" width={250} height={200} />
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"

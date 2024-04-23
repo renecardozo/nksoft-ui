@@ -57,7 +57,6 @@ export default function ListUser() {
   }, [])
   const handleSubmit = async (event, values) => {
     event.preventDefault()
-
     validateData(values).then((resp) => {
       const service = id
         ? APISERVICE.put(`api/users/${id}`, data)

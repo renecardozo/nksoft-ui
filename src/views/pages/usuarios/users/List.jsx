@@ -57,7 +57,7 @@ export default function ListUser() {
       title: 'Rol',
       key: 'role_id',
       field: (row) => {
-        return row.role.name
+       // return row.role.name
       },
     },
     {

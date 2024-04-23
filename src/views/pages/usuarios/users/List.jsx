@@ -53,6 +53,14 @@ export default function ListUser() {
       key: 'code_sis',
     },
     {
+      id: 7,
+      title: 'Rol',
+      key: 'role_id',
+      field: (row) => {
+        return row.role.name
+      },
+    },
+    {
       id: 8,
       title: 'Telefono',
       key: 'phone',

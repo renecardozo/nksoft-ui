@@ -1,37 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  CCol,
-  CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-  CContainer,
-} from '@coreui/react'
-import { useAppContext } from '../../../../hooks'
-import { getFeriados } from '../service'
+import { CCol, CRow, CContainer } from '@coreui/react'
+import { getFeriados, getListCodeDates } from '../service'
 
 function Feriados() {
-  // const { state } = useAppContext()
-  // console.log(state)
   const [feriados, setFeriados] = useState([])
+  const [codes, setCodes] = useState([])
   const describirFeriado = (codigo) => {
-    switch (codigo) {
-      case 'COD_001':
-        return 'Nacional'
-      case 'COD_002':
-        return 'Halloween'
-      case 'COD_003':
-        return 'San Valentin'
-    }
+    const feriadoEncontrado = codes.find((item) => item.code == codigo)
+    return feriadoEncontrado.name || 'No definido'
   }
   const findAll = async () => {
     const response = await getFeriados()
-    console.log(response)
+    const codesList = await getListCodeDates()
     setFeriados(response)
+    setCodes(codesList)
   }
 
   useEffect(() => {
@@ -52,26 +35,36 @@ function Feriados() {
       </CRow>
       <br></br>
       <CRow>
-        <CTable>
-          <CTableHead>
-            <CTableRow>
-              <CTableHeaderCell scope="col">#</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Fecha</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Feriado</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Descripcion</CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            {feriados.map((feriado) => (
-              <CTableRow key={feriado.id}>
-                <CTableHeaderCell scope="row">{feriado.id}</CTableHeaderCell>
-                <CTableDataCell>{feriado.fecha}</CTableDataCell>
-                <CTableDataCell>{describirFeriado(feriado.codigo)}</CTableDataCell>
-                <CTableDataCell>{feriado.descripcion}</CTableDataCell>
-              </CTableRow>
-            ))}
-          </CTableBody>
-        </CTable>
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Feriado</th>
+              <th scope="col">Descripcion</th>
+            </tr>
+          </thead>
+          <tbody>
+            {feriados.length ? (
+              feriados.map((item, index) => (
+                <tr key={item.id}>
+                  <th scope="row">{item.id}</th>
+                  <td>{item.fecha}</td>
+                  <td>
+                    <Link to={`/administracion/feriados/${item.id}/details`}>
+                      {describirFeriado(item.codigo)}
+                    </Link>
+                  </td>
+                  <td>{item.descripcion}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <th>No Hay Feridos</th>
+              </tr>
+            )}
+          </tbody>
+        </table>
         <nav aria-label="Page navigation example">
           <ul className="pagination justify-content-end">
             <li className="page-item disabled">

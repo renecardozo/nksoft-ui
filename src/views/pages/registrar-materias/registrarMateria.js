@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 import {
   CButton,
@@ -54,7 +54,6 @@ function leerMaterias (mat) {
 
 
 const registrarMateria = () => {
-
   const navigate = useNavigate()
   const [departamento, setDepartamento] = useState('')
   const [codigo, setCodigo] = useState('')
@@ -65,11 +64,10 @@ const registrarMateria = () => {
   const [bien, setBien] = useState(false);
 
   const {
-   state: { materias },
+    state: { materias },
     dispatch,
   } = useAppContext()
 
- 
   const guardarMateria = async (e) => {
 
     e.preventDefault()
@@ -106,7 +104,6 @@ const registrarMateria = () => {
       setError2(false);
       setError(true);
     }
-
   }
 
 
@@ -121,7 +118,6 @@ const registrarMateria = () => {
                 <CForm>
                   <h1>Agregar Materia</h1>
                   <p className="text-body-secondary">Registrar una Materia</p>
-                 
 
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
@@ -133,7 +129,6 @@ const registrarMateria = () => {
                       onChange={(e) => setCodigo(e.target.value)}
                     />
                   </CInputGroup>
-
 
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
@@ -157,20 +152,19 @@ const registrarMateria = () => {
                     />
                   </CInputGroup>
 
-
                   <CInputGroup className="mb-3">
-                  <CInputGroupText>
-                        <CIcon icon={cilText} />
-                  </CInputGroupText>
-                  <CFormSelect
-                      onChange={(e) => setDepartamento(e.target.value)}
-                      >
+                    <CInputGroupText>
+                      <CIcon icon={cilText} />
+                    </CInputGroupText>
+                    <CFormSelect onChange={(e) => setDepartamento(e.target.value)}>
                       <option value="">Seleccione un departamento</option>
                       <option value="Industrias">Departamento de Industrias</option>
                       <option value="Química">Departamento de Química</option>
                       <option value="Física">Departamento de Física</option>
                       <option value="Matemítica">Departamento de Matemática</option>
-                      <option value="Informática-Sistemas">Departamento de Informática-Sistemas</option>
+                      <option value="Informática-Sistemas">
+                        Departamento de Informática-Sistemas
+                      </option>
                       <option value="Civil">Departamento de Civil</option>
                       <option value="Eléctrica-Electrónica">Departamento de Eléctrica-Electrónica</option>
                       <option value="Mecánica">Departamento de Mecánica</option>
@@ -201,7 +195,7 @@ const registrarMateria = () => {
 
                   <div className="d-grid">
                     <CButton color="primary" onClick={(e) => guardarMateria(e)}>
-                        Registrar
+                      Registrar
                     </CButton>
                   </div>
                 </CForm>

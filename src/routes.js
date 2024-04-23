@@ -8,10 +8,17 @@ const Solicitudes = React.lazy(() => import('./views/pages/solicitudes/Solicitud
 const Administrar = React.lazy(() => import('./views/pages/administrar/Administrar'))
 const Roles = React.lazy(() => import('./views/pages/usuarios/roles/Role'))
 const CrearRoles = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
+const EditarRole = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
 const Calendario = React.lazy(() => import('./components/calendario/Calendario'))
-const Feriados = React.lazy(() => import('./views/pages/module-feriados/feriados/Feriados'))
+// const Feriados = React.lazy(() => import('./views/pages/module-feriados/feriados/Feriados'))
 const AgregarMateria = React.lazy(() => import('./views/pages/agregar-materia/AgregarMateria'))
-const registrarMateria = React.lazy(() => import('./views/pages/registrar-materias/registrarMateria'))
+const registrarMateria = React.lazy(
+  () => import('./views/pages/registrar-materias/registrarMateria'),
+)
+const ListUser = React.lazy(() => import('./views/pages/usuarios/users/List.jsx'))
+const FormUser = React.lazy(() => import('./views/pages/usuarios/users/Form.jsx'))
+import Feriados from './views/pages/module-feriados/feriados/Feriados'
+import DetailsFeriado from './views/pages/module-feriados/details-feriado/DetailsFeriado.js'
 const CrearFeriados = React.lazy(
   () => import('./views/pages/module-feriados/crear-feriados/CreateFeriados'),
 )
@@ -24,12 +31,26 @@ const routes = [
   { path: '/configurar/solicitudes', name: 'Solicitudes', element: Solicitudes },
   { path: '/configurar/administrar', name: 'Administrar', element: Administrar },
   { path: '/configurar/roles', name: 'Roles', element: Roles },
-  { path: '/configurar/crear-roles', name: 'Crear Roles', element: CrearRoles },
+  { path: '/configurar/crear-roles', name: 'Crear Role', element: CrearRoles },
+  { path: '/configurar/editar-role/:id', name: 'Editar Role', element: EditarRole },
   { path: '/administracion/calendario', name: 'Calendario', element: Calendario },
   { path: '/administracion/feriados', name: 'Feriados', element: Feriados },
   { path: '/administracion/crear-feriados', name: 'Crear Feriado', element: CrearFeriados },
   { path: '/administracion/agregar-materia', name: 'Agregar Materia', element: AgregarMateria },
-  { path: '/administracion/registrar-materias', name: 'Agregar Materia', element: registrarMateria },
+  {
+    path: '/administracion/feriados/:id/details',
+    name: 'Detalles Feriado',
+    element: DetailsFeriado,
+  },
+  {
+    path: '/administracion/registrar-materias',
+    name: 'Agregar Materia',
+    element: registrarMateria,
+  },
+  //USUARIOS
+  { path: '/users', name: 'Usuarios', element: ListUser },
+  { path: '/users/create', name: 'Crear Usuario', element: FormUser },
+  { path: '/users/:id/edit', name: 'Editar Usuario', element: FormUser },
 ]
 
 export default routes

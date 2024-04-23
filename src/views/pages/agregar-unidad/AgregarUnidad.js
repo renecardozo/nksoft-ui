@@ -2,27 +2,39 @@ import React, { useState, useEffect } from 'react';
 import { CListGroup, CListGroupItem, CCol, CRow, CCard, CCardBody, CCardHeader, CButton } from '@coreui/react';
 import { getUnidad } from './servicios';
 import { Link } from 'react-router-dom';
-import { getAulasPorUnidad } from './serviciosAulas';
+import { getAulasPorUnidad } from './servicios';
 
 const Unidades = () => {
     const [unidades, setUnidades] = useState([]);
+    const [unidadSeleccionada, setUnidadSeleccionada] = useState(null);
+
 
     useEffect(() => {
         const obtenerUnidades = async () => {
             try {
                 const unidadesData = await getUnidad();
-                setUnidades(unidadesData);
+                console.log("Datos de unidades:", unidadesData);
+                const unidadesConDepartamento = unidadesData.map(unidad => ({
+                    ...unidad,
+                    nombreDepartamentos: unidad.departamento && unidad.departamento.nombreDepartamentos ? unidad.departamento.nombreDepartamentos : 'Ninguno'
+                }));
+                const unidadesOrdenadas = unidadesConDepartamento.sort((a, b) => a.nombreUnidades.localeCompare(b.nombreUnidades));
+                setUnidades(unidadesOrdenadas);
             } catch (error) {
                 console.error('Error al obtener las unidades:', error);
             }
         };
+        
+        
         obtenerUnidades();
     }, []);
+    
 
     const handleVerAulas = async (unidadId) => {
         try {
             const aulasData = await getAulasPorUnidad(unidadId); 
             console.log('Aulas asociadas a la unidad:', aulasData);
+            setUnidadSeleccionada(unidadId); // Guardar la unidad seleccionada
         } catch (error) {
             console.error('Error al obtener las aulas asociadas:', error);
         }
@@ -57,9 +69,13 @@ const Unidades = () => {
                                             <br />
                                             <strong>Hora de Cierre:</strong> {unidad.horaCierreUnidades}
                                             <br />
-                                            <strong>Departamento:</strong> {unidad.departamento_id}
+                                            <strong>Asociado a:</strong> {unidad.nombreDepartamentos}
                                         </div>
-                                        <CButton color="primary" onClick={() => handleVerAulas(unidad.id)}>Ver Aulas</CButton>
+                                        <div className="d-grid">
+                                        <Link to={`/administracion/unidades/${unidad.id}/aulas`} className="btn btn-primary" onClick={() => handleVerAulas(unidad.id)}>
+    Ver Aulas
+</Link>
+                                   </div>
                                     </CListGroupItem>
                                 ))}
                             </CListGroup>

@@ -20,8 +20,7 @@ import {
 import CIcon from '@coreui/icons-react';
 import { cilClock, cilText, cilBuilding, cilPlus, cilMinus } from '@coreui/icons';
 import { useNavigate } from 'react-router-dom';
-import { postUnidad } from './servicios';
-import { getDepartamento } from '../agregar-departamento/servicios';
+import { postUnidad, getUnidad, horaInicio, horaFin, getAulasPorUnidad, agregarAula } from './servicios'; 
 
 const RegistrarUnidad = () => {
     const navigate = useNavigate();
@@ -31,7 +30,9 @@ const RegistrarUnidad = () => {
     const [nombreDepartamentos, setNombreDepartamentos] = useState([]);
     const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState(null);
     const [departamentos, setDepartamentos] = useState([]);
-    const [aulas, setAulas] = useState([{ nombre: '', capacidad: '' }]);
+    const [aulas, setAulas] = useState([{ nombreAulas: '', capacidadAulas: '' , unidad_id: null}]);
+    const [horasApertura, setHorasApertura] = useState([]); 
+    const [horasCierre, setHorasCierre] = useState([]);
 
     useEffect(() => {
         const obtenerDepartamentos = async () => {
@@ -55,34 +56,80 @@ const RegistrarUnidad = () => {
         obtenerDepartamentos();
     }, []);
 
+    useEffect(() => {
+        const cargarHorasDeAperturaYCierre = async () => {
+            try {
+                const horaInicioData = await horaInicio();
+                const horaFinData = await horaFin();
+                setHorasApertura(horaInicioData);
+                setHorasCierre(horaFinData);
+            } catch (error) {
+                console.error('Error al cargar las horas de apertura y cierre:', error);
+            }
+        };
+        cargarHorasDeAperturaYCierre();
+    }, []);
+
     const guardarUnidad = async () => {
         try {
-            if (nombreUnidades.trim() === '' || !departamentoSeleccionado || !departamentoSeleccionado.id) {
-                alert('Error: llenar todos los campos');
+            // Verificar si se completaron los campos obligatorios
+            if (nombreUnidades.trim() === '') {
+                alert('Por favor complete el nombre de la unidad');
+                return;
+            }
+            if (horaAperturaUnidades.trim() === '') {
+                alert('Por favor seleccione una hora de apertura');
+                return;
+            }
+            if (horaCierreUnidades.trim() === '') {
+                alert('Por favor seleccione una hora de cierre');
+                return;
+            }
+            if (horaCierreUnidades.trim() <= horaAperturaUnidades.trim()){
+            alert('La hora de cierre debe ser posterior la hora de apertura, por favor seleccione un horario válido ');
                 return;
             }
 
-            const nuevaUnidad = {
+            const unidades = await getUnidad();
+            const unidadExistente = unidades.find(unidad => unidad.nombreUnidades === nombreUnidades);
+            if (unidadExistente) {
+                alert('El nombre de la unidad ya se encuentra registrado, por favor ingrese otro');
+                return;
+            }
+        
+            // Asignar el ID de la unidad a las aulas
+            const uniid = await postUnidad({
                 nombreUnidades,
                 horaAperturaUnidades,
                 horaCierreUnidades,
-                departamento_id: departamentoSeleccionado.id,
-                aulas: aulas.filter(aula => aula.nombre.trim() !== '' && aula.capacidad.trim() !== '') 
-            };
-
-            await postUnidad(nuevaUnidad);
+                departamento_id: departamentoSeleccionado ? departamentoSeleccionado.id : null,
+            });
+        
+            const aulasConUnidadId = aulas.map(aula => ({
+                ...aula,
+                unidad_id: uniid
+            }));
+        
+            // Guardar las aulas en el servidor
+            await Promise.all(aulasConUnidadId.map(async (aula) => {
+                await agregarAula(aula);
+            }));
+        
+            // Limpiar los campos después de guardar
             setNombreUnidades('');
             setHoraDeApertura('');
             setHoraDeCierre('');
-            setDepartamentoSeleccionado('');
-            setAulas([{ nombre: '', capacidad: '' }]);
+            setDepartamentoSeleccionado(null);
+            setAulas([{ nombreAulas: '', capacidadAulas: '' }]);
+        
+            alert('Se ha registrado la unidad exitosamente');
         } catch (error) {
-            alert(error.message);
+            alert('Error al registrar la unidad: ' + error.message);
         }
     };
-
-    const agregarAula = () => {
-        setAulas([...aulas, { nombre: '', capacidad: '' }]);
+    
+    const agregarNuevaAula = () => {
+        setAulas([...aulas, { nombreAulas: '', capacidadAulas: '' }]);
     };
 
     const eliminarAula = (index) => {
@@ -93,13 +140,13 @@ const RegistrarUnidad = () => {
 
     const handleNombreAulaChange = (index, value) => {
         const nuevasAulas = [...aulas];
-        nuevasAulas[index].nombre = value;
+        nuevasAulas[index].nombreAulas = value;
         setAulas(nuevasAulas);
     };
 
     const handleCapacidadAulaChange = (index, value) => {
         const nuevasAulas = [...aulas];
-        nuevasAulas[index].capacidad = value;
+        nuevasAulas[index].capacidadAulas = value;
         setAulas(nuevasAulas);
     };
 
@@ -112,20 +159,16 @@ const RegistrarUnidad = () => {
                             <CCardBody className="p-4">
                                 <CForm>
                                     <h1>Registrar unidad nueva</h1>
-
-                                    {/* Campos de la unidad */}
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>
                                             <CIcon icon={cilText} />
                                         </CInputGroupText>
-                                        <CFormInput
-                                            placeholder="Nombre"
-                                            autoComplete="nombre"
-                                            value={nombreUnidades}
-                                            onChange={(e) => setNombreUnidades(e.target.value)}
-                                        />
+                                            <CFormInput
+                                                placeholder="Nombre"
+                                                autoComplete="nombre"
+                                                value={nombreUnidades}
+                                                onChange={(e) => setNombreUnidades(e.target.value)}/>
                                     </CInputGroup>
-
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>
                                             <CIcon icon={cilBuilding} />
@@ -134,12 +177,10 @@ const RegistrarUnidad = () => {
                                             className="form-select"
                                             value={departamentoSeleccionado ? departamentoSeleccionado.id : ''}
                                             onChange={(e) => {
-                                                const selectedDept = departamentos.find(dep => dep.id === parseInt(e.target.value));
-                                                console.log('Departamento seleccionado:', selectedDept);
-                                                setDepartamentoSeleccionado(selectedDept);
-                                            }}
-                                        >
-                                            <option value="">Selecciona un departamento</option>
+                                                const selectedDeptId = parseInt(e.target.value);
+                                                const selectedDept = selectedDeptId !== -1 ? departamentos.find(dep => dep.id === selectedDeptId) : null;
+                                                setDepartamentoSeleccionado(selectedDept);}}>
+                                            <option value={-1}>Ninguno</option>
                                             {departamentos.map(dept => (
                                                 <option key={dept.id} value={dept.id}>
                                                     {dept.nombreDepartamentos}
@@ -147,29 +188,37 @@ const RegistrarUnidad = () => {
                                             ))}
                                         </select>
                                     </CInputGroup>
-
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>
                                             <CIcon icon={cilClock} />
                                         </CInputGroupText>
-                                        <CFormInput
-                                            placeholder="Hora de apertura"
-                                            autoComplete="Hora de apertura"
+                                        <select
+                                            className="form-select"
                                             value={horaAperturaUnidades}
-                                            onChange={(e) => setHoraDeApertura(e.target.value)}
-                                        />
+                                            onChange={(e) => setHoraDeApertura(e.target.value)}>
+                                            <option value="">Seleccionar hora de apertura</option>
+                                            {horasApertura.map((hora, index) => (
+                                                <option key={index} value={hora}>
+                                                    {hora}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </CInputGroup>
-
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>
                                             <CIcon icon={cilClock} />
                                         </CInputGroupText>
-                                        <CFormInput
-                                            placeholder="Hora de cierre"
-                                            autoComplete="Hora de cierre"
+                                        <select
+                                            className="form-select"
                                             value={horaCierreUnidades}
-                                            onChange={(e) => setHoraDeCierre(e.target.value)}
-                                        />
+                                            onChange={(e) => setHoraDeCierre(e.target.value)}>
+                                            <option value="">Seleccionar hora de cierre</option>
+                                            {horasCierre.map((hora, index) => (
+                                                <option key={index} value={hora}>
+                                                    {hora}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </CInputGroup>
                                     <div className="d-grid">
                                         <CButton color="primary" onClick={guardarUnidad}>
@@ -200,7 +249,7 @@ const RegistrarUnidad = () => {
                                                         <CFormInput
                                                             placeholder={`Nombre del aula ${index + 1}`}
                                                             autoComplete="nombre"
-                                                            value={aula.nombre}
+                                                            value={aula.nombreAulas}
                                                             onChange={(e) => handleNombreAulaChange(index, e.target.value)}
                                                         />
                                                     </CTableDataCell>
@@ -208,9 +257,8 @@ const RegistrarUnidad = () => {
                                                         <CFormInput
                                                             placeholder={`Capacidad del aula ${index + 1}`}
                                                             autoComplete="capacidad"
-                                                            value={aula.capacidad}
-                                                            onChange={(e) => handleCapacidadAulaChange(index, e.target.value)}
-                                                        />
+                                                            value={aula.capacidadAulas}
+                                                            onChange={(e) => handleCapacidadAulaChange(index, e.target.value)}/>
                                                     </CTableDataCell>
                                                     <CTableDataCell>
                                                         <CButton color="danger" onClick={() => eliminarAula(index)}>
@@ -222,8 +270,9 @@ const RegistrarUnidad = () => {
                                         </CTableBody>
                                     </CTable>
                                     <div className="d-grid mt-3">
-                                        <CButton color="primary" onClick={agregarAula}>
-                                            <CIcon icon={cilPlus} /> Agregar Aula
+                                        <CButton color="primary" onClick={agregarNuevaAula}>
+                                            <CIcon icon={cilPlus} /> 
+                                            Agregar Aula
                                         </CButton>
                                     </div>
                                 </CForm>
@@ -235,5 +284,4 @@ const RegistrarUnidad = () => {
         </div>
     );
 };
-
 export default RegistrarUnidad;

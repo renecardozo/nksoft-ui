@@ -19,6 +19,7 @@ const AgregarUnidad = React.lazy(() => import('./views/pages/agregar-unidad/Agre
 const registrarUnidad = React.lazy(() => import('./views/pages/registrar-unidad/registrarUnidad'))
 const AgregarDepartamento = React.lazy(() => import('./views/pages/agregar-departamento/AgregarDepartamento'))
 const RegistrarDepartamento = React.lazy(() => import('./views/pages/registrar-departamentos/registrarDepartamento'))
+const verAulas = React.lazy(() => import('./views/pages/agregar-unidad/vistaAulas'))
 
 const ListUser = React.lazy(() => import('./views/pages/usuarios/users/List.jsx'))
 const FormUser = React.lazy(() => import('./views/pages/usuarios/users/Form.jsx'))
@@ -61,6 +62,7 @@ const routes = [
   { path: '/administracion/registrar-unidad', name: 'Agregar unidad', element: registrarUnidad },
   { path: '/administracion/Departamentos', name: 'Departamentos', element: AgregarDepartamento },
   { path: '/administracion/registrar-departamentos', name: 'Agregar Departamento', element: RegistrarDepartamento },
+  { path: '/administracion/unidades/:unidadId/aulas', name: 'Aulas', element: verAulas },
 
 ]
 

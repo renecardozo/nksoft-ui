@@ -8,7 +8,8 @@ import {
   cilList,
   cilPeople,
   cilNoteAdd,
-  cilBuilding
+  cilBuilding,
+  cilInstitution
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
 
@@ -96,7 +97,7 @@ const _nav = [
     component: CNavItem,
     name: 'Departamentos',
     to: '/administracion/Departamentos',
-    icon: <CIcon icon={cilBuilding} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilInstitution} customClassName="nav-icon" />,
   }
 ]
 export default _nav

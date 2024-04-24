@@ -97,7 +97,6 @@ const RegistrarUnidad = () => {
                 return;
             }
         
-            // Asignar el ID de la unidad a las aulas
             const uniid = await postUnidad({
                 nombreUnidades,
                 horaAperturaUnidades,
@@ -110,12 +109,10 @@ const RegistrarUnidad = () => {
                 unidad_id: uniid
             }));
         
-            // Guardar las aulas en el servidor
             await Promise.all(aulasConUnidadId.map(async (aula) => {
                 await agregarAula(aula);
             }));
         
-            // Limpiar los campos después de guardar
             setNombreUnidades('');
             setHoraDeApertura('');
             setHoraDeCierre('');
@@ -177,16 +174,18 @@ const RegistrarUnidad = () => {
                                             className="form-select"
                                             value={departamentoSeleccionado ? departamentoSeleccionado.id : ''}
                                             onChange={(e) => {
-                                                const selectedDeptId = parseInt(e.target.value);
-                                                const selectedDept = selectedDeptId !== -1 ? departamentos.find(dep => dep.id === selectedDeptId) : null;
-                                                setDepartamentoSeleccionado(selectedDept);}}>
+                                            const selectedDeptId = parseInt(e.target.value);
+                                            const selectedDept = selectedDeptId !== -1 ? departamentos.find(dep => dep.id === selectedDeptId) : null;
+                                            setDepartamentoSeleccionado(selectedDept);
+                                         }}>
                                             <option value={-1}>Ninguno</option>
-                                            {departamentos.map(dept => (
-                                                <option key={dept.id} value={dept.id}>
-                                                    {dept.nombreDepartamentos}
-                                                </option>
-                                            ))}
+                                            {departamentos.sort((a, b) => a.nombreDepartamentos.localeCompare(b.nombreDepartamentos)).map(dept => (
+                                            <option key={dept.id} value={dept.id}>
+                                            {dept.nombreDepartamentos}
+                                            </option>
+                                             ))}
                                         </select>
+
                                     </CInputGroup>
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>

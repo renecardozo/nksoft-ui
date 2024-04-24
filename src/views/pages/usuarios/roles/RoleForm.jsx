@@ -12,11 +12,17 @@ export default function RoleForm() {
   const [permissions, setPermissions] = useState([])
   const [validationError, setValidationError] = useState({})
   const [toast, addToast] = useState(null)
+  const [roles, setRoles] = useState({ roleName: '', permissions: [] })
 
   const getRole = async () => {
     let url = `api/role/${id}`
     const response = await APISERVICE.get(url)
     setFormData(response)
+  }
+  const getRoles = async () => {
+    let url = 'api/role-permissions'
+    const response = await APISERVICE.get(url)
+    setRoles(response)
   }
 
   const getPermissions = async () => {
@@ -61,7 +67,19 @@ export default function RoleForm() {
       })
     }
   }
+  const arraysEqual = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) return false
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) return false
+    }
+    return true
+  }
 
+  // Función para comparar los permisos de un rol con los permisos de la secretaria
+  const comparePermissions = (role) => {
+    const fotmDataPermissions = formData.permissions
+    return arraysEqual(role.permissions, fotmDataPermissions)
+  }
   const handleSubmit = (e) => {
     e.preventDefault()
     const errors = {}
@@ -73,13 +91,17 @@ export default function RoleForm() {
     }
 
     setValidationError(errors)
-
-    if (Object.keys(errors).length === 0) {
-      if (id) {
-        editRole(formData, id)
-        createRole(formData)
-      } else {
-        createRole(formData)
+    const rolesWithSamePermissions = roles.filter(comparePermissions)
+    if (rolesWithSamePermissions.length > 0) {
+      let res = rolesWithSamePermissions.map(role => role.roleName);
+      addToast(mesageToast("Rol con esos permisos ya existe: "+res))
+    } else {
+      if (Object.keys(errors).length === 0) {
+        if (id) {
+          editRole(formData, id)
+        } else {
+          createRole(formData)
+        }
       }
     }
   }
@@ -89,24 +111,23 @@ export default function RoleForm() {
   }
 
   const mesageToast = (message) => (
-    <CToast autohide={false} visible={true}>
+    <CToast autohide={true} visible={true} color='danger'>
       <CToastBody>{message}</CToastBody>
     </CToast>
   )
-
   useEffect(() => {
     if (id) {
       getRole(id)
     }
     getPermissions()
+    getRoles()
   }, [id])
 
   return (
     <div className="container">
-      <CToaster ref={toaster} push={toast} placement="bottom-end" />
-      <h2 className="text-center mb-4">Crear Nuevo Rol</h2>
+      <CToaster ref={toaster} push={toast} placement="bottom-end" style={{marginBottom:"50px"}}/>
+      <h2 className="text-center mb-4">{id ? 'Editar Role' : 'Crear Nuevo Rol'}</h2>
       <form onSubmit={handleSubmit}>
-        {/* Input para nombre del rol */}
         <div className="row">
           <div className="col-md-6">
             <label htmlFor="roleName" className="form-label">
@@ -126,11 +147,11 @@ export default function RoleForm() {
           </div>
         </div>
         <div className="row mt-3">
-          <div className="col-md-6">
+          <div>
             <p>Permisos:</p>
-            <div className="row">
+            <div className="row ">
               {permissions.map((permiso) => (
-                <div className="col-md-6 mb-2" key={permiso.id}>
+                <div className="col-md-3 mb-2" key={permiso.id}>
                   <div className="form-check">
                     <input
                       className="form-check-input"
@@ -155,7 +176,6 @@ export default function RoleForm() {
             )}
           </div>
         </div>
-        {/* Botones de acción */}
         <div className="row mt-3">
           <div className="col-md-6">
             <button type="submit" className="btn btn-primary me-5">

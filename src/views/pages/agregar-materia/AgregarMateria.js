@@ -26,7 +26,6 @@ function Materias() {
   const [materias, setMaterias] = useState([])
   const findAll = async () => {
     const response = await getMaterias()
-    console.log(response)
     setMaterias(response)
   }
 
@@ -51,7 +50,7 @@ function Materias() {
         <CTable>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell scope="col">No</CTableHeaderCell>
+
 
               <CTableHeaderCell scope="col">Código</CTableHeaderCell>
               <CTableHeaderCell scope="col">Materia</CTableHeaderCell>
@@ -62,8 +61,9 @@ function Materias() {
           <CTableBody>
             {materias.map((materia) => (
               <CTableRow key={materia.id}>
-                <CTableHeaderCell scope="row">{materia.id}</CTableHeaderCell>
-                <CTableDataCell>{materia.codigo}</CTableDataCell>
+                
+                
+                <CTableDataCell scope ="row">{materia.codigo}</CTableDataCell>
                 <CTableDataCell>{materia.materia}</CTableDataCell>
                 <CTableDataCell>{materia.grupo}</CTableDataCell>
                 <CTableDataCell>{materia.departamento}</CTableDataCell>
@@ -72,6 +72,7 @@ function Materias() {
             {}
           </CTableBody>
         </CTable>
+        {/* 
         <nav aria-label="Page navigation example">
           <ul className="pagination justify-content-end">
             <li className="page-item disabled">
@@ -100,7 +101,7 @@ function Materias() {
               </a>
             </li>
           </ul>
-        </nav>
+        </nav>*/}
       </CRow>
     </CContainer>
   )

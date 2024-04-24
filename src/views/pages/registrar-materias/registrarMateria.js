@@ -9,6 +9,7 @@ import {
   CFormInput,
   CFormSelect,
   CInputGroup,
+  CFormFeedback, 
   CInputGroupText,
   CRow,
   CBadge,
@@ -17,13 +18,39 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilText, cilListNumbered, cilSortNumericDown } from '@coreui/icons'
 import { cilCalendar } from '@coreui/icons'
 import 'react-datepicker/dist/react-datepicker.css'
-//https://github.com/Hacker0x01/react-datepicker
 import DatePicker from 'react-datepicker'
 import { useAppContext } from '../../../hooks'
 import { start } from '@popperjs/core'
 import { AGREGAR_MATERIA } from '../../../actions'
 import { useNavigate } from 'react-router-dom'
 import { crearMaterias } from '../agregar-materia/servicios'
+import { getMaterias } from '../agregar-materia/servicios'
+
+
+
+
+/** 
+function leerMaterias (mat) {
+  console.log("entro")
+  var respuesta = false
+  const resultados = async () => {
+    const response = await getMaterias()
+    console.log("aqui")
+    for(var i=0;i<response.length;i++){
+      console.log(response[i].materia)
+      if(mat==response[i].materia){
+        imprimir()
+      }
+    }
+  }
+
+  
+  
+  resultados()
+
+}*/
+
+
 
 const registrarMateria = () => {
   const navigate = useNavigate()
@@ -31,6 +58,9 @@ const registrarMateria = () => {
   const [codigo, setCodigo] = useState('')
   const [grupo, setGrupo] = useState('')
   const [materia, setMateria] = useState('')
+  const [error, setError] = useState(false);
+  const [error2, setError2] = useState(false);
+  const [bien, setBien] = useState(false);
 
   const {
     state: { materias },
@@ -38,14 +68,16 @@ const registrarMateria = () => {
   } = useAppContext()
 
   const guardarMateria = async (e) => {
-    console.log('guardar Materia')
-    e.preventDefault()
-    var cantDig = codigo.replace(/[^0-9]/g, '').length
-    console.log(departamento)
-    if (departamento != '' && codigo != '' && materia != 0) {
-      if (cantDig == 7) {
-        console.log(departamento)
 
+    e.preventDefault()
+
+    var cantDig = codigo.replace(/[^0-9]/g,"").length;
+    if(departamento != '' && codigo != '' && materia != 0 && grupo !=''){
+
+
+      if(cantDig == 7){  
+
+        
         const nuevaMateria = {
           codigo,
           materia,
@@ -53,15 +85,27 @@ const registrarMateria = () => {
           departamento,
         }
         await crearMaterias(nuevaMateria)
-        //dispatch({ type: AGREGAR_MATERIA, payload: nuevaMateria })
-        navigate('/administracion/agregar-materia')
-      } else {
-        alert('El codigo es incorrecto')
+        setError(false);
+        setError2(false);
+        setBien(true);
+        setTimeout(() => {
+          navigate('/administracion/agregar-materia')
+        }, 1500);
+       
+  
+
+
+      }else{
+        setError(false);
+        setError2(true);
       }
-    } else {
-      alert('Llenar todos los campos')
+    }else{
+      setError2(false);
+      setError(true);
     }
   }
+
+
 
   return (
     <div className="container">
@@ -121,13 +165,32 @@ const registrarMateria = () => {
                         Departamento de Informática-Sistemas
                       </option>
                       <option value="Civil">Departamento de Civil</option>
-                      <option value="Eléctrica-Electrónica">
-                        Departamento de Eléctrica-Electrónica
-                      </option>
-                      <option value="Mecínica">Departamento de Mecánica</option>
-                      {}
-                    </CFormSelect>
-                  </CInputGroup>
+                      <option value="Eléctrica-Electrónica">Departamento de Eléctrica-Electrónica</option>
+                      <option value="Mecánica">Departamento de Mecánica</option>
+                       {}
+                      </CFormSelect>
+                      </CInputGroup>
+
+                     
+                    {error && (
+                      <CFormFeedback className="d-block text-center font-weight-extrabold" style={{ color: 'red', backgroundColor: '#FFC4C4', padding: '5px', borderRadius: '5px', marginBottom: '15px', border: '1px solid red'}}>
+                        Llenar todos los campos
+                      </CFormFeedback>
+                    )}
+
+                    {error2 && (
+                      <CFormFeedback className="d-block text-center font-weight-extrabold" style={{ color: 'red', backgroundColor: '#FFC4C4', padding: '5px', borderRadius: '5px', marginBottom: '15px', border: '1px solid red'}}>
+                        El código es incorrecto
+                      </CFormFeedback>
+                    )}
+
+                    {bien && (
+                      <CFormFeedback className="d-block text-center font-weight-extrabold" style={{ color: 'green', backgroundColor: '#C3FDE1', padding: '5px', borderRadius: '5px', marginBottom: '15px', border: '1px solid green'}}>
+                        Materia registrada con éxito
+                      </CFormFeedback>
+                    )}
+              
+                    
 
                   <div className="d-grid">
                     <CButton color="primary" onClick={(e) => guardarMateria(e)}>

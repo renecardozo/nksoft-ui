@@ -19,8 +19,8 @@ import { login } from './service'
 import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
-  const [codeSis, setCodeSis] = useState('200401203')
-  const [cii, setCII] = useState('6422440')
+  const [codeSis, setCodeSis] = useState('')
+  const [cii, setCII] = useState('')
   const [unauthorize, setUnathorized] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()

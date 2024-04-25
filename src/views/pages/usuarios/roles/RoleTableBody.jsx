@@ -2,7 +2,6 @@ import { CTableBody, CTableRow, CTableDataCell, CButton } from '@coreui/react'
 import { Link } from 'react-router-dom'
 
 export default function RoleTableBody({ roles, updateStateRole }) {
-  const onEdit = (id) => {}
   const onDelete = (id) => {
     updateStateRole(id)
   }

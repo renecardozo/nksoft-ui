@@ -75,7 +75,6 @@ export default function RoleForm() {
     return true
   }
 
-  // Función para comparar los permisos de un rol con los permisos de la secretaria
   const comparePermissions = (role) => {
     const fotmDataPermissions = formData.permissions
     return arraysEqual(role.permissions, fotmDataPermissions)

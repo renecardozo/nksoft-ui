@@ -16,6 +16,7 @@ import { AppSidebarNav } from './AppSidebarNav'
 import { logo } from 'src/assets/brand/logo'
 import { sygnet } from 'src/assets/brand/sygnet'
 import { fcytLogo } from 'src/assets/brand/fcyt-logo'
+
 import { CImage } from '@coreui/react'
 
 // sidebar nav config
@@ -44,8 +45,8 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
+          <CIcon customClassName="sidebar-brand-full" icon={fcytLogo} height={32} />
           <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} />
-          <CImage rounded thumbnail src="src/assets/brand/fcyt.png" width={250} height={200} />
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"

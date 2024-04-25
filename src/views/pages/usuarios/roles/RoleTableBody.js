@@ -25,7 +25,10 @@ export default function RoleTableBody({ roles, updateStateRole }) {
               )}
             </CTableDataCell>
             <CTableDataCell className="col-1">
-              <Link to={`/configurar/editar-role/${role.id}`} className="btn btn-outline-warning mb-2">
+              <Link
+                to={`/configurar/editar-role/${role.id}`}
+                className="btn btn-outline-warning mb-2"
+              >
                 Editar
               </Link>
             </CTableDataCell>

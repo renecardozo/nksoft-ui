@@ -1,5 +1,4 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
 import {
   CButton,
   CCard,
@@ -12,11 +11,38 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CAlert,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import { login } from './service'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
+  const [codeSis, setCodeSis] = useState('200401203')
+  const [cii, setCII] = useState('6422440')
+  const [unauthorize, setUnathorized] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+  const loginSession = (event) => {
+    event.preventDefault()
+    setLoading(true)
+    login(codeSis, cii)
+      .then((response) => {
+        localStorage.setItem('user_data', JSON.stringify(response.data))
+        setLoading(false)
+        navigate('/dashboard')
+      })
+      .catch((error) => {
+        setUnathorized(true)
+        setLoading(false)
+      })
+  }
+  useEffect(() => {
+    if (localStorage.getItem('user_data')) {
+      navigate('/dashboard')
+    }
+  }, [])
   return (
     <div
       id="background-div"
@@ -35,7 +61,12 @@ const Login = () => {
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Usuario" autoComplete="Usuario" />
+                      <CFormInput
+                        placeholder="Codigo SIS"
+                        autoComplete="Codigo SIS"
+                        value={codeSis}
+                        onChange={(e) => setCodeSis(e.target.value)}
+                      />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -43,41 +74,34 @@ const Login = () => {
                       </CInputGroupText>
                       <CFormInput
                         type="password"
-                        placeholder="Contraseña"
-                        autoComplete="current-password"
+                        placeholder="CI"
+                        autoComplete="CI"
+                        value={cii}
+                        onChange={(e) => setCII(e.target.value)}
                       />
                     </CInputGroup>
                     <CRow>
+                      {unauthorize && (
+                        <CCol xs={12}>
+                          <CAlert color="danger">Acceso no autorizado</CAlert>
+                        </CCol>
+                      )}
+                    </CRow>
+                    <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton
+                          color="primary"
+                          className="px-4"
+                          onClick={(e) => loginSession(e)}
+                          disabled={loading}
+                        >
                           Ingresar
                         </CButton>
                       </CCol>
-                      {/* <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
-                          Forgot password?
-                        </CButton>
-                      </CCol> */}
                     </CRow>
                   </CForm>
                 </CCardBody>
               </CCard>
-              {/* <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
-                <CCardBody className="text-center">
-                  <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
-                      </CButton>
-                    </Link>
-                  </div>
-                </CCardBody>
-              </CCard> */}
             </CCardGroup>
           </CCol>
         </CRow>

@@ -15,10 +15,22 @@ const AgregarMateria = React.lazy(() => import('./views/pages/agregar-materia/Ag
 const registrarMateria = React.lazy(
   () => import('./views/pages/registrar-materias/registrarMateria'),
 )
+const AgregarUnidad = React.lazy(() => import('./views/pages/agregar-unidad/AgregarUnidad'))
+const registrarUnidad = React.lazy(() => import('./views/pages/registrar-unidad/registrarUnidad'))
+const AgregarDepartamento = React.lazy(
+  () => import('./views/pages/agregar-departamento/AgregarDepartamento'),
+)
+const RegistrarDepartamento = React.lazy(
+  () => import('./views/pages/registrar-departamentos/registrarDepartamento'),
+)
+const verAulas = React.lazy(() => import('./views/pages/agregar-unidad/vistaAulas'))
+
 const ListUser = React.lazy(() => import('./views/pages/usuarios/users/List.jsx'))
 const FormUser = React.lazy(() => import('./views/pages/usuarios/users/Form.jsx'))
 import Feriados from './views/pages/module-feriados/feriados/Feriados'
 import DetailsFeriado from './views/pages/module-feriados/details-feriado/DetailsFeriado.js'
+import Login from './views/pages/login/Login'
+import { element } from 'prop-types'
 const CrearFeriados = React.lazy(
   () => import('./views/pages/module-feriados/crear-feriados/CreateFeriados'),
 )
@@ -51,6 +63,22 @@ const routes = [
   { path: '/users', name: 'Usuarios', element: ListUser },
   { path: '/users/create', name: 'Crear Usuario', element: FormUser },
   { path: '/users/:id/edit', name: 'Editar Usuario', element: FormUser },
+  //unidades
+  { path: '/administracion/agregar-unidad', name: 'Unidades', element: AgregarUnidad },
+  { path: '/administracion/registrar-unidad', name: 'Agregar unidad', element: registrarUnidad },
+  { path: '/administracion/Departamentos', name: 'Departamentos', element: AgregarDepartamento },
+  {
+    path: '/administracion/registrar-departamentos',
+    name: 'Agregar Departamento',
+    element: RegistrarDepartamento,
+  },
+  { path: '/administracion/unidades/:unidadId/aulas', name: 'Aulas', element: verAulas },
+  // Login
+  {
+    path: '/login',
+    name: 'Login',
+    element: Login,
+  },
 ]
 
 export default routes

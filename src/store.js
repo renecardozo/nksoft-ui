@@ -6,6 +6,8 @@ import {
   BORRAR_FERIADO,
   AGREGAR_MATERIA,
   LISTAR_MATERIA,
+  AGREGAR_UNIDAD,
+  LISTAR_UNIDAD,
 } from './actions'
 import { getFeriados } from './views/pages/module-feriados/service'
 
@@ -13,6 +15,7 @@ export const initialState = {
   sidebarShow: true,
   theme: 'light',
   feriados: [],
+  unidades: [],
 }
 
 export const reducer = (state = initialState, { type, ...rest }) => {
@@ -29,6 +32,13 @@ export const reducer = (state = initialState, { type, ...rest }) => {
       return {
         ...state,
         materias: [...state.materias, rest.payload],
+      }
+    }
+    case AGREGAR_UNIDAD: {
+      console.log(' agregarrr')
+      return {
+        ...state,
+        unidades: [...state.unidades, rest.payload],
       }
     }
 
@@ -52,6 +62,10 @@ export const reducer = (state = initialState, { type, ...rest }) => {
         ...state,
         feriados: [...state.postList.filter((feriado) => feriado.id !== action.id)],
       }
+
+    case LISTAR_UNIDAD:
+      return state
+
     default:
       return state
   }

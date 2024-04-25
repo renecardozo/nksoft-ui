@@ -20,7 +20,6 @@ export default function RoleForm() {
     setFormData(response)
   }
   const getRoles = async () => {
-    console.log(id)
     let url = 'api/role-permissions'
     const response = await APISERVICE.get(url)
     setRoles(response.filter(item=>item.id !== +id));
@@ -115,7 +114,6 @@ export default function RoleForm() {
       <CToastBody>{message}</CToastBody>
     </CToast>
   )
-  console.log(roles)
   useEffect(() => {
     if (id) {
       getRole(id)

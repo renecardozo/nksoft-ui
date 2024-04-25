@@ -13,23 +13,31 @@ export default function RoleTableBody({ roles, updateStateRole }) {
             <CTableDataCell className="col-1">{index}</CTableDataCell>
             <CTableDataCell className="col-4">{role.name}</CTableDataCell>
             <CTableDataCell className="col-2">
-              {role.state ? (
-                <CButton color="success" variant="ghost" onClick={() => onDelete(role.id)}>
-                  Activo
-                </CButton>
+              {role.name !== 'Administrador' ? (
+                role.state ? (
+                  <CButton color="success" variant="ghost" onClick={() => onDelete(role.id)}>
+                    Activo
+                  </CButton>
+                ) : (
+                  <CButton color="danger" variant="ghost" onClick={() => onDelete(role.id)}>
+                    Inactivo
+                  </CButton>
+                )
               ) : (
-                <CButton color="danger" variant="ghost" onClick={() => onDelete(role.id)}>
-                  Inactivo
-                </CButton>
+                ''
               )}
             </CTableDataCell>
             <CTableDataCell className="col-1">
-              <Link
-                to={`/configurar/editar-role/${role.id}`}
-                className="btn btn-outline-warning mb-2"
-              >
-                Editar
-              </Link>
+              {role.name !== 'Administrador' ? (
+                <Link
+                  to={`/configurar/editar-role/${role.id}`}
+                  className="btn btn-outline-warning mb-2"
+                >
+                  Editar
+                </Link>
+              ) : (
+                ''
+              )}
             </CTableDataCell>
           </CTableRow>
         ))}

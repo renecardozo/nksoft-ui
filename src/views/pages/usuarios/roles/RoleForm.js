@@ -12,7 +12,7 @@ export default function RoleForm() {
   const [permissions, setPermissions] = useState([])
   const [validationError, setValidationError] = useState({})
   const [toast, addToast] = useState(null)
-  const [roles, setRoles] = useState({ roleName: '', permissions: [] })
+  const [roles, setRoles] = useState({ id:'',roleName: '', permissions: [] })
 
   const getRole = async () => {
     let url = `api/role/${id}`
@@ -22,7 +22,7 @@ export default function RoleForm() {
   const getRoles = async () => {
     let url = 'api/role-permissions'
     const response = await APISERVICE.get(url)
-    setRoles(response)
+    setRoles(response.filter(item=>item.id !== +id));
   }
 
   const getPermissions = async () => {
@@ -117,6 +117,7 @@ export default function RoleForm() {
   useEffect(() => {
     if (id) {
       getRole(id)
+      
     }
     getPermissions()
     getRoles()

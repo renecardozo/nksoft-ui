@@ -15,6 +15,7 @@ import avatar8 from './../../assets/images/avatars/8.jpg'
 
 const AppHeaderDropdown = () => {
   const navigate = useNavigate()
+  const userData = JSON.parse(localStorage.getItem('user_data'))
   const logout = () => {
     localStorage.removeItem('user_data')
     navigate('/')
@@ -26,26 +27,16 @@ const AppHeaderDropdown = () => {
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">Account</CDropdownHeader>
-        <CDropdownItem href="#">
-          <CIcon icon={cilBell} className="me-2" />
-          Updates
-          <CBadge color="info" className="ms-2">
-            42
-          </CBadge>
-        </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem>
           <CIcon icon={cilEnvelopeOpen} className="me-2" />
-          Messages
+          {userData && userData.email}
           <CBadge color="success" className="ms-2">
-            42
+            Activo
           </CBadge>
         </CDropdownItem>
-        <CDropdownItem href="#">
-          <CIcon icon={cilTask} className="me-2" />
-          Tasks
-          <CBadge color="danger" className="ms-2">
-            42
-          </CBadge>
+        <CDropdownItem>
+          <CIcon icon={cilEnvelopeOpen} className="me-2" />
+          {userData && userData.role.name}
         </CDropdownItem>
         <CDropdownItem onClick={() => logout()}>
           <CIcon icon={cilAccountLogout} className="me-2" />

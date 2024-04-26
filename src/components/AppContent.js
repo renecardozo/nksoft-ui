@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState, useCallback } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { CContainer, CSpinner } from '@coreui/react'
 
@@ -6,12 +6,17 @@ import { CContainer, CSpinner } from '@coreui/react'
 import routes from '../routes'
 
 const AppContent = () => {
-  const isAuthenticated = localStorage.getItem('user_data')
+  const user_data = localStorage.getItem('user_data')
+  const isAuthenticated = JSON.parse(user_data)
+  const allRoutes = routes
+  useEffect(() => {
+    console.log('aqui tambien para proteger las rutas')
+  }, [])
   return (
     <CContainer className="px-4" lg>
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
-          {routes.map((route, idx) => {
+          {allRoutes.map((route, idx) => {
             return (
               route.element && (
                 <Route

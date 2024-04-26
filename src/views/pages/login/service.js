@@ -7,3 +7,11 @@ export const login = (codeSis, cii) => {
   }
   return axios.post('http://localhost:8000/api/login', data)
 }
+
+export const loginAsAdmin = (email, password) => {
+  const data = {
+    email,
+    password,
+  }
+  return axios.post('http://localhost:8000/api/admin', data)
+}

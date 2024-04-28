@@ -1,4 +1,2 @@
-import Solicitudes from './Solicitudes';
-export {
-  Solicitudes
-}
+import Solicitudes from './Solicitudes'
+export { Solicitudes }

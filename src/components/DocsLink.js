@@ -28,4 +28,4 @@ DocsLink.propTypes = {
   text: PropTypes.string,
 }
 
-export default React.memo(DocsLink)
+export default DocsLink

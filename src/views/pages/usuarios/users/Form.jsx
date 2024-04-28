@@ -57,7 +57,6 @@ export default function ListUser() {
   }, [])
   const handleSubmit = async (event, values) => {
     event.preventDefault()
-
     validateData(values).then((resp) => {
       const service = id
         ? APISERVICE.put(`api/users/${id}`, data)
@@ -132,7 +131,16 @@ export default function ListUser() {
       return Promise.resolve(true)
     }
   }
-
+  const validOnlyNumbers = (event) => {
+    if (!/[0-9]/.test(event.key)) {
+      event.preventDefault()
+    }
+  }
+  const lettersOnly = (event) => {
+    if (!/^[a-zA-Z]+$/.test(event.key)) {
+      event.preventDefault()
+    }
+  }
   const handleInputChange = (event) => {
     const target = event.target
     const value = target.value
@@ -165,6 +173,7 @@ export default function ListUser() {
                 <CFormInput
                   type="text"
                   name="name"
+                  onKeyPress={lettersOnly}
                   id="name"
                   invalid={verify.name.errors.length > 0}
                   feedbackInvalid={verify.name.errors[0]}
@@ -178,6 +187,7 @@ export default function ListUser() {
                   type="text"
                   name="last_name"
                   id="last_name"
+                  onKeyPress={lettersOnly}
                   invalid={verify.last_name.errors.length > 0}
                   feedbackInvalid={verify.last_name.errors[0]}
                   value={data.last_name}
@@ -202,6 +212,7 @@ export default function ListUser() {
                   type="text"
                   name="ci"
                   id="ci"
+                  maxLength={12}
                   invalid={verify.ci.errors.length > 0}
                   feedbackInvalid={verify.ci.errors[0]}
                   value={data.ci}
@@ -212,6 +223,8 @@ export default function ListUser() {
                 <CFormLabel htmlFor="code_sis">Codigo Sis</CFormLabel>
                 <CFormInput
                   type="text"
+                  onKeyPress={validOnlyNumbers}
+                  maxLength={9}
                   name="code_sis"
                   id="code_sis"
                   invalid={verify.code_sis.errors.length > 0}
@@ -225,6 +238,8 @@ export default function ListUser() {
                 <CFormInput
                   type="text"
                   name="phone"
+                  onKeyPress={(event) => validOnlyNumbers(event)}
+                  maxLength={8}
                   id="phone"
                   invalid={verify.phone.errors.length > 0}
                   feedbackInvalid={verify.phone.errors[0]}

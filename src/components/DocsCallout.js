@@ -35,4 +35,4 @@ DocsCallout.propTypes = {
   name: PropTypes.string,
 }
 
-export default React.memo(DocsCallout)
+export default DocsCallout

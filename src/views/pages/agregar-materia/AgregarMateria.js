@@ -50,22 +50,18 @@ function Materias() {
         <CTable>
           <CTableHead>
             <CTableRow>
-
-
-              <CTableHeaderCell scope="col">Código</CTableHeaderCell>
               <CTableHeaderCell scope="col">Materia</CTableHeaderCell>
               <CTableHeaderCell scope="col">Grupo</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Docente</CTableHeaderCell>
               <CTableHeaderCell scope="col">Departamento</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
             {materias.map((materia) => (
               <CTableRow key={materia.id}>
-                
-                
-                <CTableDataCell scope ="row">{materia.codigo}</CTableDataCell>
                 <CTableDataCell>{materia.materia}</CTableDataCell>
                 <CTableDataCell>{materia.grupo}</CTableDataCell>
+                <CTableDataCell>{materia.docente}</CTableDataCell>
                 <CTableDataCell>{materia.departamento}</CTableDataCell>
               </CTableRow>
             ))}

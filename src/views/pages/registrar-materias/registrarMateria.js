@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
   CButton,
@@ -17,7 +17,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilText, cilListNumbered, cilSortNumericDown } from '@coreui/icons'
-import { cilCalendar } from '@coreui/icons'
+import { cilCalendar, cilBuilding } from '@coreui/icons'
 import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker from 'react-datepicker'
 import { useAppContext } from '../../../hooks'
@@ -29,39 +29,42 @@ import { getMaterias } from '../agregar-materia/servicios'
 
 
 
-
-/** 
-function leerMaterias (mat) {
-  console.log("entro")
-  var respuesta = false
-  const resultados = async () => {
-    const response = await getMaterias()
-    console.log("aqui")
-    for(var i=0;i<response.length;i++){
-      console.log(response[i].materia)
-      if(mat==response[i].materia){
-        imprimir()
-      }
-    }
-  }
-
-  
-  
-  resultados()
-
-}*/
-
-
-
 const registrarMateria = () => {
   const navigate = useNavigate()
+  const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState(null);
+  const [departamentos, setDepartamentos] = useState([]);
+
+
   const [departamento, setDepartamento] = useState('')
   const [codigo, setCodigo] = useState('')
   const [grupo, setGrupo] = useState('')
+  const [docente, setDocentes] = useState('')
   const [materia, setMateria] = useState('')
   const [error, setError] = useState(false);
   const [error2, setError2] = useState(false);
   const [bien, setBien] = useState(false);
+
+  useEffect(() => {
+    const obtenerDepartamentos = async () => {
+        try {
+            const response = await fetch('http://localhost:8000/api/departamentos', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setDepartamentos(data);
+            } else {
+                console.error('Error al obtener departamentos');
+            }
+        } catch (error) {
+            console.error('Error de red:', error);
+        }
+    };
+    obtenerDepartamentos();
+}, []);
 
   const {
     state: { materias },
@@ -74,7 +77,7 @@ const registrarMateria = () => {
 
     var cantDig = codigo.replace(/[^0-9]/g,"").length;
     if(departamento != '' && codigo != '' && materia != 0 && grupo !=''){
-
+    console.log(docente)
 
       if(cantDig == 7){  
 
@@ -83,6 +86,7 @@ const registrarMateria = () => {
           codigo,
           materia,
           grupo,
+          docente,
           departamento,
         }
         await crearMaterias(nuevaMateria)
@@ -105,6 +109,7 @@ const registrarMateria = () => {
       setError(true);
     }
   }
+
 
 
 
@@ -156,6 +161,17 @@ const registrarMateria = () => {
                     <CInputGroupText>
                       <CIcon icon={cilText} />
                     </CInputGroupText>
+                    <CFormInput
+                      placeholder="Docente"
+                      autoComplete="docente"
+                      onChange={(e) => setDocentes(e.target.value)}
+                    />
+                  </CInputGroup>
+
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilText} />
+                    </CInputGroupText>
                     <CFormSelect onChange={(e) => setDepartamento(e.target.value)}>
                       <option value="">Seleccione un departamento</option>
                       <option value="Industrias">Departamento de Industrias</option>
@@ -171,6 +187,30 @@ const registrarMateria = () => {
                        {}
                       </CFormSelect>
                       </CInputGroup>
+
+                      <CInputGroup className="mb-3">
+                                        <CInputGroupText>
+                                            <CIcon icon={cilBuilding} />
+                                        </CInputGroupText>
+                                        <select
+                                            className="form-select"
+                                            value={departamentoSeleccionado ? departamentoSeleccionado.id : ''}
+                                            onChange={(e) => {
+                                                const selectedDept = departamentos.find(dep => dep.id === parseInt(e.target.value));
+                                                console.log('Departamento seleccionado:', selectedDept);
+                                                setDepartamentoSeleccionado(selectedDept);
+                                            }}
+                                        >
+                                            <option value="">Selecciona un departamento</option>
+                                            {departamentos.map(dept => (
+                                                <option key={dept.id} value={dept.id}>
+                                                    {dept.nombreDepartamentos}
+                                                </option>
+                                            ))}
+                                        </select>
+                    </CInputGroup>
+
+
 
                      
                     {error && (

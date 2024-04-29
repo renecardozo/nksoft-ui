@@ -11,6 +11,7 @@ const CrearRoles = React.lazy(() => import('./views/pages/usuarios/roles/RoleFor
 const EditarRole = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
 const Calendario = React.lazy(() => import('./components/calendario/Calendario'))
 const AgregarMateria = React.lazy(() => import('./views/pages/agregar-materia/AgregarMateria'))
+const verMateria = React.lazy(() => import('./views/pages/ver-materia/verMateria'))
 const registrarMateria = React.lazy(
   () => import('./views/pages/registrar-materias/registrarMateria'),
 )
@@ -49,6 +50,8 @@ const routes = [
   { path: '/administracion/feriados', name: 'Feriados', element: Feriados },
   { path: '/administracion/crear-feriados', name: 'Crear Feriado', element: CrearFeriados },
   { path: '/administracion/agregar-materia', name: 'Agregar Materia', element: AgregarMateria },
+  { path: '/administracion/ver-materia', name: 'Ver Materia', element: verMateria },
+  
   {
     path: '/administracion/feriados/:id/details',
     name: 'Detalles Feriado',

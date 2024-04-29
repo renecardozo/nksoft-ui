@@ -34,7 +34,6 @@ export default function RoleForm() {
   const createRole = async (body) => {
     let url = 'api/create'
     const response = await APISERVICE.post(url, body)
-    console.log(response)
     if (response.success) {
       navigate('/configurar/roles')
     } else {

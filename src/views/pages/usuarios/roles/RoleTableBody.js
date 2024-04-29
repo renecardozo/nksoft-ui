@@ -1,3 +1,5 @@
+import { cilPen } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
 import { CTableBody, CTableRow, CTableDataCell, CButton } from '@coreui/react'
 import { Link } from 'react-router-dom'
 
@@ -10,10 +12,10 @@ export default function RoleTableBody({ roles, updateStateRole }) {
       {roles &&
         roles.map((role, index) => (
           <CTableRow key={role.id} className="py-5">
-            <CTableDataCell className="col-1">{index}</CTableDataCell>
+            <CTableDataCell className="col-1">{index+1}</CTableDataCell>
             <CTableDataCell className="col-4">{role.name}</CTableDataCell>
             <CTableDataCell className="col-2">
-              {role.name !== 'Administrador' ? (
+              {role.name !== 'SuperAdmin' ? (
                 role.state ? (
                   <CButton color="success" variant="ghost" onClick={() => onDelete(role.id)}>
                     Activo
@@ -28,12 +30,12 @@ export default function RoleTableBody({ roles, updateStateRole }) {
               )}
             </CTableDataCell>
             <CTableDataCell className="col-1">
-              {role.name !== 'Administrador' ? (
+              {role.name !== 'SuperAdmin' ? (
                 <Link
                   to={`/configurar/editar-role/${role.id}`}
-                  className="btn btn-outline-warning mb-2"
+                  className="btn btn-primary mb-2"
                 >
-                  Editar
+                  <CIcon icon={cilPen} />
                 </Link>
               ) : (
                 ''

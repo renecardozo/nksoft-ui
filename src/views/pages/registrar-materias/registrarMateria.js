@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CButton,
   CCard,
@@ -15,65 +15,98 @@ import {
   CBadge,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser, cilText, cilListNumbered, cilSortNumericDown } from '@coreui/icons'
+import { cilLockLocked, cilUser, cilText, cilBuilding, cilListNumbered, cilSortNumericDown } from '@coreui/icons'
 import { cilCalendar } from '@coreui/icons'
 import 'react-datepicker/dist/react-datepicker.css'
+//https://github.com/Hacker0x01/react-datepicker
 import DatePicker from 'react-datepicker'
 import { useAppContext } from '../../../hooks'
 import { start } from '@popperjs/core'
 import { AGREGAR_MATERIA } from '../../../actions'
 import { useNavigate } from 'react-router-dom'
-import { crearMaterias } from '../agregar-materia/servicios'
-import { getMaterias } from '../agregar-materia/servicios'
-
-
-
-
-/** 
-function leerMaterias (mat) {
-  console.log("entro")
-  var respuesta = false
-  const resultados = async () => {
-    const response = await getMaterias()
-    console.log("aqui")
-    for(var i=0;i<response.length;i++){
-      console.log(response[i].materia)
-      if(mat==response[i].materia){
-        imprimir()
-      }
-    }
-  }
-
-  
-  
-  resultados()
-
-}*/
-
-
+import { crearMaterias, getMaterias , guardarMaterias} from '../agregar-materia/servicios'
 
 const registrarMateria = () => {
   const navigate = useNavigate()
-  const [departamento, setDepartamento] = useState('')
+
+  const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState(null);
+  const [departamentos, setDepartamentos] = useState([]);
+
   const [codigo, setCodigo] = useState('')
   const [grupo, setGrupo] = useState('')
+  const [docente, setDocente] = useState('')
   const [materia, setMateria] = useState('')
-  const [error, setError] = useState(false);
-  const [error2, setError2] = useState(false);
-  const [bien, setBien] = useState(false);
+  const [error, setError] = useState(false)
+  const [error2, setError2] = useState(false)
+  const [error3, setError3] = useState(false)
+  const [bien, setBien] = useState(false)
+
+
 
   const {
     state: { materias },
     dispatch,
   } = useAppContext()
 
+  useEffect(() => {
+    const obtenerDepartamentos = async () => {
+        try {
+            const response = await fetch('http://localhost:8000/api/departamentos', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setDepartamentos(data);
+            } else {
+                console.error('Error al obtener departamentos');
+            }
+        } catch (error) {
+            console.error('Error de red:', error);
+        }
+    };
+    obtenerDepartamentos();
+  }, []);
+
+
   const guardarMateria = async (e) => {
 
-    e.preventDefault()
+    e.preventDefault();
 
+    var hayMateria = false;
+
+    try {
+        const respuesta = await fetch('http://localhost:8000/api/materiasDuplicado', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                materia: materia,
+                grupo: grupo
+            })
+        });
+
+        if (!respuesta.ok) {
+            throw new Error('Error en la solicitud.');
+        }
+
+        const data = await respuesta.json();
+
+        if (data.duplicados) {
+            hayMateria = true;
+        } else {
+            hayMateria = false;
+        }
+    } catch (error) {
+        console.error('Error al verificar duplicados:', error);
+    }
+    
+  
     var cantDig = codigo.replace(/[^0-9]/g,"").length;
-    if(departamento != '' && codigo != '' && materia != 0 && grupo !=''){
-
+    if(codigo != '' && materia != 0 && grupo !='' && docente != '' &&  departamentoSeleccionado && departamentoSeleccionado.id){
 
       if(cantDig == 7){  
 
@@ -82,30 +115,38 @@ const registrarMateria = () => {
           codigo,
           materia,
           grupo,
-          departamento,
+          docente,
+          departamento: departamentoSeleccionado.nombreDepartamentos,
         }
-        await crearMaterias(nuevaMateria)
-        setError(false);
-        setError2(false);
-        setBien(true);
-        setTimeout(() => {
-          navigate('/administracion/agregar-materia')
-        }, 1500);
-       
+        if (!hayMateria) {
+          await guardarMaterias(nuevaMateria);
+          setError(false);
+          setError2(false);
+          setError3(false);
+          setBien(true);
+
+          setTimeout(() => {
+              navigate('/administracion/agregar-materia');
+          }, 1500);
+        } else {
+          setError(false);
+          setError2(false);
+         setError3(true);   
+      }
   
 
 
       }else{
         setError(false);
+        setError3(false);
         setError2(true);
       }
     }else{
       setError2(false);
+      setError3(false);
       setError(true);
     }
   }
-
-
 
   return (
     <div className="container">
@@ -155,24 +196,39 @@ const registrarMateria = () => {
                     <CInputGroupText>
                       <CIcon icon={cilText} />
                     </CInputGroupText>
-                    <CFormSelect onChange={(e) => setDepartamento(e.target.value)}>
-                      <option value="">Seleccione un departamento</option>
-                      <option value="Industrias">Departamento de Industrias</option>
-                      <option value="Química">Departamento de Química</option>
-                      <option value="Física">Departamento de Física</option>
-                      <option value="Matemítica">Departamento de Matemática</option>
-                      <option value="Informática-Sistemas">
-                        Departamento de Informática-Sistemas
-                      </option>
-                      <option value="Civil">Departamento de Civil</option>
-                      <option value="Eléctrica-Electrónica">Departamento de Eléctrica-Electrónica</option>
-                      <option value="Mecánica">Departamento de Mecánica</option>
-                       {}
-                      </CFormSelect>
-                      </CInputGroup>
+                    <CFormInput
+                      placeholder="Docente"
+                      autoComplete="docente"
+                      onChange={(e) => setDocente(e.target.value)}
+                    />
+                  </CInputGroup>
 
+
+                  <CInputGroup className="mb-3">
+                                        <CInputGroupText>
+                                            <CIcon icon={cilBuilding} />
+                                        </CInputGroupText>
+                                        <select
+                                            className="form-select"
+                                            value={departamentoSeleccionado ? departamentoSeleccionado.id : ''}
+                                            onChange={(e) => {
+                                                const selectedDept = departamentos.find(dep => dep.id === parseInt(e.target.value));
+                                                console.log('Departamento seleccionado:', selectedDept);
+                                                setDepartamentoSeleccionado(selectedDept);
+                                            }}
+                                        >
+                                            <option value="">Selecciona un departamento</option>
+                                            {departamentos.map(dept => (
+                                                <option key={dept.id} value={dept.id}>
+                                                    {dept.nombreDepartamentos}
+                                                </option>
+                                            ))}
+                                        </select>
+                   </CInputGroup>
+
+                  
                      
-                    {error && (
+                  {error && (
                       <CFormFeedback className="d-block text-center font-weight-extrabold" style={{ color: 'red', backgroundColor: '#FFC4C4', padding: '5px', borderRadius: '5px', marginBottom: '15px', border: '1px solid red'}}>
                         Llenar todos los campos
                       </CFormFeedback>
@@ -180,9 +236,16 @@ const registrarMateria = () => {
 
                     {error2 && (
                       <CFormFeedback className="d-block text-center font-weight-extrabold" style={{ color: 'red', backgroundColor: '#FFC4C4', padding: '5px', borderRadius: '5px', marginBottom: '15px', border: '1px solid red'}}>
-                        El código es incorrecto
+                        El código debe tener 7 digitos
                       </CFormFeedback>
                     )}
+
+                  {error3 && (
+                      <CFormFeedback className="d-block text-center font-weight-extrabold" style={{ color: 'red', backgroundColor: '#FFC4C4', padding: '5px', borderRadius: '5px', marginBottom: '15px', border: '1px solid red'}}>
+                        La materia y grupo ya esta registrado.
+                      </CFormFeedback>
+                    )}
+
 
                     {bien && (
                       <CFormFeedback className="d-block text-center font-weight-extrabold" style={{ color: 'green', backgroundColor: '#C3FDE1', padding: '5px', borderRadius: '5px', marginBottom: '15px', border: '1px solid green'}}>
@@ -190,7 +253,6 @@ const registrarMateria = () => {
                       </CFormFeedback>
                     )}
               
-                    
 
                   <div className="d-grid">
                     <CButton color="primary" onClick={(e) => guardarMateria(e)}>

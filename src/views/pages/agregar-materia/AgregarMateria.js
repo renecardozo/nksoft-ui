@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CCard,
   CCardBody,
@@ -24,10 +24,32 @@ function Materias() {
     state: { materia },
   } = useAppContext()
   const [materias, setMaterias] = useState([])
+
+  const navigate = useNavigate();
+  
+  const handleVerMaterias = (id) => {
+   navigate('/administracion/ver-materia', { state: { id } });
+  };
+
+
   const findAll = async () => {
-    const response = await getMaterias()
-    setMaterias(response)
-  }
+    const response = await getMaterias();
+
+    // Procesar los datos para eliminar duplicados y contar el número de grupos
+    const materiasProcesadas = response.reduce((acumulador, materia) => {
+      const materiaExistente = acumulador.find(m => m.materia === materia.materia);
+
+      if (materiaExistente) {
+        materiaExistente.grupos++;
+      } else {
+        acumulador.push({ ...materia, grupos: 1 });
+      }
+
+      return acumulador;
+    }, []);
+
+    setMaterias(materiasProcesadas);
+  };
 
   useEffect(() => {
     findAll()
@@ -51,53 +73,25 @@ function Materias() {
           <CTableHead>
             <CTableRow>
               <CTableHeaderCell scope="col">Materia</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Grupo</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Docente</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Departamento</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Cantidad de grupos</CTableHeaderCell>
+
+              <CTableHeaderCell scope="col">Detalle</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
             {materias.map((materia) => (
               <CTableRow key={materia.id}>
+     
                 <CTableDataCell>{materia.materia}</CTableDataCell>
-                <CTableDataCell>{materia.grupo}</CTableDataCell>
-                <CTableDataCell>{materia.docente}</CTableDataCell>
-                <CTableDataCell>{materia.departamento}</CTableDataCell>
+                <CTableDataCell>{materia.grupos}</CTableDataCell>
+
+                <CTableDataCell><CButton color="primary" onClick={() => handleVerMaterias(materia.materia)}>Ver Materia</CButton></CTableDataCell>
               </CTableRow>
             ))}
             {}
           </CTableBody>
         </CTable>
-        {/* 
-        <nav aria-label="Page navigation example">
-          <ul className="pagination justify-content-end">
-            <li className="page-item disabled">
-              <a className="page-link" href="#" tabIndex="-1" aria-disabled="true">
-                Anterior
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                1
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                2
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                3
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                Siguiente
-              </a>
-            </li>
-          </ul>
-        </nav>*/}
+
       </CRow>
     </CContainer>
   )

@@ -70,7 +70,7 @@ const DetailsFeriado = () => {
       id,
       descripcion,
       codigo: codeSelected,
-      fecha: startDate.toISOString(),
+      fecha: new Date(startDate).toISOString(),
     }
     await editFeriado(feriadoEditado)
     navigate('/administracion/feriados')

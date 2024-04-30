@@ -16,6 +16,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CAlert,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilClock, cilText, cilBuilding, cilPlus, cilMinus } from '@coreui/icons'
@@ -40,6 +41,13 @@ const RegistrarUnidad = () => {
   const [aulas, setAulas] = useState([{ nombreAulas: '', capacidadAulas: '', unidad_id: null }])
   const [horasApertura, setHorasApertura] = useState([])
   const [horasCierre, setHorasCierre] = useState([])
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [showDuplicate, setShowDuplicate] = useState(false)
+  const [showError, setShowError] = useState(false)
+  const [showEmptyWarning, setShowEmptyWarning] = useState(false)
+  const [showHoraAperturaWarning, setShowHoraAperturaWarning] = useState(false)
+  const [showHoraCierreWarning, setShowHoraCierreWarning] = useState(false)
+  const [showHoraWarning, setShowHoraWarning] = useState(false)
 
   useEffect(() => {
     const obtenerDepartamentos = async () => {
@@ -77,32 +85,31 @@ const RegistrarUnidad = () => {
     cargarHorasDeAperturaYCierre()
   }, [])
 
-  const guardarUnidad = async () => {
+  const guardarUnidad = async (e) => {
+    e.preventDefault()
     try {
       // Verificar si se completaron los campos obligatorios
       if (nombreUnidades.trim() === '') {
-        alert('Por favor complete el nombre de la unidad')
+        setShowEmptyWarning(true)
         return
       }
       if (horaAperturaUnidades.trim() === '') {
-        alert('Por favor seleccione una hora de apertura')
+        setShowHoraAperturaWarning(true)
         return
       }
       if (horaCierreUnidades.trim() === '') {
-        alert('Por favor seleccione una hora de cierre')
+        setShowHoraCierreWarning(true)
         return
       }
       if (horaCierreUnidades.trim() <= horaAperturaUnidades.trim()) {
-        alert(
-          'La hora de cierre debe ser posterior la hora de apertura, por favor seleccione un horario válido ',
-        )
+        setShowHoraWarning(true)
         return
       }
 
       const unidades = await getUnidad()
       const unidadExistente = unidades.find((unidad) => unidad.nombreUnidades === nombreUnidades)
       if (unidadExistente) {
-        alert('El nombre de la unidad ya se encuentra registrado, por favor ingrese otro')
+        setShowDuplicate(true)
         return
       }
 
@@ -129,10 +136,20 @@ const RegistrarUnidad = () => {
       setHoraDeCierre('')
       setDepartamentoSeleccionado(null)
       setAulas([{ nombreAulas: '', capacidadAulas: '' }])
-
-      alert('Se ha registrado la unidad exitosamente')
+      setShowSuccess(true)
     } catch (error) {
-      alert('Error al registrar la unidad: ' + error.message)
+      setShowError(true)
+      console.error('Error al registrar la unidad: ' + error.message)
+    } finally {
+      setTimeout(() => {
+        setShowSuccess(false)
+        setShowDuplicate(false)
+        setShowError(false)
+        setShowEmptyWarning(false)
+        setShowHoraAperturaWarning(false)
+        setShowHoraCierreWarning(false)
+        setShowHoraWarning(false)
+      }, 3000)
     }
   }
 
@@ -239,7 +256,7 @@ const RegistrarUnidad = () => {
                     </select>
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton color="primary" onClick={guardarUnidad}>
+                    <CButton color="primary" onClick={(e) => guardarUnidad(e)}>
                       Registrar
                     </CButton>
                   </div>
@@ -297,6 +314,35 @@ const RegistrarUnidad = () => {
                 </CForm>
               </CCardBody>
             </CCard>
+          </CCol>
+        </CRow>
+        <br></br>
+        <CRow className="justify-content-center p-10">
+          <CCol>
+            {showSuccess && (
+              <CAlert color="success">Se ha registrado la unidad exitosamente</CAlert>
+            )}
+            {showDuplicate && (
+              <CAlert color="warning">
+                El nombre de la unidad ya se encuentra registrado, por favor ingrese otro
+              </CAlert>
+            )}
+            {showError && <CAlert color="danger">Error al registrar la unidad</CAlert>}
+            {showEmptyWarning && (
+              <CAlert color="warning">Por favor complete el nombre de la unidad.</CAlert>
+            )}
+            {showHoraAperturaWarning && (
+              <CAlert color="warning">Por favor seleccione una hora de apertura</CAlert>
+            )}
+            {showHoraCierreWarning && (
+              <CAlert color="warning">Por favor seleccione una hora de Cierre</CAlert>
+            )}
+            {showHoraWarning && (
+              <CAlert color="warning">
+                La hora de cierre debe ser posterior la hora de apertura, por favor seleccione un
+                horario válido{' '}
+              </CAlert>
+            )}
           </CCol>
         </CRow>
       </CContainer>

@@ -9,6 +9,9 @@ import {
   CTableHeaderCell,
   CTableRow,
   CButton,
+  CRow,
+  CCol,
+  CAlert,
 } from '@coreui/react'
 import { cilPlus, cilRoom, cilPen } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
@@ -22,6 +25,10 @@ const Unidades = () => {
   const [nombreEditado, setNombreEditado] = useState('')
   const [horaAperturaEditada, setHoraAperturaEditada] = useState('')
   const [horaCierreEditada, setHoraCierreEditada] = useState('')
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [showDuplicate, setShowDuplicate] = useState(false)
+  const [showError, setShowError] = useState(false)
+  const [showEmptyWarning, setShowEmptyWarning] = useState(false)
 
   useEffect(() => {
     const obtenerUnidades = async () => {
@@ -60,7 +67,10 @@ const Unidades = () => {
       (unidad) => unidad.nombreUnidades === nombreEditado && unidad.id !== unidadId,
     )
     if (unidadExistente) {
-      alert('El nombre de la unidad ya está en uso. Por favor, ingrese un nombre diferente.')
+      setShowDuplicate(true)
+      setTimeout(() => {
+        setShowDuplicate(false)
+      }, 3000)
       return
     }
 
@@ -93,10 +103,16 @@ const Unidades = () => {
       setHoraCierreEditada('')
 
       // Mostrar mensaje de éxito
-      alert('Unidad actualizada correctamente')
+      setShowSuccess(true)
     } catch (error) {
       console.error('Error al actualizar la unidad:', error)
-      alert('Ocurrió un error al actualizar la unidad. Por favor, inténtelo de nuevo.')
+      setShowError(true)
+    } finally {
+      setTimeout(() => {
+        setShowSuccess(false)
+        setShowDuplicate(false)
+        setShowError(false)
+      }, 3000)
     }
   }
 
@@ -206,6 +222,26 @@ const Unidades = () => {
                 <CTableBody>{unidades.map((unidad) => renderRow(unidad))}</CTableBody>
               </CTable>
             </CCardBody>
+            <CRow>
+              <CCol>
+                {showSuccess && <CAlert color="success">Unidad actualizada correctamente</CAlert>}
+                {showDuplicate && (
+                  <CAlert color="warning">
+                    El nombre de la unidad ya está en uso. Por favor, ingrese un nombre diferente.
+                  </CAlert>
+                )}
+                {showError && (
+                  <CAlert color="danger">
+                    Ocurrió un error al actualizar la unidad. Por favor, inténtelo de nuevo.
+                  </CAlert>
+                )}
+                {showEmptyWarning && (
+                  <CAlert color="warning">
+                    Por favor, ingrese un nombre para el departamento.
+                  </CAlert>
+                )}
+              </CCol>
+            </CRow>
           </CCard>
         </div>
       </div>

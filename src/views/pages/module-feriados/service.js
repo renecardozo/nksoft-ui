@@ -75,3 +75,12 @@ export const editFeriado = async (body) => {
     console.error(error)
   }
 }
+
+export const deleteFeriado = async (id) => {
+  try {
+    const { data } = await axios.delete(`http://localhost:8000/api/v1/event/${id}`)
+    return data
+  } catch (error) {
+    console.error(error)
+  }
+}

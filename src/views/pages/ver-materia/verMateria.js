@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { getMaterias } from '../agregar-materia/servicios'
 
 import { Link, useNavigate } from 'react-router-dom'
@@ -21,15 +21,14 @@ import {
 } from '@coreui/react'
 import { useAppContext } from '../../../hooks'
 
-
 function DetallesMateria() {
-    const location = useLocation();
-    const id = location.state?.id;
-    const navigate = useNavigate();
+  const location = useLocation()
+  const id = location.state?.id
+  const navigate = useNavigate()
 
-     console.log(id)
+  console.log(id)
 
-   /** 
+  /** 
       const [materia, setMateria] = useState([])
     
       /** 
@@ -42,26 +41,26 @@ function DetallesMateria() {
         findAll()
       }, [])*/
 
-     const [materias, setMaterias] = useState([]);
+  const [materias, setMaterias] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getMaterias();
-        const materiasEncontradas = response.filter(materia => materia.materia === id);
-        setMaterias(materiasEncontradas);
+        const response = await getMaterias()
+        const materiasEncontradas = response.filter((materia) => materia.materia === id)
+        setMaterias(materiasEncontradas)
       } catch (error) {
-        console.error('Error al cargar los detalles de la materia:', error);
+        console.error('Error al cargar los detalles de la materia:', error)
       }
-    };
+    }
 
-    fetchData();
-  }, [id]);
+    fetchData()
+  }, [id])
   return (
     <CContainer className="px-4">
       <CRow>
         <CCol>
-        <h1 style={{ fontSize: '1.7rem' }}>MATERIA: {id}</h1>
+          <h1 style={{ fontSize: '1.7rem' }}>MATERIA: {id}</h1>
         </CCol>
       </CRow>
       <CRow>
@@ -75,7 +74,7 @@ function DetallesMateria() {
               </CTableRow>
             </CTableHead>
             <CTableBody>
-              {materias.map(materia => (
+              {materias.map((materia) => (
                 <CTableRow key={materia.id}>
                   <CTableDataCell>{materia.grupo}</CTableDataCell>
                   <CTableDataCell>{materia.docente}</CTableDataCell>
@@ -88,12 +87,13 @@ function DetallesMateria() {
       </CRow>
       <CRow>
         <CCol>
-          <CButton onClick={() => navigate('/administracion/agregar-materia')} color="primary">Volver</CButton>
+          <CButton onClick={() => navigate('/administracion/agregar-materia')} color="primary">
+            Volver
+          </CButton>
         </CCol>
       </CRow>
     </CContainer>
-  );
-
+  )
 }
 
-export default DetallesMateria;
+export default DetallesMateria

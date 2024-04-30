@@ -12,17 +12,18 @@ export default function RoleForm() {
   const [permissions, setPermissions] = useState([])
   const [validationError, setValidationError] = useState({})
   const [toast, addToast] = useState(null)
-  const [roles, setRoles] = useState({ id:'',roleName: '', permissions: [] })
+  const [roles, setRoles] = useState({ id: '', roleName: '', permissions: [] })
 
   const getRole = async () => {
     let url = `api/role/${id}`
     const response = await APISERVICE.get(url)
+    console.log(response)
     setFormData(response)
   }
   const getRoles = async () => {
     let url = 'api/role-permissions'
     const response = await APISERVICE.get(url)
-    setRoles(response.filter(item=>item.id !== +id));
+    setRoles(response.filter((item) => item.id !== +id))
   }
 
   const getPermissions = async () => {
@@ -92,8 +93,8 @@ export default function RoleForm() {
     setValidationError(errors)
     const rolesWithSamePermissions = roles.filter(comparePermissions)
     if (rolesWithSamePermissions.length > 0) {
-      let res = rolesWithSamePermissions.map(role => role.roleName);
-      addToast(mesageToast("Rol con esos permisos ya existe: "+res))
+      let res = rolesWithSamePermissions.map((role) => role.roleName)
+      addToast(mesageToast('Rol con esos permisos ya existe: ' + res))
     } else {
       if (Object.keys(errors).length === 0) {
         if (id) {
@@ -110,14 +111,13 @@ export default function RoleForm() {
   }
 
   const mesageToast = (message) => (
-    <CToast autohide={true} visible={true} color='danger'>
+    <CToast autohide={true} visible={true} color="danger">
       <CToastBody>{message}</CToastBody>
     </CToast>
   )
   useEffect(() => {
     if (id) {
       getRole(id)
-      
     }
     getPermissions()
     getRoles()
@@ -125,7 +125,12 @@ export default function RoleForm() {
 
   return (
     <div className="container">
-      <CToaster ref={toaster} push={toast} placement="bottom-end" style={{marginBottom:"50px"}}/>
+      <CToaster
+        ref={toaster}
+        push={toast}
+        placement="bottom-end"
+        style={{ marginBottom: '50px' }}
+      />
       <h2 className="text-center mb-4">{id ? 'Editar Role' : 'Crear Nuevo Rol'}</h2>
       <form onSubmit={handleSubmit}>
         <div className="row">

@@ -256,7 +256,7 @@ const RegistrarUnidad = () => {
                     </select>
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton color="primary" onClick={(e) => guardarUnidad(e)}>
+                    <CButton type="button" color="primary" onClick={(e) => guardarUnidad(e)}>
                       Registrar
                     </CButton>
                   </div>

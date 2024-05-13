@@ -109,3 +109,19 @@ export const getAulas = async () => {
     throw new Error('Error al obtener las aulas');
   }
 };
+export const habilitarAulas = async (aulaId, habilitado) => {
+  try {
+    const response = await axios.put(`http://localhost:8000/api/aulas/${aulaId}/habilitar`, { habilitado });
+    return response.data;
+  } catch (error) {
+    throw new Error('Error al habilitar las aulas');
+  }  
+};
+export const getAulasInhabilitadas = async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/api/inhabilitados/aulas');
+    return response.data;
+  } catch (error) {
+    throw new Error('Error al obtener las aulas inhabilitadas:', error);
+  }
+};

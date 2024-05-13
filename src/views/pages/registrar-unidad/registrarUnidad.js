@@ -1,21 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-    CButton,
-    CCard,
-    CCardBody,
-    CCol,
-    CContainer,
-    CForm,
-    CFormInput,
-    CInputGroup,
-    CInputGroupText,
-    CRow,
-    CTable,
-    CTableBody,
-    CTableDataCell,
-    CTableHead,
-    CTableHeaderCell,
-    CTableRow,
+import {CButton, CCard, CCardBody, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, 
+        CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow,
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilClock, cilText, cilBuilding, cilPlus, cilMinus } from '@coreui/icons';

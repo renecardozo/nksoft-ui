@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { CCard, CTableDataCell, CCardBody, CCardHeader, CContainer, CRow, CCol, CTable, CTableBody, CTableHead, CTableHeaderCell, CTableRow, CButton } from '@coreui/react';
-import { getAulasPorUnidad, agregarAula, actualizarAula, getAulas } from './servicios';
+import { CCard, CTableDataCell, CCardBody, CCardHeader, CContainer, CRow, CCol, CTable, CTableBody, 
+    CTableHead, CTableHeaderCell, CTableRow, CButton } from '@coreui/react';
+import { getAulasPorUnidad, agregarAula, actualizarAula, getAulas, getAulasInhabilitadas, habilitarAulas } from './servicios';
 import CIcon from '@coreui/icons-react';
 import { cilPen } from '@coreui/icons';
 
@@ -15,6 +15,7 @@ const VistaAulas = () => {
     const [aulaEditandoId, setAulaEditandoId] = useState(null); 
     const [nombreAulaEditando, setNombreAulaEditando] = useState('');
     const [capacidadAulaEditando, setCapacidadAulaEditando] = useState('');
+    const [inhabilitados, setInhabilitados] = useState([]); 
 
     useEffect(() => {
         const obtenerAulas = async () => {
@@ -22,6 +23,8 @@ const VistaAulas = () => {
                 if (unidadId) {
                     const aulasData = await getAulasPorUnidad(unidadId);
                     setAulas(aulasData);
+                    const aulasInhabilitadas = await getAulasInhabilitadas();
+                    setInhabilitados(aulasInhabilitadas);
                 } else {
                     console.error('ID de unidad no válido:', unidadId);
                 }
@@ -30,14 +33,35 @@ const VistaAulas = () => {
             }
         };
     
-        if (unidadId !== null) {
-            obtenerAulas();
-        }
+        obtenerAulas();
     }, [unidadId]);
+
+    useEffect(() => {
+        const obtenerAulasInhabilitadas = async () => {
+            try {
+                const response = await getAulasInhabilitadas;
+                const inhabilitados = response.data;
+                console.log(inhabilitados);
+            } catch (error) {
+                console.error('Error al obtener las aulas inhabilitadas:', error);
+            }
+        };
     
+        obtenerAulasInhabilitadas();
+    }, []);
+
     const handleMostrarFormulario = () => {
         setMostrarFormulario(true);
     };
+    const sortedAulas = [...aulas].sort((a, b) => {
+        if (a.nombreAulas < b.nombreAulas) {
+            return -1;
+        }
+        if (a.nombreAulas > b.nombreAulas) {
+            return 1;
+        }
+        return 0;
+    });
 
     const handleAgregarAula = async () => {
         try {
@@ -53,7 +77,7 @@ const VistaAulas = () => {
                 return;
             }
     
-            const todasLasAulas = await getAulas(); // Obtener todas las aulas registradas en la base de datos
+            const todasLasAulas = await getAulas(); // Obtener todas las aulas registradas en el base de datos
             const aulaExistente = todasLasAulas.find(aula => aula.nombreAulas === nombreNuevaAula);
     
             if (aulaExistente) {
@@ -79,7 +103,6 @@ const VistaAulas = () => {
     };
     
     const handleEditarAula = (aulaId) => { 
-
         const aula = aulas.find(aula => aula.id === aulaId);
         if (aula) {
             setAulaEditandoId(aulaId);
@@ -93,7 +116,7 @@ const VistaAulas = () => {
     const handleGuardarEdicionAula = async () => {
         try {
             const capacidad = parseInt(capacidadAulaEditando);
-            const todasLasAulas = await getAulas(); // Obtener todas las aulas registradas en la base de datos
+            const todasLasAulas = await getAulas();
             const aulaExistente = todasLasAulas.find(aula => aula.nombreAulas === nombreAulaEditando && aula.id !== aulaEditandoId); // Verificar si el nombre del aula editada ya existe, excluyendo el aula que se está editando
     
             if (aulaExistente) {
@@ -126,7 +149,26 @@ const VistaAulas = () => {
             alert('Error al actualizar el aula. Por favor, inténtelo de nuevo.');
         }
     };
+
+    const handleToggleHabilitado = async (aulaId) => {
+        try {
+            const index = inhabilitados.indexOf(aulaId);
+            let newInhabilitados = [...inhabilitados];
     
+            if (index === -1) {
+                newInhabilitados.push(aulaId);
+            } else {
+                newInhabilitados.splice(index, 1);
+            }
+            setInhabilitados(newInhabilitados);    
+            await habilitarAulas(aulaId);
+            const aulasData = await getAulasPorUnidad(unidadId);
+            setAulas(aulasData);
+        } catch (error) {
+            console.error('Error al habilitar/deshabilitar el aula:', error);
+            alert('Error al habilitar/deshabilitar el aula. Por favor, inténtelo de nuevo.');
+        }
+    };
     
     return (
         <CContainer>
@@ -170,46 +212,55 @@ const VistaAulas = () => {
                     <CTable striped bordered responsive>
                         <CTableHead>
                             <CTableRow>
+                                <CTableHeaderCell scope="col">Habilitado</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Nombre del aula</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Capacidad (alumnos)</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Editar</CTableHeaderCell>
                             </CTableRow>
                         </CTableHead>
                         <CTableBody>
-                            {aulas.map((aula, index) => (
-                                <CTableRow key={index}>
-                                    <CTableDataCell scope="row">
-                                        {aulaEditandoId === aula.id ? (
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                value={nombreAulaEditando}
-                                                onChange={(e) => setNombreAulaEditando(e.target.value)} />
-                                        ) : (
-                                            aula.nombreAulas
-                                        )}
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        {aulaEditandoId === aula.id ? (
-                                            <input
-                                                type="number"
-                                                className="form-control"
-                                                value={capacidadAulaEditando}
-                                                onChange={(e) => setCapacidadAulaEditando(e.target.value)} />
-                                        ) : (
-                                            aula.capacidadAulas
-                                        )}
-                                    </CTableDataCell>
-                                    <CTableHeaderCell>
-                                        {aulaEditandoId === aula.id ? (
-                                            <CButton color="primary" onClick={handleGuardarEdicionAula}>Guardar</CButton>
-                                        ) : (
-                                            <CButton color="primary" onClick={() => handleEditarAula(aula.id)}><CIcon icon={cilPen} /></CButton>
-                                        )}
-                                    </CTableHeaderCell>
-                                </CTableRow>
-                            ))}
-                        </CTableBody>
+                        {sortedAulas.map((aula, index) => (
+        <CTableRow key={index}>
+            <CTableHeaderCell>
+                <input
+                    type="checkbox"
+                    checked={!inhabilitados.includes(aula.id)}
+                    onChange={() => handleToggleHabilitado(aula.id)}
+                />
+            </CTableHeaderCell>
+            <CTableDataCell scope="row">
+                {aulaEditandoId === aula.id ? (
+                    <input
+                        type="text"
+                        className="form-control"
+                        value={nombreAulaEditando}
+                        onChange={(e) => setNombreAulaEditando(e.target.value)} />
+                ) : (
+                    aula.nombreAulas
+                )}
+            </CTableDataCell>
+            <CTableDataCell>
+                {aulaEditandoId === aula.id ? (
+                    <input
+                        type="number"
+                        className="form-control"
+                        value={capacidadAulaEditando}
+                        onChange={(e) => setCapacidadAulaEditando(e.target.value)} />
+                ) : (
+                    aula.capacidadAulas
+                )}
+            </CTableDataCell>
+            <CTableHeaderCell>
+                {aulaEditandoId === aula.id ? (
+                    <CButton color="primary" onClick={handleGuardarEdicionAula}>Guardar</CButton>
+                ) : (
+                    <CButton color="primary" onClick={() => handleEditarAula(aula.id)}><CIcon icon={cilPen} /></CButton>
+                )}
+            </CTableHeaderCell>
+        </CTableRow>
+    ))}
+</CTableBody>
+
                     </CTable>
                 </CCardBody>
             </CCard>

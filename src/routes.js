@@ -63,6 +63,8 @@ const routes = [
   { path: '/administracion/Departamentos', name: 'Departamentos', element: AgregarDepartamento },
   { path: '/administracion/registrar-departamentos', name: 'Agregar Departamento', element: RegistrarDepartamento },
   { path: '/administracion/unidades/:unidadId/aulas', name: 'Aulas', element: verAulas },
+  //formulario
+  { path: '/registro-solicitud', name:'Formulario de reserva'}
 
 ]
 

@@ -48,4 +48,4 @@ const AppBreadcrumb = () => {
   )
 }
 
-export default React.memo(AppBreadcrumb)
+export default AppBreadcrumb

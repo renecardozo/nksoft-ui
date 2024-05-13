@@ -9,6 +9,32 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 // import "@fullcalendar/timegrid/main.css";
 
 // import events from './events'
+const codigoList = [
+  {
+    name: 'Feriado Institucional',
+    code: 'COD_0001',
+    color: 'primary',
+    hexColor: '#6261cc',
+  },
+  {
+    name: 'Feriado Local',
+    code: 'COD_0002',
+    color: 'info',
+    hexColor: '#3d99f',
+  },
+  {
+    name: 'Feriado Nacional',
+    code: 'COD_0003',
+    color: 'success',
+    hexColor: '#249542',
+  },
+  {
+    name: 'Foraneo',
+    code: 'COD_0004',
+    color: 'secondary',
+    hexColor: '#6b7785',
+  },
+]
 
 function Calendario() {
   const [events, setEvents] = useState([])
@@ -18,7 +44,7 @@ function Calendario() {
       return {
         title: d.descripcion,
         start: d.fecha,
-        backgroundColor: '#5856d6',
+        backgroundColor: codigoList.find((item) => item.code === d.codigo).hexColor,
         allDay: true,
         // textColor: 'black',
       }

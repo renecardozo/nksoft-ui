@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   CButton,
   CCard,
@@ -15,34 +15,34 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
-import { login } from './service'
+import { loginAsAdmin } from './service'
 import { useNavigate } from 'react-router-dom'
 
-const Login = () => {
-  const [codeSis, setCodeSis] = useState('')
-  const [cii, setCII] = useState('')
+const Admin = () => {
+  const [email, setEmail] = useState('barthg.simpson@mail.ogt')
+  const [password, setPassword] = useState('1234567')
   const [unauthorize, setUnathorized] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const loginSession = (event) => {
+  const loginAdmin = (event) => {
     event.preventDefault()
     setLoading(true)
-    login(codeSis, cii)
+    loginAsAdmin(email, password)
       .then((response) => {
-        localStorage.setItem('user_data', JSON.stringify(response.data))
+        const { data } = response
+        if (data.role.name === 'SuperAdmin') {
+          localStorage.setItem('user_data', JSON.stringify(response.data))
+          navigate('/dashboard')
+        } else {
+          setUnathorized(true)
+        }
         setLoading(false)
-        navigate('/dashboard')
       })
       .catch((error) => {
-        setUnathorized(true)
+        console.error(error)
         setLoading(false)
       })
   }
-  useEffect(() => {
-    if (localStorage.getItem('user_data')) {
-      navigate('/dashboard')
-    }
-  }, [])
   return (
     <div
       id="background-div"
@@ -55,17 +55,19 @@ const Login = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm>
-                    <h1>Login</h1>
-                    <p className="text-body-secondary">Inicie sesion con su cuenta</p>
+                    <h1>Admin Login</h1>
+                    <p className="text-body-secondary">
+                      Inicie sesion con su cuenta de administrador
+                    </p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
                       <CFormInput
-                        placeholder="Codigo SIS"
-                        autoComplete="Codigo SIS"
-                        value={codeSis}
-                        onChange={(e) => setCodeSis(e.target.value)}
+                        placeholder="Correo Electronico"
+                        autoComplete="Correo Electronico"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
@@ -74,10 +76,10 @@ const Login = () => {
                       </CInputGroupText>
                       <CFormInput
                         type="password"
-                        placeholder="CI"
-                        autoComplete="CI"
-                        value={cii}
-                        onChange={(e) => setCII(e.target.value)}
+                        placeholder="Contraseña"
+                        autoComplete="Contraseña"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </CInputGroup>
                     <CRow>
@@ -92,10 +94,20 @@ const Login = () => {
                         <CButton
                           color="primary"
                           className="px-4"
-                          onClick={(e) => loginSession(e)}
+                          onClick={(e) => loginAdmin(e)}
                           disabled={loading}
                         >
                           Ingresar
+                        </CButton>
+                      </CCol>
+                      <CCol xs={6} className="text-end">
+                        <CButton
+                          color="default"
+                          className="px-4"
+                          onClick={(e) => navigate('/login')}
+                          disabled={loading}
+                        >
+                          Volver
                         </CButton>
                       </CCol>
                     </CRow>
@@ -110,4 +122,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Admin

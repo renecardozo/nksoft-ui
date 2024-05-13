@@ -11,6 +11,7 @@ import {
   CInputGroupText,
   CRow,
   CBadge,
+  CAlert,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilText } from '@coreui/icons'
@@ -27,6 +28,8 @@ const CrearFeriados = () => {
   const [codes, setCodes] = useState([])
   const [descripcion, setSescripcion] = useState('')
   const [codeSelected, setCodeSelected] = useState('')
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [showError, setShowError] = useState(false)
   const getCodes = async () => {
     const response = await getListCodeDates()
     setCodes(response)
@@ -35,16 +38,30 @@ const CrearFeriados = () => {
   useEffect(() => {
     getCodes()
   }, [])
+  const cancel = async (e) => {
+    e.preventDefault()
+    navigate('/administracion/feriados')
+  }
   const save = async (e) => {
     e.preventDefault()
-    console.log('guardar feriado')
-    const nuevoFeriado = {
-      descripcion,
-      codigo: codeSelected,
-      fecha: startDate.toISOString(),
+    try {
+      console.log('guardar feriado')
+      const nuevoFeriado = {
+        descripcion,
+        codigo: codeSelected,
+        fecha: startDate.toISOString(),
+      }
+      await crearFeriados(nuevoFeriado)
+      navigate('/administracion/feriados')
+    } catch (error) {
+      console.error(error)
+      setShowError(true)
+    } finally {
+      setTimeout(() => {
+        setShowSuccess(false)
+        setShowError(false)
+      }, 3000)
     }
-    await crearFeriados(nuevoFeriado)
-    navigate('/administracion/feriados')
   }
 
   return (
@@ -91,6 +108,9 @@ const CrearFeriados = () => {
                     <CButton color="primary" onClick={(e) => save(e)}>
                       Crear
                     </CButton>
+                    <CButton color="default" onClick={(e) => cancel(e)}>
+                      Cancelar
+                    </CButton>
                   </div>
                 </CForm>
               </CCardBody>
@@ -102,6 +122,14 @@ const CrearFeriados = () => {
                 {item.name} <CBadge color={item.color}>{item.code}</CBadge>
               </h5>
             ))}
+          </CCol>
+        </CRow>
+        <CRow className="justify-content-center p-10">
+          <CCol>
+            {showSuccess && <CAlert color="success">Feriado registrado correctamente</CAlert>}
+            {showError && (
+              <CAlert color="danger">Error al registrar el Feriado, intentelo de nuevo.</CAlert>
+            )}
           </CCol>
         </CRow>
       </CContainer>

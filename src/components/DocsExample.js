@@ -40,4 +40,4 @@ DocsExample.propTypes = {
   tabContentClassName: PropTypes.string,
 }
 
-export default React.memo(DocsExample)
+export default DocsExample

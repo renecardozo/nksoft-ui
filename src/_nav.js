@@ -9,11 +9,11 @@ import {
   cilPeople,
   cilNoteAdd,
   cilBuilding,
-  cilInstitution
+  cilInstitution,
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
 
-const _nav = [
+let _nav = [
   {
     component: CNavItem,
     name: 'Dashboard',
@@ -38,7 +38,7 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Configurar',
+    name: 'Permisos',
   },
   {
     component: CNavItem,
@@ -76,7 +76,7 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Feridos',
+    name: 'Feriados',
     to: '/administracion/feriados',
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
@@ -89,7 +89,7 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Unidades y aulas',
+    name: 'Unidades',
     to: '/administracion/agregar-unidad',
     icon: <CIcon icon={cilBuilding} customClassName="nav-icon" />,
   },
@@ -98,6 +98,6 @@ const _nav = [
     name: 'Departamentos',
     to: '/administracion/Departamentos',
     icon: <CIcon icon={cilInstitution} customClassName="nav-icon" />,
-  }
+  },
 ]
 export default _nav

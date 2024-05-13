@@ -1,62 +1,94 @@
-import React, { useState, useEffect } from 'react';
-import { CCard, CCardBody, CCardHeader,CTableDataCell ,CCol, CRow, CForm, CFormInput, CInputGroup, CInputGroupText, CTable, CTableBody, CTableHead, CTableHeaderCell, CTableRow, CContainer, CButton } from '@coreui/react';
-import { postDepartamento, getDepartamento } from '../agregar-departamento/servicios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CTableDataCell,
+  CCol,
+  CRow,
+  CForm,
+  CFormInput,
+  CTable,
+  CTableBody,
+  CTableHead,
+  CTableHeaderCell,
+  CTableRow,
+  CContainer,
+  CButton,
+  CAlert,
+} from '@coreui/react'
+import { postDepartamento, getDepartamento } from '../agregar-departamento/servicios'
+import { useNavigate } from 'react-router-dom'
 
 function Departamentos() {
-  const [departamentos, setDepartamentos] = useState([]);
-  const [nombreDepartamentos, setNombreDepartamentos] = useState('');
-  const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const navigate = useNavigate();
+  const [departamentos, setDepartamentos] = useState([])
+  const [nombreDepartamentos, setNombreDepartamentos] = useState('')
+  const [mostrarFormulario, setMostrarFormulario] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [showDuplicate, setShowDuplicate] = useState(false)
+  const [showError, setShowError] = useState(false)
+  const [showEmptyWarning, setShowEmptyWarning] = useState(false)
+  const navigate = useNavigate()
 
   const findAll = async () => {
-    const response = await getDepartamento();
-    setDepartamentos(response);
-  };
+    const response = await getDepartamento()
+    setDepartamentos(response)
+  }
 
   useEffect(() => {
-    findAll();
-  }, []);
+    findAll()
+  }, [])
 
   const guardarDepartamento = async (e) => {
-    e.preventDefault();
-  
-    if (nombreDepartamentos.trim() === '') {
-      alert('Por favor, ingrese un nombre para el departamento.');
-      return;
-    }
-  
-    try {
-      const listaDepartamentos = await getDepartamento();
-      
-      const departamentoExistente = listaDepartamentos.find(departamento => departamento.nombreDepartamentos === nombreDepartamentos);
-      
-      if (departamentoExistente) {
-        alert('El nombre del departamento ya está en uso. Por favor, ingrese otro nombre.');
-        return;
-      }
-  
-      const nuevoDepartamento = {
-        nombreDepartamentos
-      };
-      await postDepartamento(nuevoDepartamento);
-      alert('Departamento registrado con éxito');
+    e.preventDefault()
 
-      
-      await findAll();
-      
-      setNombreDepartamentos('');
-      
-      setMostrarFormulario(false);
-    } catch (error) {
-      alert('Ocurrió un error al intentar guardar el departamento. Por favor, inténtelo de nuevo.');
-      console.error('Error al guardar el departamento:', error);
+    if (nombreDepartamentos.trim() === '') {
+      // alert('Por favor, ingrese un nombre para el departamento.')
+      setShowEmptyWarning(true)
+      setTimeout(() => {
+        setShowEmptyWarning(false)
+      }, 3000)
+      return
     }
-  };
-  
+
+    try {
+      const listaDepartamentos = await getDepartamento()
+
+      const departamentoExistente = listaDepartamentos.find(
+        (departamento) => departamento.nombreDepartamentos === nombreDepartamentos,
+      )
+
+      if (departamentoExistente) {
+        setShowDuplicate(true)
+        return
+      }
+
+      const nuevoDepartamento = {
+        nombreDepartamentos,
+      }
+      await postDepartamento(nuevoDepartamento)
+      // alert('Departamento registrado con éxito')
+      setShowSuccess(true)
+      await findAll()
+
+      setNombreDepartamentos('')
+
+      setMostrarFormulario(false)
+    } catch (error) {
+      setShowError(true)
+      console.error('Error al guardar el departamento:', error)
+    } finally {
+      setTimeout(() => {
+        setShowSuccess(false)
+        setShowDuplicate(false)
+        setShowError(false)
+      }, 3000)
+    }
+  }
+
   const handleMostrarFormulario = () => {
-    setMostrarFormulario(true);
-  };
+    setMostrarFormulario(true)
+  }
 
   return (
     <CContainer className="px-4">
@@ -67,7 +99,9 @@ function Departamentos() {
               <h3>Departamentos</h3>
             </CCol>
             <CCol xs="auto" className="ml-auto">
-              <CButton color="primary" onClick={handleMostrarFormulario}>Agregar Departamento</CButton>
+              <CButton color="primary" onClick={handleMostrarFormulario}>
+                Agregar Departamento
+              </CButton>
             </CCol>
           </CRow>
         </CCardHeader>
@@ -84,7 +118,9 @@ function Departamentos() {
                   />
                 </CCol>
                 <CCol xs="auto">
-                  <CButton color="primary" onClick={(e) => guardarDepartamento(e)}>Registrar</CButton>
+                  <CButton color="primary" onClick={(e) => guardarDepartamento(e)}>
+                    Registrar
+                  </CButton>
                 </CCol>
               </CRow>
             </CForm>
@@ -108,9 +144,27 @@ function Departamentos() {
             </CTableBody>
           </CTable>
         </CCardBody>
+        <CRow>
+          <CCol>
+            {showSuccess && <CAlert color="success">Departamento registrado con éxito</CAlert>}
+            {showDuplicate && (
+              <CAlert color="warning">
+                El nombre del departamento ya está en uso. Por favor, ingrese otro nombre.
+              </CAlert>
+            )}
+            {showError && (
+              <CAlert color="danger">
+                Ocurrió un error al intentar guardar el departamento. Por favor, inténtelo de nuevo.
+              </CAlert>
+            )}
+            {showEmptyWarning && (
+              <CAlert color="warning">Por favor, ingrese un nombre para el departamento.</CAlert>
+            )}
+          </CCol>
+        </CRow>
       </CCard>
     </CContainer>
-  );
+  )
 }
 
-export default Departamentos;
+export default Departamentos

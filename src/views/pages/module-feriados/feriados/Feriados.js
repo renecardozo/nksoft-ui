@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { CCol, CRow, CContainer } from '@coreui/react'
-import { getFeriados, getListCodeDates } from '../service'
+import { CCol, CRow, CContainer, CButton } from '@coreui/react'
+import { getFeriados, getListCodeDates, deleteFeriado } from '../service'
+import CIcon from '@coreui/icons-react'
+import { cilDelete } from '@coreui/icons'
 
 function Feriados() {
   const [feriados, setFeriados] = useState([])
   const [codes, setCodes] = useState([])
+
   const describirFeriado = (codigo) => {
     const feriadoEncontrado = codes.find((item) => item.code == codigo)
     return feriadoEncontrado.name || 'No definido'
@@ -17,6 +20,16 @@ function Feriados() {
     setCodes(codesList)
   }
 
+  const deleFeriado = async (e, item) => {
+    e.preventDefault()
+    console.log(item)
+    try {
+      await deleteFeriado(item.id)
+      findAll()
+    } catch (e) {
+      console.log(e)
+    }
+  }
   useEffect(() => {
     findAll()
   }, [])
@@ -42,6 +55,7 @@ function Feriados() {
               <th scope="col">Fecha</th>
               <th scope="col">Feriado</th>
               <th scope="col">Descripcion</th>
+              <th scope="col">Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -56,6 +70,16 @@ function Feriados() {
                     </Link>
                   </td>
                   <td>{item.descripcion}</td>
+                  <td>
+                    <CButton
+                      color="danger"
+                      onClick={(e) => {
+                        deleFeriado(e, item)
+                      }}
+                    >
+                      <CIcon icon={cilDelete} />
+                    </CButton>
+                  </td>
                 </tr>
               ))
             ) : (

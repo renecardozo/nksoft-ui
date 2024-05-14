@@ -7,6 +7,7 @@ function CrearReservas() {
     const [materia, setMateria] = useState('');
     const [grupo, setGrupo] = useState('');
     const [cantidad, setCantidad] = useState('');
+    const [motivo, setMotivo] = useState(''); // Estado para motivo
     const [fecha, setFecha] = useState('');
     const [horario, setHorario] = useState('');
     const [periodosSeleccionados, setPeriodosSeleccionados] = useState([]);
@@ -40,6 +41,7 @@ function CrearReservas() {
             setMateria('');
             setGrupo('');
             setCantidad('');
+            setMotivo('');
             setFecha('');
             setHorario('');
             setPeriodosSeleccionados([]);
@@ -55,13 +57,13 @@ function CrearReservas() {
             alert('Debe seleccionar un período primero.');
             return;
         }
-        
+
         // Verifica si el periodo ya ha sido seleccionado
         if (periodosSeleccionados.some(periodo => periodo.id === parseInt(periodoSeleccionado))) {
             alert('Este período ya ha sido seleccionado.');
             return;
         }
-        
+
         const periodo = periodosDisponibles.find(p => p.id === parseInt(periodoSeleccionado));
         setPeriodosSeleccionados([...periodosSeleccionados, periodo]);
         setPeriodoSeleccionado('');
@@ -88,6 +90,7 @@ function CrearReservas() {
                                         placeholder="Ingrese el nombre del solicitante"
                                     />
                                 </div>
+                                
                                 <div className="form-group mb-3 row">
                                     <div className="col">
                                         <label htmlFor="materia" className="fw-bold">Materia</label>
@@ -113,15 +116,42 @@ function CrearReservas() {
                                     </div>
                                 </div>
                                 <div className="form-group mb-3">
-                                    <label htmlFor="cantidad" className="fw-bold">Número estimado de estudiantes</label>
+                                    <label htmlFor="Aula" className="fw-bold">Aula</label>
                                     <input
                                         type="text"
-                                        id="cantidad"
+                                        id="aula"
                                         className="form-control"
-                                        value={cantidad}
-                                        onChange={(e) => setCantidad(e.target.value)}
-                                        placeholder="Ingrese el número estimado de estudiantes"
+                                        value={nombre}
+                                        onChange={(e) => setAula(e.target.value)}
+                                        placeholder="Ingrese el aula que desea reservar"
                                     />
+                                </div>
+                                <div className="form-group mb-3 row">
+                                    <div className="col">
+                                        <label htmlFor="cantidad" className="fw-bold">Número estimado de estudiantes</label>
+                                        <input
+                                            type="text"
+                                            id="cantidad"
+                                            className="form-control"
+                                            value={cantidad}
+                                            onChange={(e) => setCantidad(e.target.value)}
+                                            placeholder="Ingrese el número estimado de estudiantes"
+                                        />
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="motivo" className="fw-bold">Motivo</label>
+                                        <select
+                                            id="motivo"
+                                            className="form-select"
+                                            value={motivo}
+                                            onChange={(e) => setMotivo(e.target.value)}
+                                        >
+                                            <option value="">Seleccione un motivo</option>
+                                            <option value="Clase">Clases</option>
+                                            <option value="Examen">Examen</option>
+                                            <option value="Reunión">Reunión</option>
+                                            <option value="Reunión">Conferencia</option>                                        </select>
+                                    </div>
                                 </div>
                                 <div className="form-group mb-3">
                                     <label htmlFor="fecha" className="fw-bold">Fecha</label>
@@ -134,16 +164,7 @@ function CrearReservas() {
                                         min={new Date().toISOString().split("T")[0]} 
                                     />
                                 </div>
-                                <div className="form-group mb-3">
-                                    <label htmlFor="horario" className="fw-bold">Horario</label>
-                                    <input
-                                        type="time"
-                                        id="horario"
-                                        className="form-control"
-                                        value={horario}
-                                        onChange={(e) => setHorario(e.target.value)}
-                                    />
-                                </div>
+                                
                                 <div className="form-group mb-3">
                                     <label htmlFor="periodo" className="fw-bold">Período</label>
                                     <select

@@ -40,7 +40,7 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/reservas/buscar-aulas', name: 'Buscar Aulas', element: BuscarAulas, exact: true },
-  { path: '/reservas/crear-reservas', name: 'Crear reservas', element: CrearReservas },
+  { path: '/reservas/crear-reservas', name: 'Solicitar reserva', element: CrearReservas },
   { path: '/configurar/solicitudes', name: 'Solicitudes', element: Solicitudes },
   { path: '/configurar/administrar', name: 'Administrar', element: Administrar },
   { path: '/configurar/roles', name: 'Roles', element: Roles },

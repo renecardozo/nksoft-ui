@@ -104,11 +104,11 @@ function Solicitudes() {
         <CTableHead>
           <CTableRow>
             <CTableHeaderCell scope="col">#</CTableHeaderCell>
+            <CTableHeaderCell scope="col">Usuario</CTableHeaderCell>
             <CTableHeaderCell scope="col">Materia</CTableHeaderCell>
             <CTableHeaderCell scope="col">Fecha</CTableHeaderCell>
             <CTableHeaderCell scope="col">Aula</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Hora Inicio</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Hora Fin</CTableHeaderCell>
+            <CTableHeaderCell scope="col">Estado</CTableHeaderCell>
             <CTableHeaderCell scope="col">Acciones</CTableHeaderCell>
           </CTableRow>
         </CTableHead>
@@ -116,11 +116,12 @@ function Solicitudes() {
           {solicitudes?.map((sol) => (
             <CTableRow key={sol.id}>
               <CTableHeaderCell scope="row">{sol.id}</CTableHeaderCell>
+              <CTableDataCell>{sol.users?.name}</CTableDataCell>
               <CTableDataCell>{sol.materia?.materia}</CTableDataCell>
               <CTableDataCell>{sol.fecha_hora_reserva.split(" ")[0]}</CTableDataCell>
               <CTableDataCell>{sol.aula}</CTableDataCell>
-              <CTableDataCell>{sol.periodos.horaInicio}</CTableDataCell>
-              <CTableDataCell>{sol.periodos.horaFin}</CTableDataCell>
+              <CTableDataCell>{sol.estado}</CTableDataCell>
+
 
               <CTableDataCell>
                 <CButton className="me-2" color="primary" onClick={() => onUpdate(sol)}>
@@ -150,6 +151,7 @@ function Solicitudes() {
         <CModalBody>
           {solicitud ? (
             <>
+              <p>Materia : {solicitud.users.name}</p>
               <p>Materia : {solicitud.materia.materia}</p>
               <p>Motivo : {solicitud.motivo_reserva}</p>
               <p>Fecha reserva : {solicitud.fecha_hora_reserva.split(" ")[0]}</p>
@@ -162,7 +164,7 @@ function Solicitudes() {
                 aria-label="Large select example"
                 onChange={handleChange}
               >
-                <option>Pendiente</option>
+                <option>{solicitud.estado}</option>
                 <option value="Aceptado">Aceptado</option>
                 <option value="Rechazado">Rechazado</option>
               </CFormSelect>

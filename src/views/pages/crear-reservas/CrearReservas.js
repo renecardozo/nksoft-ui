@@ -1,187 +1,253 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { getPeriodos } from './servicios';
+    import React, { useState, useEffect } from 'react';
+    import { Link } from 'react-router-dom';
+    import { getPeriodos, getMaterias, getMateriasGrupos, getAulas } from './servicios';
 
-function CrearReservas() {
-    const [nombreUsuario, setNombreUsuario] = useState('');
-    const [userData, setUserData] = useState(null);
-    const [materia, setMateria] = useState('');
-    const [grupo, setGrupo] = useState('');
-    const [cantidad, setCantidad] = useState('');
-    const [motivo, setMotivo] = useState('');
-    const [fecha, setFecha] = useState('');
-    const [periodosSeleccionados, setPeriodosSeleccionados] = useState([]);
-    const [periodosDisponibles, setPeriodosDisponibles] = useState([]);
-    const [periodoSeleccionado, setPeriodoSeleccionado] = useState('');
+    function CrearReservas() {
+        const [nombreUsuario, setNombreUsuario] = useState('');
+        const [userData, setUserData] = useState(null);
+        const [materiasGrupos, setMateriasGrupos] = useState([]); 
+        const [materias, setMaterias] = useState([]);
+        const [materiaSeleccionada, setMateriaSeleccionada] = useState('');
+        const [grupos, setGrupos] = useState([]);
+        const [gruposRelacionados, setGruposRelacionados] = useState([]);
+        const [grupoSeleccionado, setGrupoSeleccionado] = useState(''); 
+        const [cantidad, setCantidad] = useState('');
+        const [motivo, setMotivo] = useState('');
+        const [fecha, setFecha] = useState('');
+        const [periodosSeleccionados, setPeriodosSeleccionados] = useState([]);
+        const [periodosDisponibles, setPeriodosDisponibles] = useState([]);
+        const [periodoSeleccionado, setPeriodoSeleccionado] = useState('');
 
-    useEffect(() => {
-        const fetchPeriodos = async () => {
+        useEffect(() => {
+            const fetchPeriodos = async () => {
+                try {
+                    const data = await getPeriodos();
+                    const periodosFormateados = data.map((periodo, index) => ({
+                        id: index + 1,
+                        ...periodo,
+                        nombreCompleto: `${periodo.horaInicio} - ${periodo.horaFin}`
+                    }));
+                    setPeriodosDisponibles(periodosFormateados);
+                } catch (error) {
+                    console.error('Error al obtener los periodos:', error);
+                }
+            };
+
+            fetchPeriodos();
+        }, []);
+        useEffect(() => {
+            const fetchMaterias = async () => {
+                try {
+                    const data = await getMaterias();
+                    setMaterias(data);
+                } catch (error) {
+                    console.error('Error al obtener las materias:', error);
+                }
+            };
+        
+            fetchMaterias();
+        }, []);
+        
+
+        useEffect(() => {
+            const fetchMateriasGrupos = async () => { // Cambia a getMateriasGrupos
+                try {
+                    const data = await getMateriasGrupos(); // Usa getMateriasGrupos
+                    setMateriasGrupos(data);
+                } catch (error) {
+                    console.error('Error al obtener las materias y grupos:', error);
+                }
+            };
+        
+            fetchMateriasGrupos();
+        }, []);
+        
+        useEffect(() => {
+            if (materiaSeleccionada) {
+                const grupos = materiasGrupos.filter(grupo => grupo.materiaId === parseInt(materiaSeleccionada));
+                setGruposRelacionados(grupos);
+            } else {
+                setGruposRelacionados([]);
+            }
+        }, [materiaSeleccionada, materiasGrupos]);
+        
+        
+    
+        useEffect(() => {
+            const userDataFromStorage = localStorage.getItem('user_data');
+            if (userDataFromStorage) {
+                const userData = JSON.parse(userDataFromStorage);
+                setUserData(userData);
+                setNombreUsuario(userData.name);
+            }
+        }, []);
+
+        const handleRegistro = async () => {
             try {
-                const data = await getPeriodos();
-                const periodosFormateados = data.map((periodo, index) => ({
-                    id: index + 1,
-                    ...periodo,
-                    nombreCompleto: `${periodo.horaInicio} - ${periodo.horaFin}`
-                }));
-                setPeriodosDisponibles(periodosFormateados);
+                console.log('Períodos seleccionados:', periodosSeleccionados);
+                setMateria('');
+                setGrupo('');
+                setCantidad('');
+                setMotivo('');
+                setFecha('');
+                setPeriodosSeleccionados([]);
+                alert('Reserva registrada correctamente');
             } catch (error) {
-                console.error('Error al obtener los periodos:', error);
+                console.error('Error al registrar la reserva:', error);
+                alert('Ocurrió un error al registrar la reserva. Por favor, inténtelo de nuevo.');
             }
         };
 
-        fetchPeriodos();
-    }, []);
+        const handleAgregarPeriodo = () => {
+            if (!periodoSeleccionado) {
+                alert('Debe seleccionar un período primero.');
+                return;
+            }
 
-    useEffect(() => {
-        const userDataFromStorage = localStorage.getItem('user_data');
-        if (userDataFromStorage) {
-            const userData = JSON.parse(userDataFromStorage);
-            setUserData(userData);
-            setNombreUsuario(userData.name); // Actualizar el estado nombreUsuario con el nombre del usuario
-        }
-    }, []);
+            if (periodosSeleccionados.some(periodo => periodo.id === parseInt(periodoSeleccionado))) {
+                alert('Este período ya ha sido seleccionado.');
+                return;
+            }
 
-    const handleRegistro = async () => {
-        try {
-            console.log('Períodos seleccionados:', periodosSeleccionados);
-            setMateria('');
-            setGrupo('');
-            setCantidad('');
-            setMotivo('');
-            setFecha('');
-            setPeriodosSeleccionados([]);
-            alert('Reserva registrada correctamente');
-        } catch (error) {
-            console.error('Error al registrar la reserva:', error);
-            alert('Ocurrió un error al registrar la reserva. Por favor, inténtelo de nuevo.');
-        }
-    };
+            const periodo = periodosDisponibles.find(p => p.id === parseInt(periodoSeleccionado));
+            setPeriodosSeleccionados([...periodosSeleccionados, periodo]);
+            setPeriodoSeleccionado('');
+        };
 
-    const handleAgregarPeriodo = () => {
-        if (!periodoSeleccionado) {
-            alert('Debe seleccionar un período primero.');
-            return;
-        }
+        return (
+            <div className="container">
+                <div className="row justify-content-center">
+                    <div className="col-md-8">
+                        <div className="card p-4">
+                            <div className="card-header">
+                                <h3 className="mb-0">Solicitud de registro de aula</h3>
+                            </div>
+                            <div className="card-body">
+                                <form>
+                                    <div className="form-group mb-3">
+                                        <label htmlFor="nombre" className="fw-bold">Nombre</label>
+                                        <input
+                                            type="text"
+                                            id="nombre"
+                                            className="form-control"
+                                            value={nombreUsuario}
+                                            disabled
+                                        />
+                                    </div>
+                                    
+                                    <div className="row">
+        <div className="col-md-6">
+            <div className="form-group mb-3">
+                <label htmlFor="materia" className="fw-bold">Materia</label>
+                <select
+                    id="materia"
+                    className="form-select"
+                    value={materiaSeleccionada}
+                    onChange={(e) => {
+                        setMateriaSeleccionada(e.target.value);
+                        const grupos = materias.find(materia => materia.id === e.target.value)?.grupos || [];        
+                        setGruposRelacionados(grupos);
+                    }}
+                    placeholder="Seleccione la materia"
+                >
+                    <option value="">Seleccione la materia</option>
+                    {materias.map(materia => (
+                        <option key={materia.id} value={materia.id}>{materia.materia}</option>
+                    ))}
+                </select>
+            </div>
+        </div>
+        <div className="col-md-6">
+            <div className="form-group mb-3">
+                <label htmlFor="grupos" className="fw-bold">Grupos de la materia</label>
+                <select
+                    id="grupo"
+                    className="form-select"
+                    value={grupoSeleccionado}
+                    onChange={(e) => setGrupoSeleccionado(e.target.value)}
+                    placeholder="Seleccione el grupo"
+                >
+                    <option value="">Seleccione el grupo</option>
+                    {gruposRelacionados.map(grupo => (
+                        <option key={grupo.id} value={grupo.id}>{grupo.nombre}</option>
+                    ))}
+                </select>
+            </div>
+        </div>
+    </div>                                          
+                                        <div className="row">
+        
+        <div className="col-md-6">
+            <div className="form-group mb-3">
+                <label htmlFor="cantidad" className="fw-bold">Número estimado de estudiantes</label>
+                <input
+                    type="text"
+                    id="cantidad"
+                    className="form-control"
+                    value={cantidad}
+                    onChange={(e) => setCantidad(e.target.value)}
+                    placeholder="Ingrese el número estimado de estudiantes"
+                />
+            </div>
+        </div>
+        <div className="col-md-6">
+            <div className="form-group mb-3">
+                <label htmlFor="motivo" className="fw-bold">Motivo</label>
+                <select
+                    id="motivo"
+                    className="form-select"
+                    value={motivo}
+                    onChange={(e) => setMotivo(e.target.value)}
+                >
+                    <option value="">Seleccione un motivo</option>
+                    <option value="Clase">Clases</option>
+                    <option value="Examen">Examen</option>
+                    <option value="Reunión">Reunión</option>
+                    <option value="Conferencia">Conferencia</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-        if (periodosSeleccionados.some(periodo => periodo.id === parseInt(periodoSeleccionado))) {
-            alert('Este período ya ha sido seleccionado.');
-            return;
-        }
-
-        const periodo = periodosDisponibles.find(p => p.id === parseInt(periodoSeleccionado));
-        setPeriodosSeleccionados([...periodosSeleccionados, periodo]);
-        setPeriodoSeleccionado('');
-    };
-
-    return (
-        <div className="container">
-            <div className="row justify-content-center">
-                <div className="col-md-8">
-                    <div className="card p-4">
-                        <div className="card-header">
-                            <h3 className="mb-0">Solicitud de registro de aula</h3>
-                        </div>
-                        <div className="card-body">
-                            <form>
-                                <div className="form-group mb-3">
-                                    <label htmlFor="nombre" className="fw-bold">Nombre</label>
-                                    <input
-                                        type="text"
-                                        id="nombre"
-                                        className="form-control"
-                                        value={nombreUsuario}
-                                        disabled
-                                    />
-                                </div>
-                                
-                                <div className="form-group mb-3">
-                                    <label htmlFor="materia" className="fw-bold">Materia</label>
-                                    <input
-                                        type="text"
-                                        id="materia"
-                                        className="form-control"
-                                        value={materia}
-                                        onChange={(e) => setMateria(e.target.value)}
-                                        placeholder="Ingrese la materia a reservar"
-                                    />
-                                </div>
-                                
-                                <div className="form-group mb-3">
-                                    <label htmlFor="grupo" className="fw-bold">Grupo</label>
-                                    <input
-                                        type="text"
-                                        id="grupo"
-                                        className="form-control"
-                                        value={grupo}
-                                        onChange={(e) => setGrupo(e.target.value)}
-                                        placeholder="Ingrese el grupo de la materia"
-                                    />
-                                </div>
-                                
-                                <div className="form-group mb-3">
-                                    <label htmlFor="cantidad" className="fw-bold">Número estimado de estudiantes</label>
-                                    <input
-                                        type="text"
-                                        id="cantidad"
-                                        className="form-control"
-                                        value={cantidad}
-                                        onChange={(e) => setCantidad(e.target.value)}
-                                        placeholder="Ingrese el número estimado de estudiantes"
-                                    />
-                                </div>
-                                
-                                <div className="form-group mb-3">
-                                    <label htmlFor="motivo" className="fw-bold">Motivo</label>
-                                    <select
-                                        id="motivo"
-                                        className="form-select"
-                                        value={motivo}
-                                        onChange={(e) => setMotivo(e.target.value)}
-                                    >
-                                        <option value="">Seleccione un motivo</option>
-                                        <option value="Clase">Clases</option>
-                                        <option value="Examen">Examen</option>
-                                        <option value="Reunión">Reunión</option>
-                                        <option value="Conferencia">Conferencia</option>
-                                    </select>
-                                </div>
-                                
-                                <div className="form-group mb-3">
-                                    <label htmlFor="fecha" className="fw-bold">Fecha</label>
-                                    <input
-                                        type="date"
-                                        id="fecha"
-                                        className="form-control"
-                                        value={fecha}
-                                        onChange={(e) => setFecha(e.target.value)}
-                                        min={new Date().toISOString().split("T")[0]} 
-                                    />
-                                </div>
-                                
-                                <div className="form-group mb-3">
+                                    
+                                    <div className="form-group mb-3">
+                                        <label htmlFor="fecha" className="fw-bold">Fecha</label>
+                                        <input
+                                            type="date"
+                                            id="fecha"
+                                            className="form-control"
+                                            value={fecha}
+                                            onChange={(e) => setFecha(e.target.value)}
+                                            min={new Date().toISOString().split("T")[0]} 
+                                        />
+                                    </div>
+                                    
+                                    <div className="form-group mb-3">
                                     <label htmlFor="periodo" className="fw-bold">Período</label>
-                                    <select
-                                        id="periodo"
-                                        className="form-select"
-                                        value={periodoSeleccionado}
-                                        onChange={(e) => setPeriodoSeleccionado(e.target.value)}
-                                    >
-                                        <option value="">Seleccione un período</option>
-                                        {periodosDisponibles
-                                            .filter(periodo => !periodosSeleccionados.some(p => p.id === periodo.id))
-                                            .map(periodo => (
-                                                <option key={periodo.id} value={periodo.id}>{periodo.nombreCompleto}</option>
-                                            ))}
-                                    </select>
+                                    <div className="d-flex align-items-center">
+                                        <select
+                                            id="periodo"
+                                            className="form-select"
+                                            value={periodoSeleccionado}
+                                            onChange={(e) => setPeriodoSeleccionado(e.target.value)}
+                                        >
+                                            <option value="">Seleccione un período</option>
+                                            {periodosDisponibles
+                                                .filter(periodo => !periodosSeleccionados.some(p => p.id === periodo.id))
+                                                .map(periodo => (
+                                                    <option key={periodo.id} value={periodo.id}>{periodo.nombreCompleto}</option>
+                                                ))}
+                                        </select>
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary"
+                                            onClick={handleAgregarPeriodo}
+                                            style={{ height: 'calc(1.5em + 0.75rem + 2px)' }}
+                                        >
+                                            Agregar Período
+                                        </button>
+                                    </div>
                                 </div>
-                                
-                                <button
-                                    type="button"
-                                    className="btn btn-primary mb-3"
-                                    onClick={handleAgregarPeriodo}
-                                >
-                                    Agregar Período
-                                </button>
                                 
                                 {periodosSeleccionados.length > 0 && (
                                     <div>
@@ -193,27 +259,40 @@ function CrearReservas() {
                                         </ul>
                                     </div>
                                 )}
-                                
-                                <div className="text-center">
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary me-2"
-                                        onClick={handleRegistro}
-                                    >
-                                        Registrar Reserva
-                                    </button>
                                     
-                                    <Link to="/" className="btn btn-primary">
-                                        Volver
-                                    </Link>
-                                </div>
-                            </form>
+                                    <div className="form-group mb-3">
+    <fieldset>
+        <legend className="fw-bold">Observaciones</legend>
+        <div className="form-group mb-3">
+            <textarea
+                id="observaciones"
+                className="form-control"
+                rows="3"
+                placeholder="Ingrese observaciones adicionales"
+            ></textarea>
+        </div>
+    </fieldset>
+</div>
+                                    
+                                    <div className="text-center">
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary me-2"
+                                            onClick={handleRegistro}
+                                        >
+                                            Registrar Reserva
+                                        </button>
+                                        <Link to="/" className="btn btn-primary">
+                                            Volver
+                                        </Link>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
 
-export default CrearReservas;
+    export default CrearReservas;

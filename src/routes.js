@@ -5,13 +5,13 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const BuscarAulas = React.lazy(() => import('./views/pages/buscar-aulas/BuscarAulas'))
 const CrearReservas = React.lazy(() => import('./views/pages/crear-reservas/CrearReservas'))
 const Solicitudes = React.lazy(() => import('./views/pages/solicitudes/Solicitudes'))
-const Administrar = React.lazy(() => import('./views/pages/administrar/Administrar'))
+const Administrar = React.lazy(() => import('./views/pages/GestionarDocentes/Administrar'))
 const Roles = React.lazy(() => import('./views/pages/usuarios/roles/Role'))
 const CrearRoles = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
 const EditarRole = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
 const Calendario = React.lazy(() => import('./components/calendario/Calendario'))
 const AgregarMateria = React.lazy(() => import('./views/pages/agregar-materia/AgregarMateria'))
-const verMateria = React.lazy(() => import('./views/pages/ver-materia/verMateria'))
+const verMateria = React.lazy(() => import('./views/pages/GestionarDocentes/ver-materias'))
 const registrarMateria = React.lazy(
   () => import('./views/pages/registrar-materias/registrarMateria'),
 )
@@ -24,7 +24,7 @@ const RegistrarDepartamento = React.lazy(
   () => import('./views/pages/registrar-departamentos/registrarDepartamento'),
 )
 const verAulas = React.lazy(() => import('./views/pages/agregar-unidad/vistaAulas'))
-const verMaterias = React.lazy(() => import('./views/pages/administrar/ver-materias'))
+const verMaterias = React.lazy(() => import('./views/pages/GestionarDocentes/ver-materias'))
 
 const ListUser = React.lazy(() => import('./views/pages/usuarios/users/List.jsx'))
 const FormUser = React.lazy(() => import('./views/pages/usuarios/users/Form.jsx'))
@@ -43,7 +43,7 @@ const routes = [
   { path: '/reservas/buscar-aulas', name: 'Buscar Aulas', element: BuscarAulas, exact: true },
   { path: '/reservas/crear-reservas', name: 'Solicitar reserva', element: CrearReservas },
   { path: '/configurar/solicitudes', name: 'Solicitudes', element: Solicitudes },
-  { path: '/configurar/administrar', name: 'Administrar', element: Administrar },
+  { path: '/configurar/administrar', name: 'Docentes', element: Administrar },
   { path: '/configurar/roles', name: 'Roles', element: Roles },
   { path: '/configurar/crear-roles', name: 'Crear Role', element: CrearRoles },
   { path: '/configurar/editar-role/:id', name: 'Editar Role', element: EditarRole },
@@ -69,6 +69,6 @@ const routes = [
   //formulario
   { path: '/registro-solicitud', name:'Formulario de reserva', element: CrearReservas},
   //materias de docentes
-  { path: '/configurar/administrar/:usuarioId/materias', name: 'Materias', element: verMaterias },
+  { path: '/configurar/docentes/:usuarioId/materias', name: 'Materias', element: verMateria },
 ]
 export default routes

@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getPeriodos } from './servicios';
 
-function CrearReservas() {
-    const [nombre, setNombre] = useState('');
+function CrearReservas({ userData }) {
+    const [nombreUsuario, setNombreUsuario] = useState(userData ? userData.name : '');
     const [materia, setMateria] = useState('');
     const [grupo, setGrupo] = useState('');
     const [cantidad, setCantidad] = useState('');
-    const [motivo, setMotivo] = useState(''); // Estado para motivo
+    const [motivo, setMotivo] = useState('');
     const [fecha, setFecha] = useState('');
-    const [horario, setHorario] = useState('');
     const [periodosSeleccionados, setPeriodosSeleccionados] = useState([]);
     const [periodosDisponibles, setPeriodosDisponibles] = useState([]);
     const [periodoSeleccionado, setPeriodoSeleccionado] = useState('');
@@ -32,18 +31,22 @@ function CrearReservas() {
         fetchPeriodos();
     }, []);
 
+    useEffect(() => {
+        if (userData && userData.name) {
+            setNombreUsuario(userData.name);
+            console.log(userData.name); // Agrega esta línea para verificar si se está recibiendo el nombre correctamente
+        }
+    }, [userData]);
+    
+
     const handleRegistro = async () => {
         try {
-            // Aquí puedes realizar el registro con los períodos seleccionados
             console.log('Períodos seleccionados:', periodosSeleccionados);
-            // Limpia los campos después de registrar la reserva
-            setNombre('');
             setMateria('');
             setGrupo('');
             setCantidad('');
             setMotivo('');
             setFecha('');
-            setHorario('');
             setPeriodosSeleccionados([]);
             alert('Reserva registrada correctamente');
         } catch (error) {
@@ -58,7 +61,6 @@ function CrearReservas() {
             return;
         }
 
-        // Verifica si el periodo ya ha sido seleccionado
         if (periodosSeleccionados.some(periodo => periodo.id === parseInt(periodoSeleccionado))) {
             alert('Este período ya ha sido seleccionado.');
             return;
@@ -85,74 +87,63 @@ function CrearReservas() {
                                         type="text"
                                         id="nombre"
                                         className="form-control"
-                                        value={nombre}
-                                        onChange={(e) => setNombre(e.target.value)}
-                                        placeholder="Ingrese el nombre del solicitante"
+                                        value={userData ? userData.name : ''}
+                                        disabled
                                     />
                                 </div>
                                 
-                                <div className="form-group mb-3 row">
-                                    <div className="col">
-                                        <label htmlFor="materia" className="fw-bold">Materia</label>
-                                        <input
-                                            type="text"
-                                            id="materia"
-                                            className="form-control"
-                                            value={materia}
-                                            onChange={(e) => setMateria(e.target.value)}
-                                            placeholder="Ingrese la materia a reservar"
-                                        />
-                                    </div>
-                                    <div className="col">
-                                        <label htmlFor="grupo" className="fw-bold">Grupo</label>
-                                        <input
-                                            type="text"
-                                            id="grupo"
-                                            className="form-control"
-                                            value={grupo}
-                                            onChange={(e) => setGrupo(e.target.value)}
-                                            placeholder="Ingrese el grupo de la materia"
-                                        />
-                                    </div>
-                                </div>
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Aula" className="fw-bold">Aula</label>
+                                    <label htmlFor="materia" className="fw-bold">Materia</label>
                                     <input
                                         type="text"
-                                        id="aula"
+                                        id="materia"
                                         className="form-control"
-                                        value={nombre}
-                                        onChange={(e) => setAula(e.target.value)}
-                                        placeholder="Ingrese el aula que desea reservar"
+                                        value={materia}
+                                        onChange={(e) => setMateria(e.target.value)}
+                                        placeholder="Ingrese la materia a reservar"
                                     />
                                 </div>
-                                <div className="form-group mb-3 row">
-                                    <div className="col">
-                                        <label htmlFor="cantidad" className="fw-bold">Número estimado de estudiantes</label>
-                                        <input
-                                            type="text"
-                                            id="cantidad"
-                                            className="form-control"
-                                            value={cantidad}
-                                            onChange={(e) => setCantidad(e.target.value)}
-                                            placeholder="Ingrese el número estimado de estudiantes"
-                                        />
-                                    </div>
-                                    <div className="col">
-                                        <label htmlFor="motivo" className="fw-bold">Motivo</label>
-                                        <select
-                                            id="motivo"
-                                            className="form-select"
-                                            value={motivo}
-                                            onChange={(e) => setMotivo(e.target.value)}
-                                        >
-                                            <option value="">Seleccione un motivo</option>
-                                            <option value="Clase">Clases</option>
-                                            <option value="Examen">Examen</option>
-                                            <option value="Reunión">Reunión</option>
-                                            <option value="Reunión">Conferencia</option>                                        </select>
-                                    </div>
+                                
+                                <div className="form-group mb-3">
+                                    <label htmlFor="grupo" className="fw-bold">Grupo</label>
+                                    <input
+                                        type="text"
+                                        id="grupo"
+                                        className="form-control"
+                                        value={grupo}
+                                        onChange={(e) => setGrupo(e.target.value)}
+                                        placeholder="Ingrese el grupo de la materia"
+                                    />
                                 </div>
+                                
+                                <div className="form-group mb-3">
+                                    <label htmlFor="cantidad" className="fw-bold">Número estimado de estudiantes</label>
+                                    <input
+                                        type="text"
+                                        id="cantidad"
+                                        className="form-control"
+                                        value={cantidad}
+                                        onChange={(e) => setCantidad(e.target.value)}
+                                        placeholder="Ingrese el número estimado de estudiantes"
+                                    />
+                                </div>
+                                
+                                <div className="form-group mb-3">
+                                    <label htmlFor="motivo" className="fw-bold">Motivo</label>
+                                    <select
+                                        id="motivo"
+                                        className="form-select"
+                                        value={motivo}
+                                        onChange={(e) => setMotivo(e.target.value)}
+                                    >
+                                        <option value="">Seleccione un motivo</option>
+                                        <option value="Clase">Clases</option>
+                                        <option value="Examen">Examen</option>
+                                        <option value="Reunión">Reunión</option>
+                                        <option value="Conferencia">Conferencia</option>
+                                    </select>
+                                </div>
+                                
                                 <div className="form-group mb-3">
                                     <label htmlFor="fecha" className="fw-bold">Fecha</label>
                                     <input
@@ -181,6 +172,7 @@ function CrearReservas() {
                                             ))}
                                     </select>
                                 </div>
+                                
                                 <button
                                     type="button"
                                     className="btn btn-primary mb-3"
@@ -188,6 +180,7 @@ function CrearReservas() {
                                 >
                                     Agregar Período
                                 </button>
+                                
                                 {periodosSeleccionados.length > 0 && (
                                     <div>
                                         <p>Períodos seleccionados:</p>
@@ -198,6 +191,7 @@ function CrearReservas() {
                                         </ul>
                                     </div>
                                 )}
+                                
                                 <div className="text-center">
                                     <button
                                         type="button"
@@ -206,6 +200,7 @@ function CrearReservas() {
                                     >
                                         Registrar Reserva
                                     </button>
+                                    
                                     <Link to="/" className="btn btn-primary">
                                         Volver
                                     </Link>

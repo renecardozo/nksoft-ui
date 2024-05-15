@@ -48,7 +48,7 @@ let _nav = [
   },
   {
     component: CNavItem,
-    name: 'Administrar',
+    name: 'Gestionar docentes',
     to: '/configurar/administrar',
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },

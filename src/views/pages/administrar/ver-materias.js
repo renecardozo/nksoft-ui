@@ -13,7 +13,7 @@ import {
   CTableRow,
 } from '@coreui/react';
 
-function VerDocentes() {
+function verMaterias() {
   const [usuarios, setUsuarios] = useState([]);
 
   useEffect(() => {
@@ -84,4 +84,4 @@ function VerDocentes() {
   );
 }
 
-export default VerDocentes;
+export default verMaterias;

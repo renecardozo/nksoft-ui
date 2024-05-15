@@ -24,6 +24,7 @@ const RegistrarDepartamento = React.lazy(
   () => import('./views/pages/registrar-departamentos/registrarDepartamento'),
 )
 const verAulas = React.lazy(() => import('./views/pages/agregar-unidad/vistaAulas'))
+const verMaterias = React.lazy(() => import('./views/pages/administrar/ver-materias'))
 
 const ListUser = React.lazy(() => import('./views/pages/usuarios/users/List.jsx'))
 const FormUser = React.lazy(() => import('./views/pages/usuarios/users/Form.jsx'))
@@ -51,17 +52,8 @@ const routes = [
   { path: '/administracion/crear-feriados', name: 'Crear Feriado', element: CrearFeriados },
   { path: '/administracion/agregar-materia', name: 'Agregar Materia', element: AgregarMateria },
   { path: '/administracion/ver-materia', name: 'Ver Materia', element: verMateria },
-  
-  {
-    path: '/administracion/feriados/:id/details',
-    name: 'Detalles Feriado',
-    element: DetailsFeriado,
-  },
-  {
-    path: '/administracion/registrar-materias',
-    name: 'Agregar Materia',
-    element: registrarMateria,
-  },
+  { path: '/administracion/feriados/:id/details',name: 'Detalles Feriado', element: DetailsFeriado,},
+  { path: '/administracion/registrar-materias',name: 'Agregar Materia',element: registrarMateria, },
   //USUARIOS
   { path: '/users', name: 'Usuarios', element: ListUser },
   { path: '/users/create', name: 'Crear Usuario', element: FormUser },
@@ -70,20 +62,13 @@ const routes = [
   { path: '/administracion/agregar-unidad', name: 'Unidades', element: AgregarUnidad },
   { path: '/administracion/registrar-unidad', name: 'Agregar unidad', element: registrarUnidad },
   { path: '/administracion/Departamentos', name: 'Departamentos', element: AgregarDepartamento },
-  {
-    path: '/administracion/registrar-departamentos',
-    name: 'Agregar Departamento',
-    element: RegistrarDepartamento,
-  },
+  { path: '/administracion/registrar-departamentos',name: 'Agregar Departamento',element: RegistrarDepartamento, },
   { path: '/administracion/unidades/:unidadId/aulas', name: 'Aulas', element: verAulas },
   // Login
-  {
-    path: '/login',
-    name: 'Login',
-    element: Login,
-  },  //formulario
-  { path: '/registro-solicitud', name:'Formulario de reserva'}
-
+  { path: '/login', name: 'Login', element: Login, },  
+  //formulario
+  { path: '/registro-solicitud', name:'Formulario de reserva', element: CrearReservas},
+  //materias de docentes
+  { path: '/configurar/administrar/:usuarioId/materias', name: 'Materias', element: verMaterias },
 ]
-
 export default routes

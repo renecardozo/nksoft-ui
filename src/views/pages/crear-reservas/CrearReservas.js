@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getPeriodos } from './servicios';
 
-function CrearReservas({ userData }) {
-    const [nombreUsuario, setNombreUsuario] = useState(userData ? userData.name : '');
+function CrearReservas() {
+    const [nombreUsuario, setNombreUsuario] = useState('');
+    const [userData, setUserData] = useState(null);
     const [materia, setMateria] = useState('');
     const [grupo, setGrupo] = useState('');
     const [cantidad, setCantidad] = useState('');
@@ -32,12 +33,13 @@ function CrearReservas({ userData }) {
     }, []);
 
     useEffect(() => {
-        if (userData && userData.name) {
-            setNombreUsuario(userData.name);
-            console.log(userData.name); // Agrega esta línea para verificar si se está recibiendo el nombre correctamente
+        const userDataFromStorage = localStorage.getItem('user_data');
+        if (userDataFromStorage) {
+            const userData = JSON.parse(userDataFromStorage);
+            setUserData(userData);
+            setNombreUsuario(userData.name); // Actualizar el estado nombreUsuario con el nombre del usuario
         }
-    }, [userData]);
-    
+    }, []);
 
     const handleRegistro = async () => {
         try {
@@ -87,7 +89,7 @@ function CrearReservas({ userData }) {
                                         type="text"
                                         id="nombre"
                                         className="form-control"
-                                        value={userData ? userData.name : ''}
+                                        value={nombreUsuario}
                                         disabled
                                     />
                                 </div>

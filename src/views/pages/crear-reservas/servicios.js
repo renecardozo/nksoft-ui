@@ -33,3 +33,16 @@ export const getMateriasGrupos = async () => {
         throw error;
     }
 }
+export const getAulas = async() => {
+    try {
+      const response = await fetch('http://localhost:8000/api/aulas/mostrar');
+      if (!response.ok) {
+        throw new Error('Error al obtener las aulas');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error al obtener los datos de las aulas:', error);
+      throw error;
+    }
+  }

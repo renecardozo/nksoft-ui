@@ -33,6 +33,7 @@ const registrarMateria = () => {
   const [departamentos, setDepartamentos] = useState([]);
 
   const [codigo, setCodigo] = useState('')
+  //const [id_materia, setId_materia] = useState('')
   const [grupo, setGrupo] = useState('')
   const [docente, setDocente] = useState('')
   const [materia, setMateria] = useState('')
@@ -104,14 +105,15 @@ const registrarMateria = () => {
         console.error('Error al verificar duplicados:', error);
     }
     
-  
+    var id_materia
     var cantDig = codigo.replace(/[^0-9]/g,"").length;
     if(codigo != '' && materia != 0 && grupo !='' && docente != '' &&  departamentoSeleccionado && departamentoSeleccionado.id){
-
+      id_materia = codigo
       if(cantDig == 7){  
 
         
         const nuevaMateria = {
+          id_materia,
           codigo,
           materia,
           grupo,

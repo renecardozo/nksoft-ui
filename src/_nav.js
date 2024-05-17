@@ -32,7 +32,7 @@ let _nav = [
   },
   {
     component: CNavItem,
-    name: 'Solicitar reserva',
+    name: 'reserva',
     to: '/reservas/crear-reservas',
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },

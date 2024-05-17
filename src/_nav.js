@@ -10,6 +10,7 @@ import {
   cilNoteAdd,
   cilBuilding,
   cilInstitution,
+  cilBell,
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
 
@@ -19,6 +20,18 @@ let _nav = [
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+  },
+
+  {
+    component: CNavTitle,
+    name: 'Docente',
+  },
+  
+  {
+    component: CNavItem,
+    name: 'Notificaciones',
+    to: '/docente/notificacion',
+    icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,

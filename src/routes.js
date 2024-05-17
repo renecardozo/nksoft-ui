@@ -12,6 +12,8 @@ const EditarRole = React.lazy(() => import('./views/pages/usuarios/roles/RoleFor
 const Calendario = React.lazy(() => import('./components/calendario/Calendario'))
 const AgregarMateria = React.lazy(() => import('./views/pages/agregar-materia/AgregarMateria'))
 const verMateria = React.lazy(() => import('./views/pages/GestionarDocentes/ver-materias'))
+const notificacion = React.lazy(() => import('./views/pages/notificacion/notificacion'))
+const detallesNotificacion = React.lazy(() => import('./views/pages/notificacion/detallesNotificacion'))
 const registrarMateria = React.lazy(
   () => import('./views/pages/registrar-materias/registrarMateria'),
 )
@@ -32,6 +34,8 @@ import Feriados from './views/pages/module-feriados/feriados/Feriados'
 import DetailsFeriado from './views/pages/module-feriados/details-feriado/DetailsFeriado.js'
 import Login from './views/pages/login/Login'
 import Admin from './views/pages/login/Admin'
+
+//import detallesNotificacion from './views/pages/notificacion/detallesNotificacion.js'
 
 const CrearFeriados = React.lazy(
   () => import('./views/pages/module-feriados/crear-feriados/CreateFeriados'),
@@ -54,6 +58,8 @@ const routes = [
   { path: '/administracion/ver-materia', name: 'Ver Materia', element: verMateria },
   { path: '/administracion/feriados/:id/details',name: 'Detalles Feriado', element: DetailsFeriado,},
   { path: '/administracion/registrar-materias',name: 'Agregar Materia',element: registrarMateria, },
+  { path: '/docente/detallesNotificacion', name: 'Detalles de Notificacion', element: detallesNotificacion },
+  { path: '/docente/notificacion', name: 'Notificaciones', element: notificacion },
   //USUARIOS
   { path: '/users', name: 'Usuarios', element: ListUser },
   { path: '/users/create', name: 'Crear Usuario', element: FormUser },

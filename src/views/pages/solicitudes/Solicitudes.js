@@ -67,7 +67,6 @@ function Solicitudes() {
       
     } else {
       //enviar sugerecia
-      console.log(updateData.value)
       onClose()
       getSolicitudes()
     }
@@ -115,6 +114,7 @@ function Solicitudes() {
             <CTableHeaderCell scope="col">#</CTableHeaderCell>
             <CTableHeaderCell scope="col">Usuario</CTableHeaderCell>
             <CTableHeaderCell scope="col">Fecha</CTableHeaderCell>
+            <CTableHeaderCell scope="col">Periodo</CTableHeaderCell>
             <CTableHeaderCell scope="col">Motivo</CTableHeaderCell>
             <CTableHeaderCell scope="col">Estado</CTableHeaderCell>
             <CTableHeaderCell scope="col">Aula</CTableHeaderCell>
@@ -122,11 +122,12 @@ function Solicitudes() {
           </CTableRow>
         </CTableHead>
         <CTableBody>
-          {solicitudes?.map((sol) => (
+          {solicitudes && solicitudes.map((sol) => (
             <CTableRow key={sol.id}>
               <CTableHeaderCell scope="row">{sol.id}</CTableHeaderCell>
               <CTableDataCell>{sol.users?.name}</CTableDataCell>
-              <CTableDataCell>{sol.fecha_hora_reserva}</CTableDataCell>
+              <CTableDataCell>{(sol.fecha_hora_reserva).split(' ')[0]}</CTableDataCell>
+              <CTableDataCell>{sol.periodos.horaInicio}-{sol.periodos.horaFin}</CTableDataCell>
               <CTableDataCell>{sol.motivo_reserva}</CTableDataCell>
               <CTableDataCell>{sol.estado}</CTableDataCell>
               <CTableDataCell>{sol.aula}</CTableDataCell>

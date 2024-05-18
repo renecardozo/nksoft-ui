@@ -8,7 +8,6 @@ import {CCard,
 } from '@coreui/react';
 import { showDocentes } from './servicios'; 
 
-
 function VerDocentes() {
   const [usuarios, setUsuarios] = useState([]);
 
@@ -25,7 +24,6 @@ function VerDocentes() {
   }, []);
 
   const handleVerMaterias = (userId) => {
-    alert(`Ver materias del usuario con ID ${userId}`);
   };
 
   return (
@@ -58,7 +56,7 @@ function VerDocentes() {
                       <CTableDataCell>{usuario.email}</CTableDataCell>
                       <CTableDataCell>
                         <Link
-                          to={`/ver-materias/${usuario.id}`}
+                          to={`/configurar/docentes/${usuario.id}/materias`}
                           className="btn btn-primary ms-2"
                           onClick={() => handleVerMaterias(usuario.id)}
                         >

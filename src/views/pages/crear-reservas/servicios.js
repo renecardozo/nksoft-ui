@@ -22,6 +22,13 @@ export const getMateriasGrupos = async () => {
     try {
         const response = await axios.get('http://localhost:8000/api/materias');
         const materias = response.data;
+        
+        // Verificar si materias es un array antes de llamar a map
+        if (!Array.isArray(materias)) {
+            console.error('Error: materias no es un array');
+            return []; // Retorna un array vacío o maneja el error según sea necesario
+        }
+
         const grupos = materias.map(materia => ({
             id: materia.id,
             nombre: materia.grupo, // Aquí tomamos directamente el atributo "grupo" de la materia
@@ -33,6 +40,8 @@ export const getMateriasGrupos = async () => {
         throw error;
     }
 }
+
+
 export const getAulas = async() => {
     try {
       const response = await fetch('http://localhost:8000/api/aulas/mostrar');
@@ -46,3 +55,16 @@ export const getAulas = async() => {
       throw error;
     }
   }
+  export const postSolicitud = async (data) => {
+    try {
+        const response = await axios.post('http://localhost:8000/api/solicitud_reserva_aula', data);
+        console.log('Respuesta de la solicitud de reserva:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error al enviar la solicitud de reserva:', error);
+        throw error;
+    }
+}
+
+
+  

@@ -33,9 +33,8 @@ const registrarMateria = () => {
   const [departamentos, setDepartamentos] = useState([]);
 
   const [codigo, setCodigo] = useState('')
-  //const [id_materia, setId_materia] = useState('')
   const [grupo, setGrupo] = useState('')
-  const [docente, setDocente] = useState('')
+  //const [docente, setDocente] = useState('')
   const [materia, setMateria] = useState('')
   const [error, setError] = useState(false)
   const [error2, setError2] = useState(false)
@@ -107,7 +106,8 @@ const registrarMateria = () => {
     
     var id_materia
     var cantDig = codigo.replace(/[^0-9]/g,"").length;
-    if(codigo != '' && materia != 0 && grupo !='' && docente != '' &&  departamentoSeleccionado && departamentoSeleccionado.id){
+    //if(codigo != '' && materia != 0 && grupo !='' && docente != '' &&  departamentoSeleccionado && departamentoSeleccionado.id){
+    if(codigo != '' && materia != 0 && grupo !='' &&  departamentoSeleccionado && departamentoSeleccionado.id){
       id_materia = codigo
       if(cantDig == 7){  
 
@@ -117,7 +117,7 @@ const registrarMateria = () => {
           codigo,
           materia,
           grupo,
-          docente,
+          //docente,
           departamento: departamentoSeleccionado.nombreDepartamentos,
         }
         if (!hayMateria) {
@@ -194,6 +194,8 @@ const registrarMateria = () => {
                     />
                   </CInputGroup>
 
+
+                  {/*
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilText} />
@@ -204,7 +206,7 @@ const registrarMateria = () => {
                       onChange={(e) => setDocente(e.target.value)}
                     />
                   </CInputGroup>
-
+                  */}
 
                   <CInputGroup className="mb-3">
                                         <CInputGroupText>

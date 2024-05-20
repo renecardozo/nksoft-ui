@@ -30,6 +30,8 @@ function Solicitudes() {
   const [error, setError] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [visible, setVisible] = useState(false)
+  const [recomendation, setRecomendation] = useState([])
+  const [sugerencia, setSugrencia] = useState([])
 
   const getSolicitudes = async () => {
     let url = "api/solicitud"
@@ -41,12 +43,22 @@ function Solicitudes() {
     setSoli(sol)
     setVisible(!visible)
   }
+  const getRecomendation = async (solicitud) => {
+    let url = "api/recomendacion"
+    const response = await APISERVICE.post(url, solicitud)
+    console.log(response)
+    setRecomendation(response.data)
+    setVisible(!visible)
+  }
+
   const onClose = () => {
     setVisible(false)
     setSoli("")
     setError("")
     setMotivoRechazo("")
     setUpdateData("")
+    setRecomendation([])
+    setSugrencia([])
   }
   const onSubmit = async (id) => {
     if (!updateData.value) {
@@ -64,7 +76,6 @@ function Solicitudes() {
       getSolicitudes()
       //enviar correo de aceptado o rechazado
       //si es rechazado se envia mas el motivo de rechazo
-      
     } else {
       //enviar sugerecia
       onClose()
@@ -74,7 +85,7 @@ function Solicitudes() {
   const handleChange = (e) => {
     setUpdateData({ value: e.target.value })
   }
-  const handleChangeMotivoREchazo= (e) => {
+  const handleChangeMotivoREchazo = (e) => {
     setMotivoRechazo({ value: e.target.value })
   }
 
@@ -89,6 +100,7 @@ function Solicitudes() {
   const handlePrueba = () => {
     console.log("next")
   }
+  console.log(sugerencia)
   useEffect(() => {
     getSolicitudes()
   }, [])
@@ -122,32 +134,35 @@ function Solicitudes() {
           </CTableRow>
         </CTableHead>
         <CTableBody>
-          {solicitudes && solicitudes.map((sol) => (
-            <CTableRow key={sol.id}>
-              <CTableHeaderCell scope="row">{sol.id}</CTableHeaderCell>
-              <CTableDataCell>{sol.users?.name}</CTableDataCell>
-              <CTableDataCell>{(sol.fecha_hora_reserva).split(' ')[0]}</CTableDataCell>
-              <CTableDataCell>{sol.periodos.horaInicio}-{sol.periodos.horaFin}</CTableDataCell>
-              <CTableDataCell>{sol.motivo_reserva}</CTableDataCell>
-              <CTableDataCell>{sol.estado}</CTableDataCell>
-              <CTableDataCell>{sol.aula}</CTableDataCell>
+          {solicitudes &&
+            solicitudes.map((sol) => (
+              <CTableRow key={sol.id}>
+                <CTableHeaderCell scope="row">{sol.id}</CTableHeaderCell>
+                <CTableDataCell>{sol.users?.name}</CTableDataCell>
+                <CTableDataCell>{sol.fecha_hora_reserva.split(" ")[0]}</CTableDataCell>
+                <CTableDataCell>
+                  {sol.periodos.horaInicio}-{sol.periodos.horaFin}
+                </CTableDataCell>
+                <CTableDataCell>{sol.motivo_reserva}</CTableDataCell>
+                <CTableDataCell>{sol.estado}</CTableDataCell>
+                <CTableDataCell>{sol.aulas.nombreAulas}</CTableDataCell>
 
-              <CTableDataCell>
-                {sol.estado.toLowerCase() === "pendiente" ? (
-                  <>
-                    <CButton className="me-2" color="primary" onClick={() => onUpdate(sol)}>
-                      {<CIcon icon={cilSettings} />}
-                    </CButton>
-                    <CButton color="info" onClick={() => setVisible(!visible)}>
-                      {<CIcon icon={cilCommentSquare} />}
-                    </CButton>
-                  </>
-                ) : (
-                  ""
-                )}
-              </CTableDataCell>
-            </CTableRow>
-          ))}
+                <CTableDataCell>
+                  {sol.estado.toLowerCase() === "pendiente" ? (
+                    <>
+                      <CButton className="me-2" color="primary" onClick={() => onUpdate(sol)}>
+                        {<CIcon icon={cilSettings} />}
+                      </CButton>
+                      <CButton color="info" onClick={() => getRecomendation(sol)}>
+                        {<CIcon icon={cilCommentSquare} />}
+                      </CButton>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </CTableDataCell>
+              </CTableRow>
+            ))}
         </CTableBody>
       </CTable>
       <CPagination align="center" aria-label="Page navigation example">
@@ -175,7 +190,7 @@ function Solicitudes() {
               <p>Materia : {solicitud.materia.materia}</p>
               <p>Motivo : {solicitud.motivo_reserva}</p>
               <p>Fecha reserva : {solicitud.fecha_hora_reserva.split(" ")[0]}</p>
-              <p>Aula : {solicitud.aula}</p>
+              <p>Aula : {solicitud.aulas.nombreAulas}</p>
               <p>Hora de inicio : {solicitud.periodos.horaInicio}</p>
               <p>Hora fin: {solicitud.periodos.horaFin}</p>
               <CFormSelect
@@ -188,7 +203,7 @@ function Solicitudes() {
                 <option value="Aceptado">Aceptado</option>
                 <option value="Rechazado">Rechazado</option>
               </CFormSelect>
-              {updateData?.value === 'Rechazado' ? (
+              {updateData?.value === "Rechazado" ? (
                 <CFormTextarea
                   id="floatingTextarea"
                   placeholder="Escribe el motivo del rechazo"
@@ -202,9 +217,48 @@ function Solicitudes() {
             </>
           ) : (
             <>
+              {recomendation && (
+                <CTable>
+                  <CTableHead>
+                    <CTableRow>
+                      <CTableHeaderCell scope="col">Auna</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Capacidad</CTableHeaderCell>
+                    </CTableRow>
+                  </CTableHead>
+                  <CTableBody>
+                    {recomendation.map((rec) => (
+                      <CTableRow key={rec.id}>
+                        <CTableDataCell>{rec.nombreAulas}</CTableDataCell>
+                        <CTableDataCell>{rec.capacidadAulas}</CTableDataCell>
+
+                        <CTableDataCell>
+                          <>
+                            {sugerencia && !sugerencia.find((item) => item.id === rec.id) ? (
+                              <CButton
+                                className="me-2"
+                                color="primary"
+                                onClick={() => setSugrencia([...sugerencia, rec])}
+                              >
+                                Sugerir
+                              </CButton>
+                            ) : (
+                              ""
+                            )}
+                          </>
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))}
+                  </CTableBody>
+                </CTable>
+              )}
+
               <CFormTextarea
                 id="floatingTextarea"
-                placeholder="Escribe una sugerencia"
+                placeholder={
+                  recomendation
+                    ? "Escribe un comentario"
+                    : "NO hay aulas disponibles para esa fecha y hora"
+                }
                 value={updateData.value}
                 onChange={handleChange}
               ></CFormTextarea>

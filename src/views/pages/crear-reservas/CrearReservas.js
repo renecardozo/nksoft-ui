@@ -103,8 +103,8 @@ function CrearReservas() {
             const data = {
                 id_user: userData.id, // Asumiendo que userData contiene la información del usuario
                 id_materia: parseInt(materiaSeleccionada),
-                id_horario: parseInt(periodoSeleccionado),
-                aula: aulaSeleccionada,
+                periodos: periodosSeleccionados.map(item=>item.id),
+                id_aula: aulaSeleccionada,
                 fecha_hora_reserva: fecha,
                 cantidad_estudiantes: parseInt(cantidad),
                 motivo_reserva: motivo,
@@ -215,7 +215,7 @@ function CrearReservas() {
                                         <div className="form-group mb-3">
                                             <label htmlFor="cantidad" className="fw-bold">Número estimado de estudiantes</label>
                                             <input
-                                                type="text"
+                                                type="number"
                                                 id="cantidad"
                                                 className="form-control"
                                                 value={cantidad}

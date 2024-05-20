@@ -141,7 +141,11 @@ function Solicitudes() {
                 <CTableDataCell>{sol.users?.name}</CTableDataCell>
                 <CTableDataCell>{sol.fecha_hora_reserva.split(" ")[0]}</CTableDataCell>
                 <CTableDataCell>
-                  {sol.periodos.horaInicio}-{sol.periodos.horaFin}
+                   <ul>
+                     {sol.periodos.map(periodo => (
+                         <li key={periodo.id}>{`${periodo.horaInicio} - ${periodo.horaFin}`}</li>
+                     ))}
+                   </ul>
                 </CTableDataCell>
                 <CTableDataCell>{sol.motivo_reserva}</CTableDataCell>
                 <CTableDataCell>{sol.estado}</CTableDataCell>

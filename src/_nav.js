@@ -61,6 +61,12 @@ let _nav = [
   },
   {
     component: CNavItem,
+    name: 'Historial',
+    to: '/configurar/historial_solicitudes',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
     name: 'Gestionar docentes',
     to: '/configurar/administrar',
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,

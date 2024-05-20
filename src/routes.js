@@ -5,6 +5,7 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const BuscarAulas = React.lazy(() => import('./views/pages/buscar-aulas/BuscarAulas'))
 const CrearReservas = React.lazy(() => import('./views/pages/crear-reservas/CrearReservas'))
 const Solicitudes = React.lazy(() => import('./views/pages/solicitudes/Solicitudes'))
+const HistorialSolicitudes = React.lazy(() => import('./views/pages/historial_solicitudes/List'))
 const Administrar = React.lazy(() => import('./views/pages/GestionarDocentes/Administrar'))
 const Roles = React.lazy(() => import('./views/pages/usuarios/roles/Role'))
 const CrearRoles = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
@@ -47,6 +48,7 @@ const routes = [
   { path: '/reservas/buscar-aulas', name: 'Buscar Aulas', element: BuscarAulas, exact: true },
   { path: '/reservas/crear-reservas', name: 'Solicitar reserva', element: CrearReservas },
   { path: '/configurar/solicitudes', name: 'Solicitudes', element: Solicitudes },
+  { path: '/configurar/historial_solicitudes', name: 'Solicitudes', element: HistorialSolicitudes }, 
   { path: '/configurar/administrar', name: 'Docentes', element: Administrar },
   { path: '/configurar/roles', name: 'Roles', element: Roles },
   { path: '/configurar/crear-roles', name: 'Crear Role', element: CrearRoles },

@@ -13,7 +13,7 @@ import {
   CTableRow,
   CFormInput,
 } from '@coreui/react';
-import { getMaterias, getMateriasGrupos } from './servicios';
+import { getMaterias, getMateriasGrupos, saveMateriaGrupo } from './servicios';
 import Select from 'react-select';
 
 function VerMaterias() {
@@ -79,10 +79,20 @@ function VerMaterias() {
     setShowEditFields(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setShowEditFields(false);
-    // Aquí puedes realizar otras acciones si es necesario
+    const selectedMateriaGrupo = {
+      materiaId: materiaSeleccionada,
+      grupoId: grupoSeleccionado, 
+    };
+    try {
+      await saveMateriaGrupo(selectedMateriaGrupo);
+      console.log('Materia y grupo guardados exitosamente');
+    } catch (error) {
+      console.error('Error al guardar la materia y grupo:', error);
+    }
   };
+  
   
   return (
     <div className="container">
@@ -129,12 +139,13 @@ function VerMaterias() {
                         />
                       </CTableDataCell>
                       <CTableDataCell>
-                        <Select
-                          options={gruposRelacionados.map(grupo => ({ value: grupo.id, label: grupo.nombre }))}
-                          placeholder="Seleccione un grupo..."
-                          onChange={(selectedOption) => setEditableMateria({ ...editableMateria, grupos: selectedOption })}
-                          menuPosition="fixed"
-                        />
+                      <Select
+  options={gruposRelacionados.map(grupo => ({ value: grupo.id, label: grupo.nombre }))}
+  placeholder="Seleccione un grupo..."
+  onChange={(selectedOption) => setGrupoSeleccionado(selectedOption.value)} // Actualizar directamente grupoSeleccionado
+  menuPosition="fixed"
+/>
+
                       </CTableDataCell>
                       <CTableDataCell>
                         <button

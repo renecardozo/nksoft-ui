@@ -103,14 +103,14 @@ function CrearReservas() {
             const data = {
                 id_user: userData.id, // Asumiendo que userData contiene la información del usuario
                 id_materia: parseInt(materiaSeleccionada),
-                periodos: periodosSeleccionados.map(item=>item.id),
+                periodos: periodosSeleccionados.map(item => item.id),
                 id_aula: aulaSeleccionada,
                 fecha_hora_reserva: fecha,
                 cantidad_estudiantes: parseInt(cantidad),
                 motivo_reserva: motivo,
                 observaciones: document.getElementById('observaciones').value
             };
-            await postSolicitud(data);
+            await postSolicitud(data); // Utiliza la función postSolicitud
             // Restablecer los estados después de enviar la solicitud
             setMateriaSeleccionada('');
             setGrupoSeleccionado('');
@@ -125,7 +125,7 @@ function CrearReservas() {
             alert('Ocurrió un error al registrar la reserva. Por favor, inténtelo de nuevo.');
         }
     };
-
+    
     
 
     const handleAgregarPeriodo = () => {

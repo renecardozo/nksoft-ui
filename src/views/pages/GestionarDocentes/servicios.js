@@ -70,4 +70,17 @@ export const getAulas = async() => {
     }
   }
 
+  // servicios.js
+  export const saveMateriaGrupo = async (materiaGrupoData) => {
+    try {
+      const response = await axios.post('http://localhost:8000/api/docente_materia', materiaGrupoData);
+      return response.data;
+    } catch (error) {
+      console.error('Error al guardar materia y grupo:', error);
+      throw error;
+    }
+  };
+  
+
+
   

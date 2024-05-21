@@ -46,7 +46,6 @@ function Solicitudes() {
   const getRecomendation = async (solicitud) => {
     let url = "api/recomendacion"
     const response = await APISERVICE.post(url, solicitud)
-    console.log(response)
     setRecomendation(response.data)
     setVisible(!visible)
   }
@@ -141,11 +140,11 @@ function Solicitudes() {
                 <CTableDataCell>{sol.users?.name}</CTableDataCell>
                 <CTableDataCell>{sol.fecha_hora_reserva.split(" ")[0]}</CTableDataCell>
                 <CTableDataCell>
-                   <ul>
-                     {sol.periodos.map(periodo => (
-                         <li key={periodo.id}>{`${periodo.horaInicio} - ${periodo.horaFin}`}</li>
-                     ))}
-                   </ul>
+                  <ul>
+                    {sol.periodos.map((periodo) => (
+                      <li key={periodo.id}>{`${periodo.horaInicio} - ${periodo.horaFin}`}</li>
+                    ))}
+                  </ul>
                 </CTableDataCell>
                 <CTableDataCell>{sol.motivo_reserva}</CTableDataCell>
                 <CTableDataCell>{sol.estado}</CTableDataCell>
@@ -195,8 +194,13 @@ function Solicitudes() {
               <p>Motivo : {solicitud.motivo_reserva}</p>
               <p>Fecha reserva : {solicitud.fecha_hora_reserva.split(" ")[0]}</p>
               <p>Aula : {solicitud.aulas.nombreAulas}</p>
-              <p>Hora de inicio : {solicitud.periodos.horaInicio}</p>
-              <p>Hora fin: {solicitud.periodos.horaFin}</p>
+              <p>
+                Periodo :{" "}
+                {solicitud.periodos.map((periodo) => (
+                  <p key={periodo.id}>{`${periodo.horaInicio} - ${periodo.horaFin}`}</p>
+                ))}
+              </p>
+
               <CFormSelect
                 size="lg"
                 className="mb-3"

@@ -25,3 +25,23 @@ export const getAulasByUnidad = async (unidadId = 100) => {
     throw error
   }
 }
+
+export const getPeriodos = async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/api/periodos')
+    return response.data
+  } catch (error) {
+    console.error('Error al obtener los periodos:', error)
+    throw error
+  }
+}
+
+export const checkAvailability = async (data) => {
+  try {
+    const response = await axios.post('http://localhost:8000/api/disponibilidad_aulas', data)
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}

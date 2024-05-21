@@ -5,6 +5,7 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const BuscarAulas = React.lazy(() => import('./views/pages/buscar-aulas/BuscarAulas'))
 const CrearReservas = React.lazy(() => import('./views/pages/crear-reservas/CrearReservas'))
 const Solicitudes = React.lazy(() => import('./views/pages/solicitudes/Solicitudes'))
+const HistorialSolicitudes = React.lazy(() => import('./views/pages/historial_solicitudes/List'))
 const Administrar = React.lazy(() => import('./views/pages/GestionarDocentes/Administrar'))
 const Roles = React.lazy(() => import('./views/pages/usuarios/roles/Role'))
 const CrearRoles = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
@@ -12,6 +13,8 @@ const EditarRole = React.lazy(() => import('./views/pages/usuarios/roles/RoleFor
 const Calendario = React.lazy(() => import('./components/calendario/Calendario'))
 const AgregarMateria = React.lazy(() => import('./views/pages/agregar-materia/AgregarMateria'))
 const verMateria = React.lazy(() => import('./views/pages/GestionarDocentes/ver-materias'))
+const notificacion = React.lazy(() => import('./views/pages/notificacion/notificacion'))
+const detallesNotificacion = React.lazy(() => import('./views/pages/notificacion/detallesNotificacion'))
 const registrarMateria = React.lazy(
   () => import('./views/pages/registrar-materias/registrarMateria'),
 )
@@ -33,6 +36,8 @@ import DetailsFeriado from './views/pages/module-feriados/details-feriado/Detail
 import Login from './views/pages/login/Login'
 import Admin from './views/pages/login/Admin'
 
+//import detallesNotificacion from './views/pages/notificacion/detallesNotificacion.js'
+
 const CrearFeriados = React.lazy(
   () => import('./views/pages/module-feriados/crear-feriados/CreateFeriados'),
 )
@@ -43,6 +48,7 @@ const routes = [
   { path: '/reservas/buscar-aulas', name: 'Buscar Aulas', element: BuscarAulas, exact: true },
   { path: '/reservas/crear-reservas', name: 'Solicitar reserva', element: CrearReservas },
   { path: '/configurar/solicitudes', name: 'Solicitudes', element: Solicitudes },
+  { path: '/configurar/historial_solicitudes', name: 'Solicitudes', element: HistorialSolicitudes }, 
   { path: '/configurar/administrar', name: 'Docentes', element: Administrar },
   { path: '/configurar/roles', name: 'Roles', element: Roles },
   { path: '/configurar/crear-roles', name: 'Crear Role', element: CrearRoles },
@@ -54,6 +60,8 @@ const routes = [
   { path: '/administracion/ver-materia', name: 'Ver Materia', element: verMateria },
   { path: '/administracion/feriados/:id/details',name: 'Detalles Feriado', element: DetailsFeriado,},
   { path: '/administracion/registrar-materias',name: 'Agregar Materia',element: registrarMateria, },
+  { path: '/docente/detallesNotificacion', name: 'Detalles de Notificacion', element: detallesNotificacion },
+  { path: '/docente/notificacion', name: 'Notificaciones', element: notificacion },
   //USUARIOS
   { path: '/users', name: 'Usuarios', element: ListUser },
   { path: '/users/create', name: 'Crear Usuario', element: FormUser },

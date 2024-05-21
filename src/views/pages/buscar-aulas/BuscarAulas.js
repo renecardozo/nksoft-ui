@@ -4,7 +4,8 @@ import { Typeahead } from 'react-bootstrap-typeahead' // ES2015
 import 'react-datepicker/dist/react-datepicker.css'
 //https://github.com/Hacker0x01/react-datepicker
 import DatePicker from 'react-datepicker'
-import { getAulasByUnidad, getAllUnidades } from './service'
+import { getAulasByUnidad, getAllUnidades, getPeriodos, checkAvailability } from './service'
+import { useNavigate } from 'react-router-dom'
 
 import {
   CForm,
@@ -17,12 +18,19 @@ import {
   CCol,
 } from '@coreui/react'
 
-const aulasOptions = [
-  { id: 1, label: 'John' },
-  { id: 2, label: 'Miles' },
-  { id: 3, label: 'Charles' },
-  { id: 4, label: 'Herbie' },
-]
+function removeDuplicates(array, key) {
+  return array.reduce((uniqueArray, currentItem) => {
+    // Check if there is already an object with the same key value in uniqueArray
+    const isDuplicate = uniqueArray.some((item) => item[key] === currentItem[key])
+
+    // If not a duplicate, add it to the uniqueArray
+    if (!isDuplicate) {
+      uniqueArray.push(currentItem)
+    }
+
+    return uniqueArray
+  }, [])
+}
 
 function BuscarAulas() {
   const [unidad, setUnidad] = useState([])
@@ -33,10 +41,47 @@ function BuscarAulas() {
   const [capacidadList, setCapacidadList] = useState([])
   const [fecha, setFecha] = useState(Date.now())
   const [listResult, setListResult] = useState([])
-  const onBuscarAulasHandler = (e) => {
+  const [periodosSeleccionados, setPeriodosSeleccionados] = useState([])
+  const [periodosDisponibles, setPeriodosDisponibles] = useState([])
+  const [periodoSeleccionado, setPeriodoSeleccionado] = useState('')
+  const navigate = useNavigate()
+  const onBuscarAulasHandler = async (e) => {
     e.preventDefault()
     console.log('buscar')
+    const data = {
+      unidadId: unidad[0].id.toString(),
+      aulaId: aula[0].id.toString(),
+      aula: aula[0].label,
+      capacidad: capacidad[0].label,
+      fecha: new Date(fecha),
+      periodos: periodosSeleccionados.map((item) => item.id),
+    }
+    try {
+      const response = await checkAvailability(data)
+      console.log(response)
+      const uniqueArray = removeDuplicates(response.rooms, 'id')
+      setListResult([...uniqueArray])
+    } catch (error) {
+      console.log(error)
+    }
   }
+  const makeNameUnits = (id) => {
+    return unidades.find((unit) => unit.id == id).label
+  }
+  const fetchPeriodos = async () => {
+    try {
+      const data = await getPeriodos()
+      const periodosFormateados = data.map((periodo, index) => ({
+        id: index + 1,
+        ...periodo,
+        nombreCompleto: `${periodo.horaInicio} - ${periodo.horaFin}`,
+      }))
+      setPeriodosDisponibles(periodosFormateados)
+    } catch (error) {
+      console.error('Error al obtener los periodos:', error)
+    }
+  }
+
   const getAulas = async (unidadId) => {
     const listAulas = await getAulasByUnidad(unidadId)
     setAulas(
@@ -70,9 +115,28 @@ function BuscarAulas() {
   const onHandlerSelectedUnidad = (selected) => {
     setUnidad(selected)
   }
+  const handleAgregarPeriodo = () => {
+    if (!periodoSeleccionado) {
+      alert('Debe seleccionar un período primero.')
+      return
+    }
+
+    if (periodosSeleccionados.some((periodo) => periodo.id === parseInt(periodoSeleccionado))) {
+      alert('Este período ya ha sido seleccionado.')
+      return
+    }
+
+    const periodo = periodosDisponibles.find((p) => p.id === parseInt(periodoSeleccionado))
+    setPeriodosSeleccionados([...periodosSeleccionados, periodo])
+    setPeriodoSeleccionado('')
+  }
+  const goToBookingRooms = (data) => {
+    navigate('/reservas/crear-reservas', { state: { ...data, fecha } })
+  }
   useEffect(() => {
     getAulas(unidad && unidad[0]?.id)
     getUnidades()
+    fetchPeriodos()
   }, [unidad])
   return (
     <div className="container">
@@ -146,6 +210,53 @@ function BuscarAulas() {
             </div>
           </div>
         </div>
+        <div className="row">
+          <div className="col-md-6 col-sm-12">
+            <div className="mb-3">
+              <div className="form-group mb-3">
+                <label htmlFor="periodo_id" className="fw-bold">
+                  Período
+                </label>
+                <div className="d-flex align-items-center">
+                  <select
+                    id="periodo_id"
+                    className="form-select"
+                    value={periodoSeleccionado}
+                    onChange={(e) => setPeriodoSeleccionado(e.target.value)}
+                  >
+                    <option value="">Seleccione un período</option>
+                    {periodosDisponibles
+                      .filter((periodo) => !periodosSeleccionados.some((p) => p.id === periodo.id))
+                      .map((periodo) => (
+                        <option key={periodo.id} value={periodo.id}>
+                          {periodo.nombreCompleto}
+                        </option>
+                      ))}
+                  </select>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={handleAgregarPeriodo}
+                    style={{ height: 'calc(1.5em + 0.75rem + 2px)' }}
+                  >
+                    Agregar Período
+                  </button>
+                </div>
+              </div>
+
+              {periodosSeleccionados.length > 0 && (
+                <div>
+                  <p>Períodos seleccionados:</p>
+                  <ul>
+                    {periodosSeleccionados.map((periodo) => (
+                      <li key={periodo.id}>{`${periodo.horaInicio} - ${periodo.horaFin}`}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
         <div className="row justify-content-center">
           <div className="col-md-6 col-sm-12">
             <div className="mb-3">
@@ -180,12 +291,14 @@ function BuscarAulas() {
               {listResult.length ? (
                 listResult.map((item, index) => (
                   <tr key={item.id}>
-                    <th scope="row">{item.unidad}</th>
-                    <td>{item.aula}</td>
-                    <td>{item.fecha}</td>
-                    <td>{item.capacidad}</td>
+                    <th scope="row">{makeNameUnits(item.unidad_id)}</th>
+                    <td>{item.nombreAulas}</td>
+                    <td>{fecha.toLocaleString()}</td>
+                    <td>{item.capacidadAulas}</td>
                     <td>
-                      <Link to={'/administracion/reservas'}>Reservar</Link>
+                      <CButton className="btn btn-primary" onClick={() => goToBookingRooms(item)}>
+                        Reservar
+                      </CButton>
                     </td>
                   </tr>
                 ))

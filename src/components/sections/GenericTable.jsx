@@ -7,7 +7,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-} from '@coreui/react'
+} from "@coreui/react"
 
 export default function GenericTable({ headers, list, onEdit, onDelete }) {
   return (
@@ -17,19 +17,19 @@ export default function GenericTable({ headers, list, onEdit, onDelete }) {
           <CTableRow>
             {headers &&
               headers.map((header) => (
-                <CTableHeaderCell key={'head' + header.id}>{header.title}</CTableHeaderCell>
+                <CTableHeaderCell key={"head" + header.id}>{header.title}</CTableHeaderCell>
               ))}
           </CTableRow>
         </CTableHead>
         <CTableBody>
           {list &&
             list.map((item) => (
-              <CTableRow key={'body' + item.id}>
+              <CTableRow key={"body" + item.id}>
                 {headers &&
                   headers.map((header) =>
-                    header.key === 'actions' ? (
-                      <CTableDataCell key={'body' + header.id + item.id}>
-                        <CRow className='mx-2'>
+                    header.key === "actions" ? (
+                      <CTableDataCell key={"body" + header.id + item.id}>
+                        <CRow className="mx-2">
                           <CButton
                             color="warning"
                             variant="outline"
@@ -38,18 +38,20 @@ export default function GenericTable({ headers, list, onEdit, onDelete }) {
                           >
                             Editar
                           </CButton>
-                          <CButton
-                            color="danger"
-                            variant="outline"
-                            className="my-1"
-                            onClick={() => onDelete(item)}
-                          >
-                            Eliminar
-                          </CButton>
+                          {item.role_id !== 1 && (
+                            <CButton
+                              color="danger"
+                              variant="outline"
+                              className="my-1"
+                              onClick={() => onDelete(item)}
+                            >
+                              Eliminar
+                            </CButton>
+                          )}
                         </CRow>
                       </CTableDataCell>
                     ) : (
-                      <CTableDataCell key={'body' + header.id + item.id}>
+                      <CTableDataCell key={"body" + header.id + item.id}>
                         {header.field ? header.field(item) : item[header.key]}
                       </CTableDataCell>
                     ),

@@ -10,6 +10,7 @@ import {
   cilNoteAdd,
   cilBuilding,
   cilInstitution,
+  cilBell,
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
 
@@ -19,6 +20,18 @@ let _nav = [
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+  },
+
+  {
+    component: CNavTitle,
+    name: 'Docente',
+  },
+  
+  {
+    component: CNavItem,
+    name: 'Notificaciones',
+    to: '/docente/notificacion',
+    icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
@@ -32,7 +45,7 @@ let _nav = [
   },
   {
     component: CNavItem,
-    name: 'Solicitar reserva',
+    name: 'reserva',
     to: '/reservas/crear-reservas',
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
@@ -44,6 +57,12 @@ let _nav = [
     component: CNavItem,
     name: 'Solicitudes',
     to: '/configurar/solicitudes',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Historial',
+    to: '/configurar/historial_solicitudes',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {

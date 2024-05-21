@@ -9,25 +9,25 @@ import {
   CFormLabel,
   CRow,
   CFormSelect,
-} from '@coreui/react'
-import { APISERVICE } from '../../../../services/api.service'
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+} from "@coreui/react"
+import { APISERVICE } from "../../../../services/api.service"
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 export default function ListUser() {
   const [roles, setRoles] = useState([])
   const navigate = useNavigate()
   const { id } = useParams()
   const [data, setData] = useState({
-    name: '',
-    last_name: '',
-    email: '',
-    ci: '',
-    code_sis: '',
-    phone: '',
-    role_id: '',
+    name: "",
+    last_name: "",
+    email: "",
+    ci: "",
+    code_sis: "",
+    phone: "",
+    role_id: "",
   })
   const default_validation = {
-    rules: ['required'],
+    rules: ["required"],
     errors: [],
   }
   const [verify, setVerify] = useState({
@@ -40,9 +40,10 @@ export default function ListUser() {
     role_id: { ...default_validation },
   })
   const getRoles = async () => {
-    let url = 'api/roles'
+    let url = "api/roles"
     const response = await APISERVICE.get(url)
-    setRoles(response)
+    const result = response.filter((item) => item.id !== 1)
+    setRoles(result)
   }
   useEffect(() => {
     if (id) {
@@ -60,10 +61,10 @@ export default function ListUser() {
     validateData(values).then((resp) => {
       const service = id
         ? APISERVICE.put(`api/users/${id}`, data)
-        : APISERVICE.post('api/users', data)
+        : APISERVICE.post("api/users", data)
       service
         .then(() => {
-          navigate('/users')
+          navigate("/users")
           return true
         })
         .catch(async (error) => {
@@ -88,7 +89,7 @@ export default function ListUser() {
   }
   const controllerValidationField = (name, value) => {
     const messages = {
-      required: 'Este campo es requerido',
+      required: "Este campo es requerido",
     }
     let resp = { ...verify[name] }
 
@@ -99,8 +100,8 @@ export default function ListUser() {
         errors: verify[name].errors.filter((item) => item_messages.includes(item)),
       }
       if (verify[name].rules && verify[name].rules.length > 0) {
-        if (verify[name].rules.includes('required')) {
-          if ([null, undefined, ''].includes(value)) {
+        if (verify[name].rules.includes("required")) {
+          if ([null, undefined, ""].includes(value)) {
             resp = {
               ...verify[name],
               errors: resp.errors.concat(messages.required),
@@ -160,7 +161,7 @@ export default function ListUser() {
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>{id ? 'Editar Usuario' : 'Crear Usuarios'}</strong>
+            <strong>{id ? "Editar Usuario" : "Crear Usuarios"}</strong>
           </CCardHeader>
           <CCardBody className="overflow-auto p-3">
             <CForm
@@ -247,24 +248,26 @@ export default function ListUser() {
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="col-12">
-                <CFormLabel htmlFor="role_id">Rol</CFormLabel>
-                <CFormSelect
-                  name="role_id"
-                  invalid={verify.role_id.errors.length > 0}
-                  feedbackInvalid={verify.role_id.errors[0]}
-                  value={data.role_id}
-                  onChange={handleInputChange}
-                >
-                  <option value={''}>Selecciona un rol</option>
-                  {roles &&
-                    roles.map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {item.name}
-                      </option>
-                    ))}
-                </CFormSelect>
-              </div>
+              {data.role_id !== 1 && (
+                <div className="col-12">
+                  <CFormLabel htmlFor="role_id">Rol</CFormLabel>
+                  <CFormSelect
+                    name="role_id"
+                    invalid={verify.role_id.errors.length > 0}
+                    feedbackInvalid={verify.role_id.errors[0]}
+                    value={data.role_id}
+                    onChange={handleInputChange}
+                  >
+                    <option value={""}>Selecciona un rol</option>
+                    {roles &&
+                      roles.map((item) => (
+                        <option key={item.id} value={item.id}>
+                          {item.name}
+                        </option>
+                      ))}
+                  </CFormSelect>
+                </div>
+              )}
               <CCol xs={12}>
                 <CButton color="primary" type="submit">
                   Continuar

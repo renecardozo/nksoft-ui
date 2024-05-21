@@ -1,4 +1,2 @@
-import BuscarAulas from './BuscarAulas';
-export {
-  BuscarAulas
-}
+import BuscarAulas from './BuscarAulas'
+export { BuscarAulas }

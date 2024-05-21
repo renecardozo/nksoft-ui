@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getPeriodos, postSolicitud, getMaterias, getMateriasGrupos, getAulas } from './servicios';
+import { useLocation } from 'react-router-dom'
 
 function CrearReservas() {
+    const location = useLocation();
+    const data = location.state || {};
     const [nombreUsuario, setNombreUsuario] = useState('');
     const [userData, setUserData] = useState(null);
     const [materiasGrupos, setMateriasGrupos] = useState([]); 
@@ -11,10 +14,10 @@ function CrearReservas() {
     const [grupos, setGrupos] = useState([]);
     const [gruposRelacionados, setGruposRelacionados] = useState([]);
     const [grupoSeleccionado, setGrupoSeleccionado] = useState(''); 
-    const [cantidad, setCantidad] = useState('');
+    const [cantidad, setCantidad] = useState(data.capacidadAulas || '');
     const [motivo, setMotivo] = useState('');
-    const [fecha, setFecha] = useState('');
-    const [aulaSeleccionada, setAulaSeleccionada] = useState(''); // New state for selected classroom
+    const [fecha, setFecha] = useState(data.fecha || '');
+    const [aulaSeleccionada, setAulaSeleccionada] = useState(data.id || ''); // New state for selected classroom
     const [aulasDisponibles, setAulasDisponibles] = useState([]); // New state for available classrooms
     const [periodosSeleccionados, setPeriodosSeleccionados] = useState([]);
     const [periodosDisponibles, setPeriodosDisponibles] = useState([]);

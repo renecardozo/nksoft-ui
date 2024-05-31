@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   CCard,
   CCardBody,
@@ -9,102 +8,118 @@ import {
   CRow,
   CTable,
   CTableBody,
-  CTableCaption,
   CTableDataCell,
   CTableHead,
   CTableHeaderCell,
   CTableRow,
   CContainer,
   CButton,
-} from '@coreui/react'
-import { useAppContext } from '../../../hooks'
-import { getMaterias } from '../agregar-materia/servicios'
+} from '@coreui/react';
 
-function Notificacion() {
-  const navigate = useNavigate()
-    /** 
-  const {
-    state: { materia },
-  } = useAppContext()
-  const [materias, setMaterias] = useState([])
+const Notificacion = () => {
+  const [notificaciones, setNotificaciones] = useState([]);
+  const [solicitudes, setSolicitudes] = useState({});
+  const [idUsuario, setIdUsuario] = useState('');
+  const [userData, setUserData] = useState(null);
+  const [aulas, setAulas] = useState({}); // Nuevo estado para almacenar los nombres de las aulas
 
   const navigate = useNavigate();
-  
-  const handleVerMaterias = (id) => {
-   navigate('/administracion/ver-materia', { state: { id } });
+
+  const handleVerDetalles = (id) => {
+    navigate('/docente/detallesNotificacion', { state: { id } });
   };
 
+  const fetchNotificaciones = async () => {
+    const response = await fetch('http://localhost:8000/api/notificaciones'); // Ajusta la URL de tu API
+    const data = await response.json();
 
-  const findAll = async () => {
-    const response = await getMaterias();
+    const solicitudesData = {};
+    const aulasData = {};
+    const filteredNotificaciones = [];
 
-    // Procesar los datos para eliminar duplicados y contar el número de grupos
-    const materiasProcesadas = response.reduce((acumulador, materia) => {
-      const materiaExistente = acumulador.find(m => m.materia === materia.materia);
+    for (const notificacion of data) {
+      if (!solicitudesData[notificacion.id_solicitud]) {
+        const solicitud = await fetchSolicitud(notificacion.id_solicitud);
+        solicitudesData[notificacion.id_solicitud] = solicitud;
 
-      if (materiaExistente) {
-        materiaExistente.grupos++;
-      } else {
-        acumulador.push({ ...materia, grupos: 1 });
+        if (solicitud.id_user === idUsuario) {
+          filteredNotificaciones.push(notificacion);
+
+          const aulaId = solicitud.id_aula;
+          if (!aulasData[aulaId]) {
+            const aula = await fetchAula(aulaId);
+            aulasData[aulaId] = aula.nombreAulas;
+          }
+        }
       }
+    }
 
-      return acumulador;
-    }, []);
+    setNotificaciones(filteredNotificaciones);
+    setSolicitudes(solicitudesData);
+    setAulas(aulasData); // Actualizar el estado de aulas
+  };
 
-    setMaterias(materiasProcesadas);
+  const fetchSolicitud = async (idSolicitud) => {
+    const response = await fetch(`http://localhost:8000/api/solicitud/${idSolicitud}`);
+    const data = await response.json();
+    return data.data;
+  };
+
+  const fetchAula = async (idAula) => {
+    const response = await fetch(`http://localhost:8000/api/aula/${idAula}`);
+    const data = await response.json();
+    return data.data;
   };
 
   useEffect(() => {
-    findAll()
-  }, [])*/
+    const userDataFromStorage = localStorage.getItem('user_data');
+    if (userDataFromStorage) {
+      const userData = JSON.parse(userDataFromStorage);
+      setUserData(userData);
+      setIdUsuario(userData.id);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (idUsuario) {
+      fetchNotificaciones();
+    }
+  }, [idUsuario]);
 
   return (
     <CContainer className="px-4">
-     <CRow>
-     <CCol>
+      <CRow>
+        <CCol>
           <h1 style={{ fontSize: '1.7rem' }}>Lista de Notificaciones</h1>
         </CCol>
       </CRow>
       <CRow>
         <CCol sm={6} md={8}></CCol>
-        <CCol xs={6} md={4}>
-        </CCol>
+        <CCol xs={6} md={4}></CCol>
       </CRow>
-      <br></br>
+      <br />
       <CRow>
         <CTable>
           <CTableHead>
             <CTableRow>
               <CTableHeaderCell scope="col">Solicitud</CTableHeaderCell>
               <CTableHeaderCell scope="col"></CTableHeaderCell>
-
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {/*materias.map((materia) => (
-              <CTableRow key={materia.id}>
-     
-                <CTableDataCell>{materia.materia}</CTableDataCell>
-                <CTableDataCell>{materia.grupos}</CTableDataCell>
-
-                <CTableDataCell><CButton color="primary" onClick={() => handleVerMaterias(materia.materia)}>Ver Materia</CButton></CTableDataCell>
+            {notificaciones.map((notificacion) => (
+              <CTableRow key={notificacion.id}>
+                <CTableDataCell>Solicitud para el Ambiente {aulas[solicitudes[notificacion.id_solicitud]?.id_aula]}</CTableDataCell>
+                <CTableDataCell>
+                  <CButton color="primary" onClick={() => handleVerDetalles(notificacion.id)}>Ver Detalles</CButton>
+                </CTableDataCell>
               </CTableRow>
             ))}
-        {}*/}
-            <CTableDataCell>Solicitud para el aula 624</CTableDataCell>
-            <CTableDataCell> <CButton onClick={() => navigate('/docente/detallesNotificacion')} color="primary">Ver Detalles</CButton></CTableDataCell>
-
-          {/*
-            <CTableDataCell><CButton color="primary" onClick={() => handleVerMaterias()}>Ver detalles</CButton></CTableDataCell>
-
-            {/*<CTableDataCell><CButton color="primary" onClick={() => handleVerMaterias(materia.materia)}>Ver Materia</CButton></CTableDataCell>*/}
-
           </CTableBody>
         </CTable>
-
       </CRow>
     </CContainer>
-  )
+  );
 }
 
-export default Notificacion
+export default Notificacion;

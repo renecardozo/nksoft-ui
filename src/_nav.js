@@ -11,6 +11,7 @@ import {
   cilBuilding,
   cilInstitution,
   cilBell,
+  cilLibrary,
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
 
@@ -82,6 +83,12 @@ let _nav = [
     name: 'Usuarios',
     to: '/users',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Backup',
+    to: '/backups',
+    icon: <CIcon icon={cilLibrary} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,

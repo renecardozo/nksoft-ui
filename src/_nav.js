@@ -23,17 +23,7 @@ let _nav = [
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
   },
 
-  {
-    component: CNavTitle,
-    name: 'Docente',
-  },
   
-  {
-    component: CNavItem,
-    name: 'Notificaciones',
-    to: '/docente/notificacion',
-    icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
-  },
   {
     component: CNavTitle,
     name: 'Reservas',
@@ -105,6 +95,12 @@ let _nav = [
     name: 'Feriados',
     to: '/administracion/feriados',
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Bitacora',
+    to: '/administracion/bitacora',
+    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
 
   {

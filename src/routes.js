@@ -28,6 +28,7 @@ const RegistrarDepartamento = React.lazy(
 )
 const verAulas = React.lazy(() => import('./views/pages/agregar-unidad/vistaAulas'))
 const verMaterias = React.lazy(() => import('./views/pages/GestionarDocentes/ver-materias'))
+const bitacora = React.lazy(() => import('./views/pages/bitacora/bitacora'))
 
 const ListUser = React.lazy(() => import('./views/pages/usuarios/users/List.jsx'))
 const FormUser = React.lazy(() => import('./views/pages/usuarios/users/Form.jsx'))
@@ -81,5 +82,7 @@ const routes = [
   { path: '/configurar/docentes/:usuarioId/materias', name: 'Materias', element: verMateria },
   //backups
   { path: '/backups', name: 'Backups', element: Backup },
+  { path: '/administracion/bitacora', name:'Bitacora', element: bitacora},
+
 ]
 export default routes

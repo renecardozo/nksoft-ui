@@ -21,10 +21,11 @@ import { APISERVICE } from "../../../services/api.service"
 import CIcon from "@coreui/icons-react"
 import { cilCommentSquare, cilSettings } from "@coreui/icons"
 import { Link } from "react-router-dom"
-
+import { guardarNotificaciones } from "../notificacion/servicios"
 function Solicitudes() {
   const [solicitudes, setSolicitudes] = useState([])
   const [solicitud, setSoli] = useState("")
+  const [idsolicitud, setIdSol] = useState(1)
   const [updateData, setUpdateData] = useState({ value: "" })
   const [motivoRechazo, setMotivoRechazo] = useState({ value: "" })
   const [error, setError] = useState("")
@@ -40,10 +41,14 @@ function Solicitudes() {
   }
 
   const onUpdate = (sol) => {
+
     setSoli(sol)
     setVisible(!visible)
   }
   const getRecomendation = async (solicitud) => {
+
+    setIdSol(solicitud.id)
+    //console.log("Motivo de la solicitud:", idSol);
     let url = "api/recomendacion"
     const response = await APISERVICE.post(url, solicitud)
     setRecomendation(response.data)
@@ -71,11 +76,39 @@ function Solicitudes() {
     if (solicitud) {
       let url = `api/solicitud/${solicitud?.id}`
       await APISERVICE.put(url, updateData)
+      
+      if (updateData.value === "Rechazado") {
+        console.log(`Solicitud ID: ${solicitud.id}, Estado: ${updateData.value}, Motivo: ${motivoRechazo.value}`)
+        const nuevaNotificacion = {
+          id_solicitud: solicitud.id,
+          respuesta: motivoRechazo.value
+        }
+        await guardarNotificaciones(nuevaNotificacion);
+      } else {
+        console.log(`Solicitud ID: ${solicitud.id}, Estado: ${updateData.value}`)
+        var resp = "Puede Disponer del Aula";
+        const nuevaNotificacion = {
+          id_solicitud: solicitud.id,
+          respuesta: resp
+        }
+        await guardarNotificaciones(nuevaNotificacion);
+      }
+
       onClose()
       getSolicitudes()
       //enviar correo de aceptado o rechazado
       //si es rechazado se envia mas el motivo de rechazo
     } else {
+      const aulasSugeridas = sugerencia.map(aula => aula.nombreAulas).join(", ");
+      console.log(idsolicitud);
+      console.log(aulasSugeridas);
+      console.log(updateData.value);
+      var res = "Ambientes sugeridos: "+aulasSugeridas+". Observacion: "+updateData.value
+      const nuevaNotificacion = {
+        id_solicitud: idsolicitud,
+        respuesta: res
+      }
+      await guardarNotificaciones(nuevaNotificacion);
       //enviar sugerecia
       onClose()
       getSolicitudes()
@@ -229,7 +262,7 @@ function Solicitudes() {
                 <CTable>
                   <CTableHead>
                     <CTableRow>
-                      <CTableHeaderCell scope="col">Auna</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aula</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Capacidad</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>

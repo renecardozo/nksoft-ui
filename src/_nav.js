@@ -89,6 +89,12 @@ let _nav = [
     to: '/administracion/feriados',
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: 'Bitacora',
+    to: '/administracion/bitacora',
+    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+  },
 
   {
     component: CNavItem,

@@ -60,9 +60,9 @@ function Backup() {
   }
   let valor = parseInt(localStorage.getItem("interval"))
   let inter = valor ? valor : 604800000
-  setTimeout(() => {
-    createBackup()
-  }, inter)
+  //setTimeout(() => {
+   // createBackup()
+ // }, inter)
   const nameIterval=()=>{
     if(inter === 86400000){
       return "Diario"
@@ -79,7 +79,7 @@ function Backup() {
       <CToastBody>{message}</CToastBody>
     </CToast>
   )
-  console.log(interval)
+  //console.log(inter)
   useEffect(() => {
     getBackups()
   }, [])

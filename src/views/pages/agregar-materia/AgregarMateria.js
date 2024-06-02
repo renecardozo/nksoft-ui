@@ -25,31 +25,30 @@ function Materias() {
   } = useAppContext()
   const [materias, setMaterias] = useState([])
 
-  const navigate = useNavigate();
-  
-  const handleVerMaterias = (id) => {
-   navigate('/administracion/ver-materia', { state: { id } });
-  };
+  const navigate = useNavigate()
 
+  const handleVerMaterias = (id) => {
+    navigate('/administracion/ver-materia', { state: { id } })
+  }
 
   const findAll = async () => {
-    const response = await getMaterias();
+    const response = await getMaterias()
 
     // Procesar los datos para eliminar duplicados y contar el número de grupos
     const materiasProcesadas = response.reduce((acumulador, materia) => {
-      const materiaExistente = acumulador.find(m => m.materia === materia.materia);
+      const materiaExistente = acumulador.find((m) => m.materia === materia.materia)
 
       if (materiaExistente) {
-        materiaExistente.grupos++;
+        materiaExistente.grupos++
       } else {
-        acumulador.push({ ...materia, grupos: 1 });
+        acumulador.push({ ...materia, grupos: 1 })
       }
 
-      return acumulador;
-    }, []);
+      return acumulador
+    }, [])
 
-    setMaterias(materiasProcesadas);
-  };
+    setMaterias(materiasProcesadas)
+  }
 
   useEffect(() => {
     findAll()
@@ -81,17 +80,19 @@ function Materias() {
           <CTableBody>
             {materias.map((materia) => (
               <CTableRow key={materia.id}>
-     
                 <CTableDataCell>{materia.materia}</CTableDataCell>
                 <CTableDataCell>{materia.grupos}</CTableDataCell>
 
-                <CTableDataCell><CButton color="primary" onClick={() => handleVerMaterias(materia.materia)}>Ver Materia</CButton></CTableDataCell>
+                <CTableDataCell>
+                  <CButton color="primary" onClick={() => handleVerMaterias(materia.materia)}>
+                    Ver Materia
+                  </CButton>
+                </CTableDataCell>
               </CTableRow>
             ))}
             {}
           </CTableBody>
         </CTable>
-
       </CRow>
     </CContainer>
   )

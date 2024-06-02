@@ -31,7 +31,7 @@ const Login = () => {
       .then((response) => {
         localStorage.setItem('user_data', JSON.stringify(response.data))
         setLoading(false)
-        navigate('/dashboard')
+        navigate('/administracion/calendario')
       })
       .catch((error) => {
         setUnathorized(true)
@@ -40,7 +40,7 @@ const Login = () => {
   }
   useEffect(() => {
     if (localStorage.getItem('user_data')) {
-      navigate('/dashboard')
+      navigate('/administracion/calendario')
     }
   }, [])
   return (

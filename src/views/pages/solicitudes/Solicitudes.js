@@ -15,41 +15,39 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-} from "@coreui/react"
-import React, { useEffect, useState } from "react"
-import { APISERVICE } from "../../../services/api.service"
-import CIcon from "@coreui/icons-react"
-import { cilCommentSquare, cilSettings } from "@coreui/icons"
-import { Link } from "react-router-dom"
-import { guardarNotificaciones } from "../notificacion/servicios"
+} from '@coreui/react'
+import React, { useEffect, useState } from 'react'
+import { APISERVICE } from '../../../services/api.service'
+import CIcon from '@coreui/icons-react'
+import { cilCommentSquare, cilSettings } from '@coreui/icons'
+import { Link } from 'react-router-dom'
+import { guardarNotificaciones } from '../notificacion/servicios'
 function Solicitudes() {
   const [solicitudes, setSolicitudes] = useState([])
-  const [solicitud, setSoli] = useState("")
+  const [solicitud, setSoli] = useState('')
   const [idsolicitud, setIdSol] = useState(1)
-  const [updateData, setUpdateData] = useState({ value: "" })
-  const [motivoRechazo, setMotivoRechazo] = useState({ value: "" })
-  const [error, setError] = useState("")
+  const [updateData, setUpdateData] = useState({ value: '' })
+  const [motivoRechazo, setMotivoRechazo] = useState({ value: '' })
+  const [error, setError] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [visible, setVisible] = useState(false)
   const [recomendation, setRecomendation] = useState([])
   const [sugerencia, setSugrencia] = useState([])
 
   const getSolicitudes = async () => {
-    let url = "api/solicitud"
+    let url = 'api/solicitud'
     const response = await APISERVICE.get(url)
     setSolicitudes(response.data)
   }
 
   const onUpdate = (sol) => {
-
     setSoli(sol)
     setVisible(!visible)
   }
   const getRecomendation = async (solicitud) => {
-
     setIdSol(solicitud.id)
     //console.log("Motivo de la solicitud:", idSol);
-    let url = "api/recomendacion"
+    let url = 'api/recomendacion'
     const response = await APISERVICE.post(url, solicitud)
     setRecomendation(response.data)
     setVisible(!visible)
@@ -57,41 +55,43 @@ function Solicitudes() {
 
   const onClose = () => {
     setVisible(false)
-    setSoli("")
-    setError("")
-    setMotivoRechazo("")
-    setUpdateData("")
+    setSoli('')
+    setError('')
+    setMotivoRechazo('')
+    setUpdateData('')
     setRecomendation([])
     setSugrencia([])
   }
   const onSubmit = async (id) => {
     if (!updateData.value) {
       if (solicitud) {
-        return setError("Seleccione una opcion")
+        return setError('Seleccione una opcion')
       } else {
-        return setError("Campo obligatorio")
+        return setError('Campo obligatorio')
       }
     }
 
     if (solicitud) {
       let url = `api/solicitud/${solicitud?.id}`
       await APISERVICE.put(url, updateData)
-      
-      if (updateData.value === "Rechazado") {
-        console.log(`Solicitud ID: ${solicitud.id}, Estado: ${updateData.value}, Motivo: ${motivoRechazo.value}`)
+
+      if (updateData.value === 'Rechazado') {
+        console.log(
+          `Solicitud ID: ${solicitud.id}, Estado: ${updateData.value}, Motivo: ${motivoRechazo.value}`,
+        )
         const nuevaNotificacion = {
           id_solicitud: solicitud.id,
-          respuesta: motivoRechazo.value
+          respuesta: motivoRechazo.value,
         }
-        await guardarNotificaciones(nuevaNotificacion);
+        await guardarNotificaciones(nuevaNotificacion)
       } else {
         console.log(`Solicitud ID: ${solicitud.id}, Estado: ${updateData.value}`)
-        var resp = "Puede Disponer del Aula";
+        var resp = 'Puede Disponer del Aula'
         const nuevaNotificacion = {
           id_solicitud: solicitud.id,
-          respuesta: resp
+          respuesta: resp,
         }
-        await guardarNotificaciones(nuevaNotificacion);
+        await guardarNotificaciones(nuevaNotificacion)
       }
 
       onClose()
@@ -99,16 +99,16 @@ function Solicitudes() {
       //enviar correo de aceptado o rechazado
       //si es rechazado se envia mas el motivo de rechazo
     } else {
-      const aulasSugeridas = sugerencia.map(aula => aula.nombreAulas).join(", ");
-      console.log(idsolicitud);
-      console.log(aulasSugeridas);
-      console.log(updateData.value);
-      var res = "Ambientes sugeridos: "+aulasSugeridas+". Observacion: "+updateData.value
+      const aulasSugeridas = sugerencia.map((aula) => aula.nombreAulas).join(', ')
+      console.log(idsolicitud)
+      console.log(aulasSugeridas)
+      console.log(updateData.value)
+      var res = 'Ambientes sugeridos: ' + aulasSugeridas + '. Observacion: ' + updateData.value
       const nuevaNotificacion = {
         id_solicitud: idsolicitud,
-        respuesta: res
+        respuesta: res,
       }
-      await guardarNotificaciones(nuevaNotificacion);
+      await guardarNotificaciones(nuevaNotificacion)
       //enviar sugerecia
       onClose()
       getSolicitudes()
@@ -122,7 +122,7 @@ function Solicitudes() {
   }
 
   const handleFilter = async (e) => {
-    let url = "api/filtro"
+    let url = 'api/filtro'
     const filtro = {
       value: e.target.value,
     }
@@ -130,7 +130,7 @@ function Solicitudes() {
     setSolicitudes(response.data)
   }
   const handlePrueba = () => {
-    console.log("next")
+    console.log('next')
   }
   console.log(sugerencia)
   useEffect(() => {
@@ -142,7 +142,7 @@ function Solicitudes() {
         <h3 className="me-5">Filtro:</h3>
         <CFormSelect
           size="mb"
-          style={{ width: "40%" }}
+          style={{ width: '40%' }}
           aria-label="Large select example"
           onChange={handleFilter}
         >
@@ -171,7 +171,7 @@ function Solicitudes() {
               <CTableRow key={sol.id}>
                 <CTableHeaderCell scope="row">{sol.id}</CTableHeaderCell>
                 <CTableDataCell>{sol.users?.name}</CTableDataCell>
-                <CTableDataCell>{sol.fecha_hora_reserva.split(" ")[0]}</CTableDataCell>
+                <CTableDataCell>{sol.fecha_hora_reserva.split(' ')[0]}</CTableDataCell>
                 <CTableDataCell>
                   <ul>
                     {sol.periodos.map((periodo) => (
@@ -184,7 +184,7 @@ function Solicitudes() {
                 <CTableDataCell>{sol.aulas.nombreAulas}</CTableDataCell>
 
                 <CTableDataCell>
-                  {sol.estado.toLowerCase() === "pendiente" ? (
+                  {sol.estado.toLowerCase() === 'pendiente' ? (
                     <>
                       <CButton className="me-2" color="primary" onClick={() => onUpdate(sol)}>
                         {<CIcon icon={cilSettings} />}
@@ -194,7 +194,7 @@ function Solicitudes() {
                       </CButton>
                     </>
                   ) : (
-                    ""
+                    ''
                   )}
                 </CTableDataCell>
               </CTableRow>
@@ -216,7 +216,7 @@ function Solicitudes() {
       >
         <CModalHeader onClose={onClose}>
           <CModalTitle id="LiveDemoExampleLabel">
-            {solicitud ? "Actualizar solicitud" : "Redactar recomendacion"}
+            {solicitud ? 'Actualizar solicitud' : 'Redactar recomendacion'}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
@@ -225,10 +225,10 @@ function Solicitudes() {
               <p>Usuario : {solicitud.users.name}</p>
               <p>Materia : {solicitud.materia.materia}</p>
               <p>Motivo : {solicitud.motivo_reserva}</p>
-              <p>Fecha reserva : {solicitud.fecha_hora_reserva.split(" ")[0]}</p>
+              <p>Fecha reserva : {solicitud.fecha_hora_reserva.split(' ')[0]}</p>
               <p>Aula : {solicitud.aulas.nombreAulas}</p>
               <p>
-                Periodo :{" "}
+                Periodo :{' '}
                 {solicitud.periodos.map((periodo) => (
                   <p key={periodo.id}>{`${periodo.horaInicio} - ${periodo.horaFin}`}</p>
                 ))}
@@ -244,7 +244,7 @@ function Solicitudes() {
                 <option value="Aceptado">Aceptado</option>
                 <option value="Rechazado">Rechazado</option>
               </CFormSelect>
-              {updateData?.value === "Rechazado" ? (
+              {updateData?.value === 'Rechazado' ? (
                 <CFormTextarea
                   id="floatingTextarea"
                   placeholder="Escribe el motivo del rechazo"
@@ -252,7 +252,7 @@ function Solicitudes() {
                   onChange={handleChangeMotivoREchazo}
                 ></CFormTextarea>
               ) : (
-                ""
+                ''
               )}
               {error && <p className="text-danger">{error}</p>}
             </>
@@ -283,7 +283,7 @@ function Solicitudes() {
                                 Sugerir
                               </CButton>
                             ) : (
-                              ""
+                              ''
                             )}
                           </>
                         </CTableDataCell>
@@ -297,8 +297,8 @@ function Solicitudes() {
                 id="floatingTextarea"
                 placeholder={
                   recomendation
-                    ? "Escribe un comentario"
-                    : "NO hay aulas disponibles para esa fecha y hora"
+                    ? 'Escribe un comentario'
+                    : 'NO hay aulas disponibles para esa fecha y hora'
                 }
                 value={updateData.value}
                 onChange={handleChange}
@@ -312,7 +312,7 @@ function Solicitudes() {
             Close
           </CButton>
           <CButton color="primary" onClick={onSubmit}>
-            {solicitud ? "Guardar" : "Enviar"}
+            {solicitud ? 'Guardar' : 'Enviar'}
           </CButton>
         </CModalFooter>
       </CModal>

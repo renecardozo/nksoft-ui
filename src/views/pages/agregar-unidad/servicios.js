@@ -1,63 +1,83 @@
-import axios from 'axios';
+import axios from 'axios'
 
 // Función para enviar la solicitud de registro de departamento
 
 export const getUnidad = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/unidades');
-    const unidades = response.data.map(unidad => ({
+    const response = await axios.get('http://localhost:8000/api/unidades')
+    const unidades = response.data.map((unidad) => ({
       ...unidad,
-      nombreDepartamentos: unidad.departamento ? unidad.departamento.nombreDepartamentos : 'Ninguno'
-    }));
+      nombreDepartamentos: unidad.departamento
+        ? unidad.departamento.nombreDepartamentos
+        : 'Ninguno',
+    }))
     // Ordenar las unidades por nombre alfabéticamente
-    const unidadesOrdenadas = unidades.sort((a, b) => a.nombreUnidades.localeCompare(b.nombreUnidades));
+    const unidadesOrdenadas = unidades.sort((a, b) =>
+      a.nombreUnidades.localeCompare(b.nombreUnidades),
+    )
 
-    return unidadesOrdenadas;
+    return unidadesOrdenadas
   } catch (error) {
-    console.error('Error al obtener las unidades:', error);
-    throw error;
+    console.error('Error al obtener las unidades:', error)
+    throw error
+  }
+}
+export const createBitacora = (data, action, id_resource) => {
+  const userData = JSON.parse(localStorage.getItem('user_data'))
+  const toSave = {
+    timestamp: new Date().toISOString(),
+    username: `${userData.name} ${userData.last_name}`,
+    email: userData.email,
+    role: userData.role.name,
+    id_resource: id_resource,
+    name_resource: `${data}`,
+    actions: action,
+  }
+  return axios.post('http://localhost:8000/api/bitacora', toSave)
+}
+export const actualizarUnidad = async (unidadId, datosActualizados) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:8000/api/unidades/${unidadId}`,
+      datosActualizados,
+    )
+    await createBitacora(JSON.stringify(datosActualizados), 'updated', id_resource)
+    return response.data
+  } catch (error) {
+    throw new Error('Error al actualizar la unidad:', error)
   }
 }
 
-export const actualizarUnidad = async (unidadId, datosActualizados) => {
-  try {
-    const response = await axios.put(`http://localhost:8000/api/unidades/${unidadId}`, datosActualizados);
-    return response.data;
-  } catch (error) {
-    throw new Error('Error al actualizar la unidad:', error);
-  }
-};
-
-
 export const postAula = async (data) => {
   try {
-    const response = await axios.post('http://localhost:8000/api/aulas/post', data);
-    return response.data;
+    const response = await axios.post('http://localhost:8000/api/aulas/post', data)
+    await createBitacora(JSON.stringify(data), 'Created', 0)
+    return response.data
   } catch (error) {
-    throw new Error('Error al agregar el aula');
+    throw new Error('Error al agregar el aula')
   }
-};
+}
 
 export const postUnidad = async (data) => {
-  const response = await axios.post('http://localhost:8000/api/unidades', data);
-  return response.data;
+  const response = await axios.post('http://localhost:8000/api/unidades', data)
+  await createBitacora(JSON.stringify(data), 'Created', 0)
+  return response.data
 }
 
 //AULAS
 
 export const getAulasPorUnidad = async (unidadId) => {
   try {
-    const response = await fetch(`http://localhost:8000/api/aulas/mostrarId/${unidadId}`);
+    const response = await fetch(`http://localhost:8000/api/aulas/mostrarId/${unidadId}`)
     if (!response.ok) {
-      throw new Error('Error al obtener las aulas');
+      throw new Error('Error al obtener las aulas')
     }
-    const data = await response.json();
-    return data;
+    const data = await response.json()
+    return data
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.message)
   }
-};
-
+}
 
 export const agregarAula = async (nuevaAula) => {
   try {
@@ -67,61 +87,66 @@ export const agregarAula = async (nuevaAula) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(nuevaAula),
-    });
+    })
     if (!response.ok) {
-      throw new Error('Error al agregar el aula');
+      throw new Error('Error al agregar el aula')
     }
-    const data = await response.json();
-    return data;
+    await createBitacora(JSON.stringify(nuevaAula), 'Created', 0)
+    const data = await response.json()
+    return data
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.message)
   }
-};
+}
 
 export const actualizarAula = async (aulaId, datosActualizados) => {
   try {
-    const response = await axios.put(`http://localhost:8000/api/aulas/${aulaId}`, datosActualizados);
-    return response.data;
+    const response = await axios.put(`http://localhost:8000/api/aulas/${aulaId}`, datosActualizados)
+    await createBitacora(JSON.stringify(datosActualizados), 'Created', aulaId)
+    return response.data
   } catch (error) {
-    throw new Error('Error al actualizar el aula:', error);
+    throw new Error('Error al actualizar el aula:', error)
   }
-};
-    const obtenerIdAulaPorNombre = async (nombreAula) => {
-      try {
+}
 
-   const response = await axios.get('http://localhost:8000/api/aulas');
-    const aulas = response.data;
-    const aulaEncontrada = aulas.find(aula => aula.nombreAulas === nombreAula);
+const obtenerIdAulaPorNombre = async (nombreAula) => {
+  try {
+    const response = await axios.get('http://localhost:8000/api/aulas')
+    const aulas = response.data
+    const aulaEncontrada = aulas.find((aula) => aula.nombreAulas === nombreAula)
     if (!aulaEncontrada) {
-      throw new Error(`No se encontró el aula con el nombre: ${nombreAula}`);
+      throw new Error(`No se encontró el aula con el nombre: ${nombreAula}`)
     }
 
-    return aulaEncontrada.id;
+    return aulaEncontrada.id
   } catch (error) {
-    throw new Error('Error al obtener el ID del aula:', error);
+    throw new Error('Error al obtener el ID del aula:', error)
   }
-};
+}
 export const getAulas = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/aulas/mostrar');
-    return response.data;
+    const response = await axios.get('http://localhost:8000/api/aulas/mostrar')
+    return response.data
   } catch (error) {
-    throw new Error('Error al obtener las aulas');
+    throw new Error('Error al obtener las aulas')
   }
-};
+}
 export const habilitarAulas = async (aulaId, habilitado) => {
   try {
-    const response = await axios.put(`http://localhost:8000/api/aulas/${aulaId}/habilitar`, { habilitado });
-    return response.data;
+    const response = await axios.put(`http://localhost:8000/api/aulas/${aulaId}/habilitar`, {
+      habilitado,
+    })
+    await createBitacora(JSON.stringify(habilitado), 'Created', aulaId)
+    return response.data
   } catch (error) {
-    throw new Error('Error al habilitar las aulas');
-  }  
-};
+    throw new Error('Error al habilitar las aulas')
+  }
+}
 export const getAulasInhabilitadas = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/inhabilitados/aulas');
-    return response.data;
+    const response = await axios.get('http://localhost:8000/api/inhabilitados/aulas')
+    return response.data
   } catch (error) {
-    throw new Error('Error al obtener las aulas inhabilitadas:', error);
+    throw new Error('Error al obtener las aulas inhabilitadas:', error)
   }
-};
+}

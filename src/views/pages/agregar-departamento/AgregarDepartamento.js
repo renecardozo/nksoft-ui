@@ -17,7 +17,11 @@ import {
   CButton,
   CAlert,
 } from '@coreui/react'
-import { postDepartamento, getDepartamento } from '../agregar-departamento/servicios'
+import {
+  postDepartamento,
+  getDepartamento,
+  createBitacora,
+} from '../agregar-departamento/servicios'
 import { useNavigate } from 'react-router-dom'
 
 function Departamentos() {
@@ -35,6 +39,10 @@ function Departamentos() {
     setDepartamentos(response)
   }
 
+  const saveBitacora = async (data) => {
+    await createBitacora(data)
+    console.log('Nuevo departament creates')
+  }
   useEffect(() => {
     findAll()
   }, [])
@@ -67,7 +75,8 @@ function Departamentos() {
         nombreDepartamentos,
       }
       await postDepartamento(nuevoDepartamento)
-      // alert('Departamento registrado con éxito')
+      await saveBitacora(nuevoDepartamento)
+      alert('Departamento registrado con éxito')
       setShowSuccess(true)
       await findAll()
 
@@ -77,6 +86,7 @@ function Departamentos() {
     } catch (error) {
       setShowError(true)
       console.error('Error al guardar el departamento:', error)
+      await saveBitacora(error)
     } finally {
       setTimeout(() => {
         setShowSuccess(false)

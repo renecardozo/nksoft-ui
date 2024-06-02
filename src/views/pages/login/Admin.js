@@ -32,7 +32,7 @@ const Admin = () => {
         const { data } = response
         if (data.role.name === 'SuperAdmin') {
           localStorage.setItem('user_data', JSON.stringify(response.data))
-          navigate('/dashboard')
+          navigate('/administracion/calendario')
         } else {
           setUnathorized(true)
         }

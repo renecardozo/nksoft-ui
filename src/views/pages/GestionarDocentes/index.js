@@ -1,4 +1,2 @@
-import Administrar from './Administrar';
-export {
-  Administrar
-}
+import Administrar from './Administrar'
+export { Administrar }

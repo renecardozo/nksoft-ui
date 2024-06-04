@@ -17,6 +17,7 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { login } from './service'
 import { useNavigate } from 'react-router-dom'
+import { createBitacora } from '../bitacora.service'
 
 const Login = () => {
   const [codeSis, setCodeSis] = useState('')
@@ -31,6 +32,7 @@ const Login = () => {
       .then((response) => {
         localStorage.setItem('user_data', JSON.stringify(response.data))
         setLoading(false)
+        createBitacora({ codeSis, cii }, 'Login', 0)
         navigate('/administracion/calendario')
       })
       .catch((error) => {

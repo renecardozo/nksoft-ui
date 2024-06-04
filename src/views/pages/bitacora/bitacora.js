@@ -18,6 +18,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 function Bitacora() {
   const [data, setData] = useState([])
   const [roles, setRoles] = useState([])
+  const [users, setUsers] = useState([])
   const [selectedUsuario, setSelectedUsuario] = useState('')
   const [selectedRole, setSelectedRole] = useState('')
   const [selectedFecha, setSelectedFecha] = useState(null)
@@ -27,7 +28,22 @@ function Bitacora() {
       try {
         const data = await getAllBitacoras()
         console.log('Bitacoras obtenidos:', data) // Imprimir los roles en la consola
-        setRoles(Array.isArray(data) ? data : [])
+        setRoles(
+          Array.isArray(data)
+            ? removeDuplicates(
+                'role',
+                data.map((d) => ({ role: d.role, id: d.id })),
+              )
+            : [],
+        )
+        setUsers(
+          Array.isArray(data)
+            ? removeDuplicates(
+                'username',
+                data.map((d) => ({ username: d.username, id: d.id })),
+              )
+            : [],
+        )
         setData(Array.isArray(data) ? data : [])
       } catch (error) {
         console.error('Error al obtener los roles:', error)
@@ -37,6 +53,16 @@ function Bitacora() {
 
     getData()
   }, [])
+
+  const removeDuplicates = (prop, arr) => {
+    const map = new Map()
+    arr.forEach((item) => {
+      if (!map.has(item[prop])) {
+        map.set(item[prop], item)
+      }
+    })
+    return Array.from(map.values())
+  }
 
   const handleUsuarioChange = (e) => {
     setSelectedUsuario(e.target.value)
@@ -50,6 +76,11 @@ function Bitacora() {
     setSelectedFecha(date)
   }
 
+  const formatDate = (date) => {
+    const newDate = new Date()
+    return `${newDate.toLocaleDateString()} ${newDate.toLocaleTimeString()}`
+  }
+
   return (
     <div className="container">
       <CCard>
@@ -61,15 +92,19 @@ function Bitacora() {
             <div className="col-md-4 mb-3">
               <CFormSelect value={selectedUsuario} onChange={handleUsuarioChange}>
                 <option value="">Usuario</option>
-                {/* Aquí irían las opciones específicas para filtrar por usuario */}
+                {users.map((item, index) => (
+                  <option key={index} value={item.id}>
+                    {item.username}
+                  </option>
+                ))}
               </CFormSelect>
             </div>
             <div className="col-md-4 mb-3">
               <CFormSelect value={selectedRole} onChange={handleRoleChange}>
                 <option value="">Role</option>
-                {roles.map((role, index) => (
-                  <option key={index} value={role.id}>
-                    {role.nombre}
+                {roles.map((item, index) => (
+                  <option key={index} value={item.id}>
+                    {item.role}
                   </option>
                 ))}
               </CFormSelect>
@@ -101,7 +136,7 @@ function Bitacora() {
               <CTableBody>
                 {data.map((log, index) => (
                   <CTableRow key={index}>
-                    <CTableDataCell>{log.timestamp}</CTableDataCell>
+                    <CTableDataCell>{formatDate(log.timestamp)}</CTableDataCell>
                     <CTableDataCell>{log.username}</CTableDataCell>
                     <CTableDataCell>{log.email}</CTableDataCell>
                     <CTableDataCell>{log.role}</CTableDataCell>

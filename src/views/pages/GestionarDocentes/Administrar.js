@@ -1,30 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { cilBook } from '@coreui/icons';
-import CIcon from '@coreui/icons-react';
-import {CCard,
-  CCardBody, CTable, CTableDataCell, CTableBody, CTableHead,
-  CTableHeaderCell, CTableRow,
-} from '@coreui/react';
-import { showDocentes } from './servicios'; 
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { cilBook } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
+import {
+  CCard,
+  CCardBody,
+  CTable,
+  CTableDataCell,
+  CTableBody,
+  CTableHead,
+  CTableHeaderCell,
+  CTableRow,
+} from '@coreui/react'
+import { showDocentes } from './servicios'
 
 function VerDocentes() {
-  const [usuarios, setUsuarios] = useState([]);
+  const [usuarios, setUsuarios] = useState([])
 
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
-        const data = await showDocentes();
-        setUsuarios(data);
+        const data = await showDocentes()
+        setUsuarios(data)
       } catch (error) {
-        console.error('Error al obtener los datos de los docentes:', error);
+        console.error('Error al obtener los datos de los docentes:', error)
       }
-    };
-    fetchUsuarios();
-  }, []);
+    }
+    fetchUsuarios()
+  }, [])
 
-  const handleVerMaterias = (userId) => {
-  };
+  const handleVerMaterias = (userId) => {}
 
   return (
     <div className="container">
@@ -47,7 +52,7 @@ function VerDocentes() {
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {usuarios.map(usuario => (
+                  {usuarios.map((usuario) => (
                     <CTableRow key={usuario.id}>
                       <CTableDataCell>{usuario.name}</CTableDataCell>
                       <CTableDataCell>{usuario.last_name}</CTableDataCell>
@@ -75,7 +80,7 @@ function VerDocentes() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default VerDocentes;
+export default VerDocentes

@@ -17,6 +17,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 function Bitacora() {
   const [data, setData] = useState([])
+  const [dataFiltered, setDataFiltered] = useState([])
   const [roles, setRoles] = useState([])
   const [users, setUsers] = useState([])
   const [selectedUsuario, setSelectedUsuario] = useState('')
@@ -45,6 +46,7 @@ function Bitacora() {
             : [],
         )
         setData(Array.isArray(data) ? data : [])
+        setDataFiltered(Array.isArray(data) ? data : [])
       } catch (error) {
         console.error('Error al obtener los roles:', error)
         setRoles([])
@@ -65,19 +67,55 @@ function Bitacora() {
   }
 
   const handleUsuarioChange = (e) => {
-    setSelectedUsuario(e.target.value)
+    const itemSelected = e.target.value
+    if (itemSelected === '') {
+      setDataFiltered([...data])
+      return
+    }
+    console.log(itemSelected)
+    setSelectedUsuario(itemSelected)
+    const dataCopy = data.filter((d) => {
+      return d.username === itemSelected
+    })
+    setDataFiltered([...dataCopy])
   }
 
   const handleRoleChange = (e) => {
-    setSelectedRole(e.target.value)
+    console.log(typeof e.target.value)
+    const itemSelected = e.target.value
+    if (itemSelected === '') {
+      setDataFiltered([...data])
+      return
+    }
+    console.log(itemSelected)
+    setSelectedRole(itemSelected)
+    const dataCopy = data.filter((d) => {
+      return d.role === itemSelected
+    })
+    setDataFiltered([...dataCopy])
   }
 
   const handleFechaChange = (date) => {
+    if (date === null) {
+      setDataFiltered([...data])
+      return
+    }
+    console.log(date)
+    const itemSelected = new Date(date)
     setSelectedFecha(date)
+    const dataCopy = data.filter((d) => {
+      const dateTime = new Date(d.timestamp)
+      return (
+        dateTime.getMonth() === itemSelected.getMonth() &&
+        dateTime.getFullYear() === itemSelected.getFullYear() &&
+        dateTime.getDate() === itemSelected.getDate()
+      )
+    })
+    setDataFiltered([...dataCopy])
   }
 
   const formatDate = (date) => {
-    const newDate = new Date()
+    const newDate = new Date(date)
     return `${newDate.toLocaleDateString()} ${newDate.toLocaleTimeString()}`
   }
 
@@ -93,7 +131,7 @@ function Bitacora() {
               <CFormSelect value={selectedUsuario} onChange={handleUsuarioChange}>
                 <option value="">Usuario</option>
                 {users.map((item, index) => (
-                  <option key={index} value={item.id}>
+                  <option key={index} value={item.username}>
                     {item.username}
                   </option>
                 ))}
@@ -103,7 +141,7 @@ function Bitacora() {
               <CFormSelect value={selectedRole} onChange={handleRoleChange}>
                 <option value="">Role</option>
                 {roles.map((item, index) => (
-                  <option key={index} value={item.id}>
+                  <option key={index} value={item.role}>
                     {item.role}
                   </option>
                 ))}
@@ -134,7 +172,7 @@ function Bitacora() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {data.map((log, index) => (
+                {dataFiltered.map((log, index) => (
                   <CTableRow key={index}>
                     <CTableDataCell>{formatDate(log.timestamp)}</CTableDataCell>
                     <CTableDataCell>{log.username}</CTableDataCell>

@@ -50,8 +50,8 @@ export const APISERVICE = {
       if (!response.ok) {
         throw new Error(await response.json())
       }
-      await createBitacora(body, 'Updated', body.id)
       const data = await response.json()
+      await createBitacora(data, 'Updated', data.data.id)
       return data
     } catch (error) {
       return Promise.reject(error)
@@ -63,7 +63,7 @@ export const APISERVICE = {
         method: 'DELETE',
       })
       const data = await response.json()
-      await createBitacora(body, 'Deleted', body.id)
+      await createBitacora(body, 'Deleted', data.data.id)
       return data
     } catch (error) {
       return Promise.reject(error)

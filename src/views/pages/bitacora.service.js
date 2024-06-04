@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const createBitacora = async (data, action, id_resource) => {
   const userData = JSON.parse(localStorage.getItem('user_data'))
 

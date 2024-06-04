@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { createBitacora } from '../bitacora.service'
 export const getUnidad = async () => {
   try {
     const response = await axios.get('http://localhost:8000/api/unidades')
@@ -19,24 +19,10 @@ export const getUnidad = async () => {
   }
 }
 
-export const createBitacora = (data, action, id_resource) => {
-  const userData = JSON.parse(localStorage.getItem('user_data'))
-  const toSave = {
-    timestamp: new Date().toISOString(),
-    username: `${userData.name} ${userData.last_name}`,
-    email: userData.email,
-    role: userData.role.name,
-    id_resource: id_resource,
-    name_resource: `${data}`,
-    actions: action,
-  }
-  return axios.post('http://localhost:8000/api/bitacora', toSave)
-}
-
 export const postUnidad = async (data) => {
   try {
     const response = await axios.post('http://localhost:8000/api/unidades', data)
-    await createBitacora(JSON.stringify(data), 'Created', 0)
+    await createBitacora(data, 'Created', 0)
     return response.data.id // Retorna el ID de la unidad creada
   } catch (error) {
     throw new Error('Error al crear la unidad')
@@ -74,7 +60,7 @@ export const agregarAula = async (nuevaAula) => {
       },
       body: JSON.stringify(nuevaAula),
     })
-    await createBitacora(JSON.stringify(nuevaAula), 'Created', 0)
+    await createBitacora(nuevaAula, 'Created', 0)
     const data = await response.json()
     return data
   } catch (error) {

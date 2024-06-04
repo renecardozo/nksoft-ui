@@ -22,17 +22,3 @@ export const getDepartamento = async () => {
     throw error
   }
 }
-
-export const createBitacora = (data) => {
-  const userData = JSON.parse(localStorage.getItem('user_data'))
-  const toSave = {
-    timestamp: new Date().toISOString(),
-    username: `${userData.name} ${userData.last_name}`,
-    email: userData.email,
-    role: userData.role.name,
-    id_resource: 0,
-    name_resource: `Nuevo Departamento : ${data.nombreDepartamentos}`,
-    actions: 'Created',
-  }
-  return axios.post('http://localhost:8000/api/bitacora', toSave)
-}

@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { createBitacora } from '../bitacora.service'
 // Función para enviar la solicitud de registro de departamento
 
 export const getUnidad = async () => {
@@ -22,26 +22,14 @@ export const getUnidad = async () => {
     throw error
   }
 }
-export const createBitacora = (data, action, id_resource) => {
-  const userData = JSON.parse(localStorage.getItem('user_data'))
-  const toSave = {
-    timestamp: new Date().toISOString(),
-    username: `${userData.name} ${userData.last_name}`,
-    email: userData.email,
-    role: userData.role.name,
-    id_resource: id_resource,
-    name_resource: `${data}`,
-    actions: action,
-  }
-  return axios.post('http://localhost:8000/api/bitacora', toSave)
-}
+
 export const actualizarUnidad = async (unidadId, datosActualizados) => {
   try {
     const response = await axios.put(
       `http://localhost:8000/api/unidades/${unidadId}`,
       datosActualizados,
     )
-    await createBitacora(JSON.stringify(datosActualizados), 'updated', id_resource)
+    await createBitacora(datosActualizados, 'updated', id_resource)
     return response.data
   } catch (error) {
     throw new Error('Error al actualizar la unidad:', error)
@@ -51,7 +39,7 @@ export const actualizarUnidad = async (unidadId, datosActualizados) => {
 export const postAula = async (data) => {
   try {
     const response = await axios.post('http://localhost:8000/api/aulas/post', data)
-    await createBitacora(JSON.stringify(data), 'Created', 0)
+    await createBitacora(data, 'Created', 0)
     return response.data
   } catch (error) {
     throw new Error('Error al agregar el aula')
@@ -60,7 +48,7 @@ export const postAula = async (data) => {
 
 export const postUnidad = async (data) => {
   const response = await axios.post('http://localhost:8000/api/unidades', data)
-  await createBitacora(JSON.stringify(data), 'Created', 0)
+  await createBitacora(data, 'Created', 0)
   return response.data
 }
 
@@ -91,7 +79,7 @@ export const agregarAula = async (nuevaAula) => {
     if (!response.ok) {
       throw new Error('Error al agregar el aula')
     }
-    await createBitacora(JSON.stringify(nuevaAula), 'Created', 0)
+    await createBitacora(nuevaAula, 'Created', 0)
     const data = await response.json()
     return data
   } catch (error) {
@@ -102,7 +90,7 @@ export const agregarAula = async (nuevaAula) => {
 export const actualizarAula = async (aulaId, datosActualizados) => {
   try {
     const response = await axios.put(`http://localhost:8000/api/aulas/${aulaId}`, datosActualizados)
-    await createBitacora(JSON.stringify(datosActualizados), 'Created', aulaId)
+    await createBitacora(datosActualizados, 'Created', aulaId)
     return response.data
   } catch (error) {
     throw new Error('Error al actualizar el aula:', error)

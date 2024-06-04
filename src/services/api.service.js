@@ -1,19 +1,6 @@
 import axios from 'axios'
 const APIURL = 'http://localhost:8000/'
-
-export const createBitacora = (data, action, id_resource) => {
-  const userData = JSON.parse(localStorage.getItem('user_data'))
-  const toSave = {
-    timestamp: new Date().toISOString(),
-    username: `${userData.name} ${userData.last_name}`,
-    email: userData.email,
-    role: userData.role.name,
-    id_resource: id_resource,
-    name_resource: `${data}`,
-    actions: action,
-  }
-  return axios.post('http://localhost:8000/api/bitacora', toSave)
-}
+import { createBitacora } from '../views/pages/bitacora.service'
 
 export const APISERVICE = {
   get: async (url) => {
@@ -45,7 +32,7 @@ export const APISERVICE = {
         throw err
       }
       const data = await response.json()
-      await createBitacora(JSON.stringify(body), 'Created', 0)
+      await createBitacora(body, 'Created', 0)
       return data
     } catch (error) {
       return Promise.reject(error)
@@ -63,7 +50,7 @@ export const APISERVICE = {
       if (!response.ok) {
         throw new Error(await response.json())
       }
-      await createBitacora(JSON.stringify(body), 'Updated', body.id)
+      await createBitacora(body, 'Updated', body.id)
       const data = await response.json()
       return data
     } catch (error) {
@@ -76,7 +63,7 @@ export const APISERVICE = {
         method: 'DELETE',
       })
       const data = await response.json()
-      await createBitacora(JSON.stringify(body), 'Deleted', body.id)
+      await createBitacora(body, 'Deleted', body.id)
       return data
     } catch (error) {
       return Promise.reject(error)

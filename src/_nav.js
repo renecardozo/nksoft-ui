@@ -12,6 +12,11 @@ import {
   cilInstitution,
   cilBell,
   cilLibrary,
+  cilSearch,
+  cilHistory,
+  cilCursor,
+  cilClock,
+  cilNotes,
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
 
@@ -23,7 +28,6 @@ let _nav = [
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
   },
 
-  
   {
     component: CNavTitle,
     name: 'Reservas',
@@ -32,7 +36,7 @@ let _nav = [
     component: CNavItem,
     name: 'Buscar Aulas',
     to: '/reservas/buscar-aulas',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilSearch} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
@@ -48,19 +52,19 @@ let _nav = [
     component: CNavItem,
     name: 'Solicitudes',
     to: '/configurar/solicitudes',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilCursor} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Historial',
     to: '/configurar/historial_solicitudes',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilClock} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Gestionar docentes',
     to: '/configurar/administrar',
-    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
@@ -100,7 +104,7 @@ let _nav = [
     component: CNavItem,
     name: 'Bitacora',
     to: '/administracion/bitacora',
-    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilHistory} customClassName="nav-icon" />,
   },
 
   {

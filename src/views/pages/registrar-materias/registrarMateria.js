@@ -32,7 +32,7 @@ import { start } from '@popperjs/core'
 import { AGREGAR_MATERIA } from '../../../actions'
 import { useNavigate } from 'react-router-dom'
 import { crearMaterias, getMaterias, guardarMaterias } from '../agregar-materia/servicios'
-
+import { createBitacora } from '../bitacora.service'
 const registrarMateria = () => {
   const navigate = useNavigate()
 
@@ -97,7 +97,14 @@ const registrarMateria = () => {
       }
 
       const data = await respuesta.json()
-
+      await createBitacora(
+        {
+          materia: materia,
+          grupo: grupo,
+        },
+        'Created',
+        0,
+      )
       if (data.duplicados) {
         hayMateria = true
       } else {

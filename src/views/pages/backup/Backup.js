@@ -13,14 +13,15 @@ import {
   CToastBody,
   CToaster,
 } from "@coreui/react"
-import {cilTrash} from '@coreui/icons'
+import { cilTrash } from '@coreui/icons'
 import React, { useEffect, useRef, useState } from "react"
 import { APISERVICE } from "../../../services/api.service"
 import CIcon from "@coreui/icons-react"
+import { setInterval } from "core-js"
 
 function Backup() {
   const [backups, setBackups] = useState([])
-  const [interval, setInterval] = useState("")
+  const [interval, setIntervalo] = useState("")
   const [toast, addToast] = useState(null)
   const toaster = useRef()
 
@@ -53,24 +54,22 @@ function Backup() {
     console.log(response)
   }
   const handleChange = (e) => {
-    setInterval(e.target.value)
+    setIntervalo(e.target.value)
   }
   const defineInterval = () => {
     localStorage.setItem("interval", interval)
   }
   let valor = parseInt(localStorage.getItem("interval"))
   let inter = valor ? valor : 604800000
-  //setTimeout(() => {
-   // createBackup()
- // }, inter)
-  const nameIterval=()=>{
-    if(inter === 86400000){
+  //  setInterval(createBackup, inter)
+  const nameIterval = () => {
+    if (inter === 86400000) {
       return "Diario"
     }
-    if(inter === 604800000){
+    if (inter === 604800000) {
       return "Semanal"
     }
-    if(inter === 2629785600 ){
+    if (inter === 2629785600) {
       return "Mensual"
     }
   }
@@ -127,8 +126,8 @@ function Backup() {
                   <CButton className="me-2" color="primary" onClick={() => restoreBackup(backup)}>
                     Restaurar
                   </CButton>
-                  <CButton  color="info" onClick={() => deleteBackup(backup)}>
-                    {<CIcon style={{color:"red"}} icon={cilTrash} />}
+                  <CButton color="info" onClick={() => deleteBackup(backup)}>
+                    {<CIcon style={{ color: "red" }} icon={cilTrash} />}
                   </CButton>
                 </CTableDataCell>
               </CTableRow>

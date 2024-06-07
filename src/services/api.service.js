@@ -1,8 +1,8 @@
-import axios from 'axios'
 const APIURL = 'http://localhost:8000/'
 import { createBitacora } from '../views/pages/bitacora.service'
-
 export const APISERVICE = {
+
+
   get: async (url) => {
     try {
       const response = await fetch(`${APIURL + url}`)
@@ -25,14 +25,13 @@ export const APISERVICE = {
         body: JSON.stringify(body),
       })
       if (!response.ok) {
-        // throw new Error(response)
         let err = new Error('HTTP status code: ' + response.status)
         err.response = response
         err.status = response.status
         throw err
       }
       const data = await response.json()
-      await createBitacora(body, 'Created', 0)
+    await createBitacora(body, 'Created', 0)
       return data
     } catch (error) {
       return Promise.reject(error)
@@ -51,7 +50,7 @@ export const APISERVICE = {
         throw new Error(await response.json())
       }
       const data = await response.json()
-      await createBitacora(data, 'Updated', data.data.id)
+      await createBitacora(data, 'Updated', 0)
       return data
     } catch (error) {
       return Promise.reject(error)

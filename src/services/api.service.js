@@ -64,11 +64,11 @@ export const APISERVICE = {
         method: "DELETE",
       })
       const data = await response.json()
+      const split_info = url.split("/")
       let id_deleted = 0
-      if (body.id) id_deleted = body.id
-      if (data.id) id_deleted = data.id
-      if (data.data && data.data.id) id_deleted = data.data.id
-      await createBitacora(body, "Deleted", id_deleted)
+      if (split_info && !isNaN(Number(split_info[split_info.length - 1])))
+        id_deleted = split_info[split_info.length - 1]
+      await createBitacora(url, "Deleted", id_deleted)
       return data
     } catch (error) {
       return Promise.reject(error)

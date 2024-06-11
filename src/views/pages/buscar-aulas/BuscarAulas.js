@@ -7,16 +7,7 @@ import DatePicker from 'react-datepicker'
 import { getAulasByUnidad, getAllUnidades, getPeriodos, checkAvailability } from './service'
 import { useNavigate } from 'react-router-dom'
 
-import {
-  CForm,
-  CFormLabel,
-  CFormInput,
-  CFormTextarea,
-  CButton,
-  CContainer,
-  CRow,
-  CCol,
-} from '@coreui/react'
+import { CForm, CFormLabel, CButton, CContainer, CRow, CAlert, CFormInput } from '@coreui/react'
 
 function removeDuplicates(array, key) {
   return array.reduce((uniqueArray, currentItem) => {
@@ -37,24 +28,51 @@ function BuscarAulas() {
   const [unidades, setUnidades] = useState([])
   const [aula, setAula] = useState([])
   const [aulas, setAulas] = useState([])
-  const [capacidad, setCapacidad] = useState([])
-  const [capacidadList, setCapacidadList] = useState([])
+  const [capacidad, setCapacidad] = useState(0)
   const [fecha, setFecha] = useState(Date.now())
   const [listResult, setListResult] = useState([])
   const [periodosSeleccionados, setPeriodosSeleccionados] = useState([])
   const [periodosDisponibles, setPeriodosDisponibles] = useState([])
   const [periodoSeleccionado, setPeriodoSeleccionado] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [showError, setShowError] = useState(false)
   const navigate = useNavigate()
+
+  const onClearForm = () => {
+    setUnidad([])
+    setUnidades([])
+    setAula([])
+    setAulas([])
+    setCapacidad(0)
+    setFecha(Date.now())
+    setPeriodosSeleccionados([])
+    setErrorMessage('')
+    setShowError(false)
+  }
   const onBuscarAulasHandler = async (e) => {
     e.preventDefault()
-    console.log('buscar')
+    if (unidad && !unidad.length) {
+      alertMessages('Seleccione al menos una unidad')
+      return
+    }
+    if (aula && !aula.length) {
+      alertMessages('Seleccione al menos una aula')
+      return
+    }
+    if (periodosSeleccionados && !periodosSeleccionados.length) {
+      alertMessages('Seleccione al menos un periodo')
+      return
+    }
     const data = {
-      unidadId: unidad[0].id.toString(),
-      aulaId: aula[0].id.toString(),
-      aula: aula[0].label,
-      capacidad: capacidad[0].label,
+      unidadId: unidad && unidad.length ? unidad[0].id.toString() : '',
+      aulaId: aula && aula.length ? aula[0].id.toString() : '',
+      aula: aula && aula.length ? aula[0].label : '',
+      capacidad: parseInt(capacidad) || 0,
       fecha: new Date(fecha),
-      periodos: periodosSeleccionados.map((item) => item.id),
+      periodos:
+        periodosSeleccionados && periodosSeleccionados.length
+          ? periodosSeleccionados.map((item) => item.id)
+          : [],
     }
     try {
       const response = await checkAvailability(data)
@@ -64,6 +82,13 @@ function BuscarAulas() {
     } catch (error) {
       console.log(error)
     }
+  }
+  const alertMessages = (message) => {
+    setShowError(true)
+    setErrorMessage(message)
+    setTimeout(() => {
+      setShowError(false)
+    }, 3000)
   }
   const makeNameUnits = (id) => {
     return unidades.find((unit) => unit.id == id).label
@@ -89,14 +114,7 @@ function BuscarAulas() {
         return {
           id: aula.id,
           label: aula.nombreAulas,
-        }
-      }),
-    )
-    setCapacidadList(
-      listAulas.map((aula) => {
-        return {
-          id: aula.id,
-          label: aula.capacidadAulas,
+          capacidadAulas: aula.capacidadAulas,
         }
       }),
     )
@@ -117,12 +135,12 @@ function BuscarAulas() {
   }
   const handleAgregarPeriodo = () => {
     if (!periodoSeleccionado) {
-      alert('Debe seleccionar un período primero.')
+      alertMessages('Debe seleccionar un período primero.')
       return
     }
 
     if (periodosSeleccionados.some((periodo) => periodo.id === parseInt(periodoSeleccionado))) {
-      alert('Este período ya ha sido seleccionado.')
+      alertMessages('Este período ya ha sido seleccionado.')
       return
     }
 
@@ -138,6 +156,19 @@ function BuscarAulas() {
     getUnidades()
     fetchPeriodos()
   }, [unidad])
+
+  useEffect(() => {
+    const capca = aulas
+      .filter((item) => {
+        return aula.length ? item.id === aula[0].id : false
+      })
+      .map((a) => {
+        console.log(a)
+        return parseInt(a.capacidadAulas)
+      })
+    setCapacidad(capca)
+    console.log(aulas)
+  }, [aula])
   return (
     <div className="container">
       <div className="row justify-content-center">
@@ -184,12 +215,12 @@ function BuscarAulas() {
               <CFormLabel htmlFor="capacidad-list" className="fw-bold">
                 Capacidad
               </CFormLabel>
-              <Typeahead
+              <CFormInput
+                type="number"
                 id="capacidad-list"
-                onChange={setCapacidad}
-                options={capacidadList}
-                placeholder="Escoge la capacidad..."
-                selected={capacidad}
+                placeholder="Capacidad"
+                value={capacidad}
+                onChange={(e) => setCapacidad(e.target.value)}
               />
             </div>
           </div>
@@ -206,7 +237,6 @@ function BuscarAulas() {
                 onChange={(e) => setFecha(e.target.value)}
                 min={new Date().toISOString().split('T')[0]}
               />
-              {/* <DatePicker selected={fecha} onChange={(date) => setFecha(date)} /> */}
             </div>
           </div>
         </div>
@@ -267,13 +297,19 @@ function BuscarAulas() {
           </div>
           <div className="col-md-6 col-sm-12">
             <div className="mb-3">
-              <CButton color="secondary" type="button" className="mb-3">
+              <CButton
+                color="secondary"
+                type="button"
+                className="mb-3"
+                onClick={() => onClearForm()}
+              >
                 Limpiar
               </CButton>
             </div>
           </div>
         </div>
       </CForm>
+      {showError && <CAlert color="warning">{errorMessage}</CAlert>}
       <hr></hr>
       <CContainer className="px-4">
         <CRow>

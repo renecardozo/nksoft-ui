@@ -29,7 +29,8 @@ export const APISERVICE = {
         throw err
       }
       const data = await response.json()
-      await createBitacora(body, "Created", 0)
+      let newBody = JSON.stringify(body).substring(0,100)
+      await createBitacora(newBody, "Created", 0)
       return data
     } catch (error) {
       return Promise.reject(error)
@@ -52,7 +53,8 @@ export const APISERVICE = {
       if (body.id) id_updated = body.id
       if (data.id) id_updated = data.id
       if (data.data && data.data.id) id_updated = data.data.id
-      await createBitacora(data, "Updated", id_updated)
+      let newData = JSON.stringify(body).substring(0,100)
+      await createBitacora(newData, "Updated", id_updated)
       return data
     } catch (error) {
       return Promise.reject(error)

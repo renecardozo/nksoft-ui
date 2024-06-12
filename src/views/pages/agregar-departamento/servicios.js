@@ -2,13 +2,13 @@ import axios from 'axios'
 
 // Función para enviar la solicitud de registro de departamento
 export const postDepartamento = async (data) => {
-  const response = await axios.post('http://localhost:8000/api/departamentos', data)
+  const response = await axios.post(`${process.env.PATH_API}/api/departamentos`, data)
   return response.data
 }
 
 export const getDepartamento = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/departamentos')
+    const response = await axios.get(`${process.env.PATH_API}/api/departamentos`)
     const departamentos = response.data
 
     // Ordenar los departamentos por nombre en orden alfabético

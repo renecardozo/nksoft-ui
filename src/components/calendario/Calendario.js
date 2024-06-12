@@ -39,7 +39,7 @@ const codigoList = [
 function Calendario() {
   const [events, setEvents] = useState([])
   const getEvents = async () => {
-    const { data } = await axios.get('http://localhost:8000/api/v1/event')
+    const { data } = await axios.get(`${process.env.PATH_API}/api/v1/event`)
     const eventList = data.map((d) => {
       return {
         title: d.descripcion,

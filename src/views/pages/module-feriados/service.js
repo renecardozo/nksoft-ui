@@ -25,7 +25,7 @@ const codigoList = [
 
 export const getFeriados = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/v1/event')
+    const response = await axios.get(`${process.env.PATH_API}/api/v1/event`)
     return response.data
   } catch (error) {
     console.error(error)
@@ -34,7 +34,7 @@ export const getFeriados = async () => {
 
 export const crearFeriados = async (data) => {
   try {
-    const response = await axios.post('http://localhost:8000/api/v1/event', data)
+    const response = await axios.post(`${process.env.PATH_API}/api/v1/event`, data)
     return response.data
   } catch (error) {
     console.error(error)
@@ -60,7 +60,7 @@ export const getTitleFromCode = (code) => {
 
 export const getFeriado = async (id) => {
   try {
-    const { data } = await axios.get(`http://localhost:8000/api/v1/event/${id}`)
+    const { data } = await axios.get(`${process.env.PATH_API}/api/v1/event/${id}`)
     return data
   } catch (error) {
     console.error('Error fetching item details:', error)
@@ -69,7 +69,7 @@ export const getFeriado = async (id) => {
 
 export const editFeriado = async (body) => {
   try {
-    const { data } = await axios.put(`http://localhost:8000/api/v1/event/${body.id}`, body)
+    const { data } = await axios.put(`${process.env.PATH_API}/api/v1/event/${body.id}`, body)
     return data
   } catch (error) {
     console.error(error)
@@ -78,7 +78,7 @@ export const editFeriado = async (body) => {
 
 export const deleteFeriado = async (id) => {
   try {
-    const { data } = await axios.delete(`http://localhost:8000/api/v1/event/${id}`)
+    const { data } = await axios.delete(`${process.env.PATH_API}/api/v1/event/${id}`)
     return data
   } catch (error) {
     console.error(error)

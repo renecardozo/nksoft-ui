@@ -213,7 +213,8 @@ export default function ListUser() {
                   type="text"
                   name="ci"
                   id="ci"
-                  maxLength={12}
+                  onKeyPress={validOnlyNumbers}
+                  maxLength={9}
                   invalid={verify.ci.errors.length > 0}
                   feedbackInvalid={verify.ci.errors[0]}
                   value={data.ci}
@@ -225,7 +226,7 @@ export default function ListUser() {
                 <CFormInput
                   type="text"
                   onKeyPress={validOnlyNumbers}
-                  maxLength={9}
+                  maxLength={8}
                   name="code_sis"
                   id="code_sis"
                   invalid={verify.code_sis.errors.length > 0}

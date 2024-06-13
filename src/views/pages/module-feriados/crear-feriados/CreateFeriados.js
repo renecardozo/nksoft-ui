@@ -46,10 +46,15 @@ const CrearFeriados = () => {
     e.preventDefault()
     try {
       console.log('guardar feriado')
+      const d = new Date(startDate)
       const nuevoFeriado = {
         descripcion,
         codigo: codeSelected,
-        fecha: startDate.toISOString(),
+        fecha: [
+          d.getFullYear(),
+          ('0' + (d.getMonth() + 1)).slice(-2),
+          ('0' + d.getDate()).slice(-2),
+        ].join('-'),
       }
       await crearFeriados(nuevoFeriado)
       navigate('/administracion/feriados')

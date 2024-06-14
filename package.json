@@ -31,13 +31,14 @@
     "react-router-dom": "^6.22.3",
     "react-select": "^5.8.0",
     "redux": "^5.0.1",
-    "simplebar-react": "^3.2.4" 
+    "simplebar-react": "^3.2.4",
+    "cross-env": "^7.0.3"
   },
   "scripts": {
-    "build": "PATH_API=http://nksoft.tis.cs.umss.edu.bo vite build",
+    "build": "cross-env PATH_API=http://nksoft.tis.cs.umss.edu.bo vite build",
     "lint": "eslint \"src/**/*.js\"",
     "serve": "vite preview",
-    "start": "PATH_API=http://localhost:8000 vite",
+    "start": "cross-env PATH_API=http://localhost:8000 vite",
     "predeploy": "npm run build",
     "deploy": "gh-pages -b dev -d build"
   },

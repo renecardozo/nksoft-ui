@@ -43,7 +43,7 @@ export default function RoleForm() {
   }
   const editRole = async (body, id) => {
     let url = `api/editar/${id}`
-    const response = await APISERVICE.post(url, body)
+    const response = await APISERVICE.put(url, body)
     if (response.success) {
       navigate('/configurar/roles')
     } else {
@@ -145,6 +145,7 @@ export default function RoleForm() {
               name="roleName"
               value={formData.roleName}
               onChange={handleChange}
+              disabled={id ? true : false}
             />
             {validationError.roleName && (
               <div className="text-danger">{validationError.roleName}</div>

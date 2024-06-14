@@ -22,12 +22,7 @@ export const APISERVICE = {
         },
         body: JSON.stringify(body),
       })
-      if (!response.ok) {
-        let err = new Error("HTTP status code: " + response.status)
-        err.response = response
-        err.status = response.status
-        throw err
-      }
+    
       const data = await response.json()
       let newBody = JSON.stringify(body).substring(0,100)
       await createBitacora(newBody, "Created", 0)

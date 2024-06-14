@@ -42,7 +42,12 @@ export const crearFeriados = async (data) => {
 }
 
 export const getListCodeDates = async () => {
-  return new Promise((resolve) => resolve(codigoList))
+  try {
+    const response = await axios.get('http://localhost:8000/api/events-config')
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export const parserCode = (code) => {

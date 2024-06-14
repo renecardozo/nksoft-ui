@@ -2,55 +2,35 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
-// import timeGridPlugin from "@fullcalendar/timegrid";
+import { getEventConfig, getEvents } from './service'
+// import timeGridPlugin from '@fullcalendar/timegrid'
 
-// import "@fullcalendar/core/main.css";
-// import "@fullcalendar/daygrid/main.css";
-// import "@fullcalendar/timegrid/main.css";
+// import '@fullcalendar/core/main.css'
+// import '@fullcalendar/daygrid/main.css'
+// import '@fullcalendar/timegrid/main.css'
 
-// import events from './events'
-const codigoList = [
-  {
-    name: 'Feriado Institucional',
-    code: 'COD_0001',
-    color: 'primary',
-    hexColor: '#6261cc',
-  },
-  {
-    name: 'Feriado Local',
-    code: 'COD_0002',
-    color: 'info',
-    hexColor: '#3d99f',
-  },
-  {
-    name: 'Feriado Nacional',
-    code: 'COD_0003',
-    color: 'success',
-    hexColor: '#249542',
-  },
-  {
-    name: 'Foraneo',
-    code: 'COD_0004',
-    color: 'secondary',
-    hexColor: '#6b7785',
-  },
-]
+import eventsData from './events'
 
 function Calendario() {
   const [events, setEvents] = useState([])
-  const getEvents = async () => {
-    const { data } = await axios.get(`${process.env.PATH_API}/api/v1/event`)
-    const eventList = data.map((d) => {
-      return {
-        title: d.descripcion,
-        start: d.fecha,
-        backgroundColor: codigoList.find((item) => item.code === d.codigo).hexColor,
-        allDay: true,
-        // textColor: 'black',
-      }
-    })
+  const [eventsConfig, setEventsConfig] = useState([])
+  const getData = async () => {
+    const data = await getEvents()
+    const configs = await getEventConfig()
+    const eventList =
+      data && data.length
+        ? data.map((d) => {
+            return {
+              title: d.descripcion,
+              start: d.fecha,
+              backgroundColor: configs.find((item) => item.code === d.codigo).hexColor,
+              allDay: true,
+              // textColor: 'black',
+            }
+          })
+        : []
     setEvents(eventList)
-    console.log(data)
+    console.log(eventsData)
   }
 
   // {
@@ -60,7 +40,7 @@ function Calendario() {
   //   textColor: 'black',
   // },
   useEffect(() => {
-    getEvents()
+    getData()
   }, [])
   let firstDaty = 1
 

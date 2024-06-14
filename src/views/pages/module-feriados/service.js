@@ -43,7 +43,7 @@ export const crearFeriados = async (data) => {
 
 export const getListCodeDates = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/events-config')
+    const response = await axios.get(`${process.env.PATH_API}/api/events-config`)
     return response.data
   } catch (error) {
     console.error(error)

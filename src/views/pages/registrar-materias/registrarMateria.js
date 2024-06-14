@@ -107,7 +107,8 @@ const registrarMateria = () => {
     var id_materia
     var cantDig = codigo.replace(/[^0-9]/g,"").length;
     //if(codigo != '' && materia != 0 && grupo !='' && docente != '' &&  departamentoSeleccionado && departamentoSeleccionado.id){
-    if(codigo != '' && materia != 0 && grupo !='' &&  departamentoSeleccionado && departamentoSeleccionado.id){
+    //if(codigo != '' && materia != 0 && grupo !='' &&  departamentoSeleccionado && departamentoSeleccionado.id){
+      if(codigo != '' && materia != 0 &&  departamentoSeleccionado && departamentoSeleccionado.id){
       id_materia = codigo
       if(cantDig == 7){  
 
@@ -116,7 +117,7 @@ const registrarMateria = () => {
           id_materia,
           codigo,
           materia,
-          grupo,
+          //grupo,
           //docente,
           departamento: departamentoSeleccionado.nombreDepartamentos,
         }
@@ -183,7 +184,7 @@ const registrarMateria = () => {
                     />
                   </CInputGroup>
 
-                  <CInputGroup className="mb-3">
+                  {/*<CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilText} />
                     </CInputGroupText>
@@ -193,7 +194,7 @@ const registrarMateria = () => {
                       onChange={(e) => setGrupo(e.target.value)}
                     />
                   </CInputGroup>
-
+                      */}
 
                   {/*
                   <CInputGroup className="mb-3">
@@ -246,7 +247,8 @@ const registrarMateria = () => {
 
                   {error3 && (
                       <CFormFeedback className="d-block text-center font-weight-extrabold" style={{ color: 'red', backgroundColor: '#FFC4C4', padding: '5px', borderRadius: '5px', marginBottom: '15px', border: '1px solid red'}}>
-                        La materia y grupo ya esta registrado.
+                        {/*La materia y grupo ya esta registrado.*/}
+                        La materia ya esta registrado.
                       </CFormFeedback>
                     )}
 

@@ -4,7 +4,7 @@ import { createBitacora } from '../bitacora.service'
 
 export const getUnidad = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/unidades')
+    const response = await axios.get(`${process.env.PATH_API}/api/unidades`)
     const unidades = response.data.map((unidad) => ({
       ...unidad,
       nombreDepartamentos: unidad.departamento
@@ -26,7 +26,7 @@ export const getUnidad = async () => {
 export const actualizarUnidad = async (unidadId, datosActualizados) => {
   try {
     const response = await axios.put(
-      `http://localhost:8000/api/unidades/${unidadId}`,
+      `${process.env.PATH_API}/api/unidades/${unidadId}`,
       datosActualizados,
     )
     await createBitacora(datosActualizados, 'updated', id_resource)
@@ -38,7 +38,7 @@ export const actualizarUnidad = async (unidadId, datosActualizados) => {
 
 export const postAula = async (data) => {
   try {
-    const response = await axios.post('http://localhost:8000/api/aulas/post', data)
+    const response = await axios.post(`${process.env.PATH_API}/api/aulas/post`, data)
     await createBitacora(data, 'Created', 0)
     return response.data
   } catch (error) {
@@ -47,7 +47,7 @@ export const postAula = async (data) => {
 }
 
 export const postUnidad = async (data) => {
-  const response = await axios.post('http://localhost:8000/api/unidades', data)
+  const response = await axios.post(`${process.env.PATH_API}/api/unidades`, data)
   await createBitacora(data, 'Created', 0)
   return response.data
 }
@@ -56,7 +56,7 @@ export const postUnidad = async (data) => {
 
 export const getAulasPorUnidad = async (unidadId) => {
   try {
-    const response = await fetch(`http://localhost:8000/api/aulas/mostrarId/${unidadId}`)
+    const response = await fetch(`${process.env.PATH_API}/api/aulas/mostrarId/${unidadId}`)
     if (!response.ok) {
       throw new Error('Error al obtener las aulas')
     }
@@ -69,7 +69,7 @@ export const getAulasPorUnidad = async (unidadId) => {
 
 export const agregarAula = async (nuevaAula) => {
   try {
-    const response = await fetch('http://localhost:8000/api/aulas/registrar', {
+    const response = await fetch(`${process.env.PATH_API}/api/aulas/registrar`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -89,7 +89,10 @@ export const agregarAula = async (nuevaAula) => {
 
 export const actualizarAula = async (aulaId, datosActualizados) => {
   try {
-    const response = await axios.put(`http://localhost:8000/api/aulas/${aulaId}`, datosActualizados)
+    const response = await axios.put(
+      `${process.env.PATH_API}/api/aulas/${aulaId}`,
+      datosActualizados,
+    )
     await createBitacora(datosActualizados, 'Created', aulaId)
     return response.data
   } catch (error) {
@@ -99,7 +102,7 @@ export const actualizarAula = async (aulaId, datosActualizados) => {
 
 const obtenerIdAulaPorNombre = async (nombreAula) => {
   try {
-    const response = await axios.get('http://localhost:8000/api/aulas')
+    const response = await axios.get(`${process.env.PATH_API}/api/aulas`)
     const aulas = response.data
     const aulaEncontrada = aulas.find((aula) => aula.nombreAulas === nombreAula)
     if (!aulaEncontrada) {
@@ -113,7 +116,7 @@ const obtenerIdAulaPorNombre = async (nombreAula) => {
 }
 export const getAulas = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/aulas/mostrar')
+    const response = await axios.get(`${process.env.PATH_API}/api/aulas/mostrar`)
     return response.data
   } catch (error) {
     throw new Error('Error al obtener las aulas')
@@ -121,7 +124,7 @@ export const getAulas = async () => {
 }
 export const habilitarAulas = async (aulaId, habilitado) => {
   try {
-    const response = await axios.put(`http://localhost:8000/api/aulas/${aulaId}/habilitar`, {
+    const response = await axios.put(`${process.env.PATH_API}/api/aulas/${aulaId}/habilitar`, {
       habilitado,
     })
     await createBitacora(JSON.stringify(habilitado), 'Created', aulaId)
@@ -132,7 +135,7 @@ export const habilitarAulas = async (aulaId, habilitado) => {
 }
 export const getAulasInhabilitadas = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/inhabilitados/aulas')
+    const response = await axios.get(`${process.env.PATH_API}/api/inhabilitados/aulas`)
     return response.data
   } catch (error) {
     throw new Error('Error al obtener las aulas inhabilitadas:', error)

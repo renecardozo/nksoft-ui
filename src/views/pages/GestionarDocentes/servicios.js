@@ -2,7 +2,7 @@ import axios from 'axios'
 import { createBitacora } from '../bitacora.service'
 export const showDocentes = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/users/docentes')
+    const response = await fetch(`${process.env.PATH_API}/api/users/docentes`)
     if (!response.ok) {
       throw new Error('Error al obtener los datos de los docentes')
     }
@@ -16,7 +16,7 @@ export const showDocentes = async () => {
 
 export const getPeriodos = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/periodos')
+    const response = await axios.get(`${process.env.PATH_API}/api/periodos`)
     return response.data
   } catch (error) {
     console.error('Error al obtener los periodos:', error)
@@ -25,7 +25,7 @@ export const getPeriodos = async () => {
 }
 export const getMaterias = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/materias')
+    const response = await axios.get(`${process.env.PATH_API}/api/materias`)
     return response.data
   } catch (error) {
     console.error('Error al obtener las materias:', error)
@@ -34,7 +34,7 @@ export const getMaterias = async () => {
 }
 export const getMateriasGrupos = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/materias')
+    const response = await axios.get(`${process.env.PATH_API}/api/materias`)
     const materias = response.data
 
     // Verificar si materias es un array antes de llamar a map
@@ -57,7 +57,7 @@ export const getMateriasGrupos = async () => {
 
 export const getAulas = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/aulas/mostrar')
+    const response = await fetch(`${process.env.PATH_API}/api/aulas/mostrar`)
     if (!response.ok) {
       throw new Error('Error al obtener las aulas')
     }
@@ -72,7 +72,10 @@ export const getAulas = async () => {
 // servicios.js
 export const saveMateriaGrupo = async (materiaGrupoData) => {
   try {
-    const response = await axios.post('http://localhost:8000/api/docente_materia', materiaGrupoData)
+    const response = await axios.post(
+      `${process.env.PATH_API}/api/docente_materia`,
+      materiaGrupoData,
+    )
     await createBitacora(materiaGrupoData, 'Created', 0)
     return response.data
   } catch (error) {

@@ -12,5 +12,5 @@ export const createBitacora = async (data, action, id_resource) => {
     name_resource: JSON.stringify(data),
     actions: action,
   }
-  await axios.post('http://localhost:8000/api/bitacora', toSave)
+  await axios.post(`${process.env.PATH_API}/api/bitacora`, toSave)
 }

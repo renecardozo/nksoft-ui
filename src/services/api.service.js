@@ -1,4 +1,4 @@
-const APIURL = "http://localhost:8000/"
+const APIURL = `${process.env.PATH_API}/`
 import { createBitacora } from "../views/pages/bitacora.service"
 export const APISERVICE = {
   get: async (url) => {

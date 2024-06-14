@@ -2,7 +2,7 @@ import axios from 'axios'
 import { createBitacora } from '../bitacora.service'
 export const getPeriodos = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/periodos')
+    const response = await axios.get(`${process.env.PATH_API}/api/periodos`)
     return response.data
   } catch (error) {
     console.error('Error al obtener los periodos:', error)
@@ -11,7 +11,7 @@ export const getPeriodos = async () => {
 }
 export const getMaterias = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/materias')
+    const response = await axios.get(`${process.env.PATH_API}/api/materias`)
     return response.data
   } catch (error) {
     console.error('Error al obtener las materias:', error)
@@ -20,7 +20,7 @@ export const getMaterias = async () => {
 }
 export const getMateriasGrupos = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/materias')
+    const response = await axios.get(`${process.env.PATH_API}/api/materias`)
     const materias = response.data
 
     // Verificar si materias es un array antes de llamar a map
@@ -43,7 +43,7 @@ export const getMateriasGrupos = async () => {
 
 export const getAulas = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/aulas/mostrar')
+    const response = await fetch(`${process.env.PATH_API}/api/aulas/mostrar`)
     if (!response.ok) {
       throw new Error('Error al obtener las aulas')
     }
@@ -56,7 +56,7 @@ export const getAulas = async () => {
 }
 export const postSolicitud = async (data) => {
   try {
-    const response = await axios.post('http://localhost:8000/api/solicitud_reserva_aula', data)
+    const response = await axios.post(`${process.env.PATH_API}/api/solicitud_reserva_aula`, data)
     await createBitacora(data, 'Created', 0)
     console.log('Respuesta de la solicitud de reserva:', response.data)
     return response.data

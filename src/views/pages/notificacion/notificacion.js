@@ -30,7 +30,7 @@ const Notificacion = () => {
   }
 
   const fetchNotificaciones = async () => {
-    const response = await fetch('http://localhost:8000/api/notificaciones') // Ajusta la URL de tu API
+    const response = await fetch(`${process.env.PATH_API}/api/notificaciones`) // Ajusta la URL de tu API
     const data = await response.json()
 
     const solicitudesData = {}
@@ -60,13 +60,13 @@ const Notificacion = () => {
   }
 
   const fetchSolicitud = async (idSolicitud) => {
-    const response = await fetch(`http://localhost:8000/api/solicitud/${idSolicitud}`)
+    const response = await fetch(`${process.env.PATH_API}/api/solicitud/${idSolicitud}`)
     const data = await response.json()
     return data.data
   }
 
   const fetchAula = async (idAula) => {
-    const response = await fetch(`http://localhost:8000/api/aula/${idAula}`)
+    const response = await fetch(`${process.env.PATH_API}/api/aula/${idAula}`)
     const data = await response.json()
     return data.data
   }

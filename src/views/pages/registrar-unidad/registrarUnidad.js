@@ -52,7 +52,7 @@ const RegistrarUnidad = () => {
   useEffect(() => {
     const obtenerDepartamentos = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/departamentos', {
+        const response = await fetch(`${process.env.PATH_API}/api/departamentos`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

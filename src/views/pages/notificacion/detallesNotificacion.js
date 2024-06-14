@@ -15,7 +15,7 @@ const DetallesNotificacion = () => {
   useEffect(() => {
     const fetchNotificacion = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/notificacion2/${id}`)
+        const response = await fetch(`${process.env.PATH_API}/api/notificacion2/${id}`)
         const data = await response.json()
         console.log('Notificación:', data)
         if (data.success) {
@@ -36,7 +36,7 @@ const DetallesNotificacion = () => {
 
     const fetchSolicitud = async (idSolicitud) => {
       try {
-        const response = await fetch(`http://localhost:8000/api/solicitud/${idSolicitud}`)
+        const response = await fetch(`${process.env.PATH_API}/api/solicitud/${idSolicitud}`)
         const data = await response.json()
         console.log('Solicitud:', data)
         if (data.success) {
@@ -59,7 +59,7 @@ const DetallesNotificacion = () => {
 
     const fetchAula = async (idAula) => {
       try {
-        const response = await fetch(`http://localhost:8000/api/aula/${idAula}`)
+        const response = await fetch(`${process.env.PATH_API}/api/aula/${idAula}`)
         const data = await response.json()
         if (data.success) {
           setNombreAula(data.data.nombreAulas)
@@ -73,7 +73,7 @@ const DetallesNotificacion = () => {
 
     const fetchMateria = async (idMateria) => {
       try {
-        const response = await fetch(`http://localhost:8000/api/materia/${idMateria}`)
+        const response = await fetch(`${process.env.PATH_API}/api/materia/${idMateria}`)
         const data = await response.json()
         console.log('Respuesta completa de Materia:', data) // Log completo de la respuesta
         if (data.success) {

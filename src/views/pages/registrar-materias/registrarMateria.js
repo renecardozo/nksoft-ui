@@ -56,7 +56,7 @@ const registrarMateria = () => {
   useEffect(() => {
     const obtenerDepartamentos = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/departamentos', {
+        const response = await fetch(`${process.env.PATH_API}/api/departamentos`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ const registrarMateria = () => {
     var hayMateria = false
 
     try {
-      const respuesta = await fetch('http://localhost:8000/api/materiasDuplicado', {
+      const respuesta = await fetch(`${process.env.PATH_API}/api/materiasDuplicado`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

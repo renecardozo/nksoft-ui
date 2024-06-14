@@ -17,6 +17,7 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { loginAsAdmin } from './service'
 import { useNavigate } from 'react-router-dom'
+import { createBitacora } from '../bitacora.service'
 
 const Admin = () => {
   const [email, setEmail] = useState('barthg.simpson@mail.ogt')
@@ -32,7 +33,8 @@ const Admin = () => {
         const { data } = response
         if (data.role.name === 'SuperAdmin') {
           localStorage.setItem('user_data', JSON.stringify(response.data))
-          navigate('/dashboard')
+          createBitacora({ email }, 'Login Admin', 0)
+          navigate('/administracion/calendario')
         } else {
           setUnathorized(true)
         }

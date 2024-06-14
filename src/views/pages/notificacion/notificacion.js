@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   CCard,
   CCardBody,
@@ -14,77 +14,77 @@ import {
   CTableRow,
   CContainer,
   CButton,
-} from '@coreui/react';
+} from '@coreui/react'
 
 const Notificacion = () => {
-  const [notificaciones, setNotificaciones] = useState([]);
-  const [solicitudes, setSolicitudes] = useState({});
-  const [idUsuario, setIdUsuario] = useState('');
-  const [userData, setUserData] = useState(null);
-  const [aulas, setAulas] = useState({}); // Nuevo estado para almacenar los nombres de las aulas
+  const [notificaciones, setNotificaciones] = useState([])
+  const [solicitudes, setSolicitudes] = useState({})
+  const [idUsuario, setIdUsuario] = useState('')
+  const [userData, setUserData] = useState(null)
+  const [aulas, setAulas] = useState({}) // Nuevo estado para almacenar los nombres de las aulas
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleVerDetalles = (id) => {
-    navigate('/docente/detallesNotificacion', { state: { id } });
-  };
+    navigate('/docente/detallesNotificacion', { state: { id } })
+  }
 
   const fetchNotificaciones = async () => {
-    const response = await fetch('http://localhost:8000/api/notificaciones'); // Ajusta la URL de tu API
-    const data = await response.json();
+    const response = await fetch(`${process.env.PATH_API}/api/notificaciones`) // Ajusta la URL de tu API
+    const data = await response.json()
 
-    const solicitudesData = {};
-    const aulasData = {};
-    const filteredNotificaciones = [];
+    const solicitudesData = {}
+    const aulasData = {}
+    const filteredNotificaciones = []
 
     for (const notificacion of data) {
       if (!solicitudesData[notificacion.id_solicitud]) {
-        const solicitud = await fetchSolicitud(notificacion.id_solicitud);
-        solicitudesData[notificacion.id_solicitud] = solicitud;
+        const solicitud = await fetchSolicitud(notificacion.id_solicitud)
+        solicitudesData[notificacion.id_solicitud] = solicitud
 
         if (solicitud.id_user === idUsuario) {
-          filteredNotificaciones.push(notificacion);
+          filteredNotificaciones.push(notificacion)
 
-          const aulaId = solicitud.id_aula;
+          const aulaId = solicitud.id_aula
           if (!aulasData[aulaId]) {
-            const aula = await fetchAula(aulaId);
-            aulasData[aulaId] = aula.nombreAulas;
+            const aula = await fetchAula(aulaId)
+            aulasData[aulaId] = aula.nombreAulas
           }
         }
       }
     }
 
-    setNotificaciones(filteredNotificaciones);
-    setSolicitudes(solicitudesData);
-    setAulas(aulasData); // Actualizar el estado de aulas
-  };
+    setNotificaciones(filteredNotificaciones)
+    setSolicitudes(solicitudesData)
+    setAulas(aulasData) // Actualizar el estado de aulas
+  }
 
   const fetchSolicitud = async (idSolicitud) => {
-    const response = await fetch(`http://localhost:8000/api/solicitud/${idSolicitud}`);
-    const data = await response.json();
-    return data.data;
-  };
+    const response = await fetch(`${process.env.PATH_API}/api/solicitud/${idSolicitud}`)
+    const data = await response.json()
+    return data.data
+  }
 
   const fetchAula = async (idAula) => {
-    const response = await fetch(`http://localhost:8000/api/aula/${idAula}`);
-    const data = await response.json();
-    return data.data;
-  };
+    const response = await fetch(`${process.env.PATH_API}/api/aula/${idAula}`)
+    const data = await response.json()
+    return data.data
+  }
 
   useEffect(() => {
-    const userDataFromStorage = localStorage.getItem('user_data');
+    const userDataFromStorage = localStorage.getItem('user_data')
     if (userDataFromStorage) {
-      const userData = JSON.parse(userDataFromStorage);
-      setUserData(userData);
-      setIdUsuario(userData.id);
+      const userData = JSON.parse(userDataFromStorage)
+      setUserData(userData)
+      setIdUsuario(userData.id)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (idUsuario) {
-      fetchNotificaciones();
+      fetchNotificaciones()
     }
-  }, [idUsuario]);
+  }, [idUsuario])
 
   return (
     <CContainer className="px-4">
@@ -109,9 +109,14 @@ const Notificacion = () => {
           <CTableBody>
             {notificaciones.map((notificacion) => (
               <CTableRow key={notificacion.id}>
-                <CTableDataCell>Solicitud para el Ambiente {aulas[solicitudes[notificacion.id_solicitud]?.id_aula]}</CTableDataCell>
                 <CTableDataCell>
-                  <CButton color="primary" onClick={() => handleVerDetalles(notificacion.id)}>Ver Detalles</CButton>
+                  Solicitud para el Ambiente{' '}
+                  {aulas[solicitudes[notificacion.id_solicitud]?.id_aula]}
+                </CTableDataCell>
+                <CTableDataCell>
+                  <CButton color="primary" onClick={() => handleVerDetalles(notificacion.id)}>
+                    Ver Detalles
+                  </CButton>
                 </CTableDataCell>
               </CTableRow>
             ))}
@@ -119,7 +124,7 @@ const Notificacion = () => {
         </CTable>
       </CRow>
     </CContainer>
-  );
+  )
 }
 
-export default Notificacion;
+export default Notificacion

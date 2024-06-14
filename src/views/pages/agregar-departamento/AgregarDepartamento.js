@@ -19,6 +19,7 @@ import {
 } from '@coreui/react'
 import { postDepartamento, getDepartamento } from '../agregar-departamento/servicios'
 import { useNavigate } from 'react-router-dom'
+import { createBitacora } from '../bitacora.service'
 
 function Departamentos() {
   const [departamentos, setDepartamentos] = useState([])
@@ -67,7 +68,8 @@ function Departamentos() {
         nombreDepartamentos,
       }
       await postDepartamento(nuevoDepartamento)
-      // alert('Departamento registrado con éxito')
+      await createBitacora(nuevoDepartamento, 'Created', 0)
+      alert('Departamento registrado con éxito')
       setShowSuccess(true)
       await findAll()
 

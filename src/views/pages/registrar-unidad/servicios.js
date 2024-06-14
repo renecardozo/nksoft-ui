@@ -1,8 +1,8 @@
 import axios from 'axios'
-
+import { createBitacora } from '../bitacora.service'
 export const getUnidad = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/unidades')
+    const response = await axios.get(`${process.env.PATH_API}/api/unidades`)
     const unidades = response.data.map((unidad) => ({
       ...unidad,
       nombreDepartamento: unidad.departamento ? unidad.departamento.nombreDepartamentos : 'Ninguno',
@@ -21,7 +21,8 @@ export const getUnidad = async () => {
 
 export const postUnidad = async (data) => {
   try {
-    const response = await axios.post('http://localhost:8000/api/unidades', data)
+    const response = await axios.post(`${process.env.PATH_API}/api/unidades`, data)
+    await createBitacora(data, 'Created', 0)
     return response.data.id // Retorna el ID de la unidad creada
   } catch (error) {
     throw new Error('Error al crear la unidad')
@@ -29,17 +30,17 @@ export const postUnidad = async (data) => {
 }
 
 export const horaInicio = async () => {
-  const response = await axios.get('http://localhost:8000/api/periodos/horaApertura')
+  const response = await axios.get(`${process.env.PATH_API}/api/periodos/horaApertura`)
   return response.data
 }
 export const horaFin = async () => {
-  const response = await axios.get('http://localhost:8000/api/periodos/horaCierre')
+  const response = await axios.get(`${process.env.PATH_API}/api/periodos/horaCierre`)
   return response.data
 }
 
 export const getAulasPorUnidad = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/aulas/mostrar')
+    const response = await fetch(`${process.env.PATH_API}/api/aulas/mostrar`)
     if (!response.ok) {
       throw new Error('Error al obtener las aulas')
     }
@@ -52,16 +53,14 @@ export const getAulasPorUnidad = async () => {
 
 export const agregarAula = async (nuevaAula) => {
   try {
-    const response = await fetch('http://localhost:8000/api/aulas/registrar', {
+    const response = await fetch(`${process.env.PATH_API}/api/aulas/registrar`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(nuevaAula),
     })
-    if (!response.ok) {
-      throw new Error('Error al agregar el aula')
-    }
+    await createBitacora(nuevaAula, 'Created', 0)
     const data = await response.json()
     return data
   } catch (error) {

@@ -28,9 +28,11 @@ const RegistrarDepartamento = React.lazy(
 )
 const verAulas = React.lazy(() => import('./views/pages/agregar-unidad/vistaAulas'))
 const verMaterias = React.lazy(() => import('./views/pages/GestionarDocentes/ver-materias'))
+const bitacora = React.lazy(() => import('./views/pages/bitacora/bitacora'))
 
 const ListUser = React.lazy(() => import('./views/pages/usuarios/users/List.jsx'))
 const FormUser = React.lazy(() => import('./views/pages/usuarios/users/Form.jsx'))
+const Backup = React.lazy(() => import('./views/pages/backup/Backup.js'))
 import Feriados from './views/pages/module-feriados/feriados/Feriados'
 import DetailsFeriado from './views/pages/module-feriados/details-feriado/DetailsFeriado.js'
 import Login from './views/pages/login/Login'
@@ -78,5 +80,9 @@ const routes = [
   { path: '/registro-solicitud', name:'Formulario de reserva', element: CrearReservas},
   //materias de docentes
   { path: '/configurar/docentes/:usuarioId/materias', name: 'Materias', element: verMateria },
+  //backups
+  { path: '/backups', name: 'Backups', element: Backup },
+  { path: '/administracion/bitacora', name:'Bitacora', element: bitacora},
+
 ]
 export default routes

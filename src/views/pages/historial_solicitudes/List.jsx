@@ -10,12 +10,12 @@ import {
   CModalHeader,
   CModalTitle,
   CRow,
-} from "@coreui/react"
-import GenericTable from "./../../../components/sections/GenericTable.jsx"
-import { APISERVICE } from "../../../services/api.service"
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import { useNavigate } from "react-router-dom"
+} from '@coreui/react'
+import GenericTable from './../../../components/sections/GenericTable.jsx'
+import { APISERVICE } from '../../../services/api.service'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 export default function ListUser() {
   const [visible, setVisible] = useState(false)
   const [user, setUser] = useState({})
@@ -24,29 +24,30 @@ export default function ListUser() {
   const headers = [
     {
       id: 1,
-      title: "ID",
-      key: "id",
+      title: 'ID',
+      key: 'id',
     },
     {
       id: 2,
-      title: "Usuario",
-      key: "user",
+      title: 'Usuario',
+      key: 'user',
       field: (row) => {
-        return (row.user.name || "") + " " + (row.user.last_name || "")
+        return (row.user.name || '') + ' ' + (row.user.last_name || '')
       },
     },
     {
       id: 3,
-      title: "Fecha",
-      key: "fecha_reserva",
+      title: 'Fecha',
+      key: 'fecha_reserva',
     },
     {
       id: 4,
-      title: "Periodos",
-      key: "periodo",
+      title: 'Periodos',
+      key: 'periodo',
       field: (row) => {
         return (
-          row.periodos && row.periodos.length && (
+          row.periodos &&
+          row.periodos.length && (
             <ul>
               {row.periodos.map((periodo) => (
                 <li key={periodo.id}>{`${periodo.horaInicio} - ${periodo.horaFin}`}</li>
@@ -58,28 +59,28 @@ export default function ListUser() {
     },
     {
       id: 5,
-      title: "Motivo",
-      key: "motivo_reserva",
+      title: 'Motivo',
+      key: 'motivo_reserva',
     },
     {
       id: 6,
-      title: "Estado",
-      key: "estado",
+      title: 'Estado',
+      key: 'estado',
     },
     {
       id: 7,
-      title: "Aula",
-      key: "aula",
+      title: 'Aula',
+      key: 'aula',
       field: (row) => {
         return row.aula.nombreAulas
       },
     },
   ]
   const getUsers = async () => {
-    let url = "api/solicitud_reserva_aula"
-    if (localStorage.getItem("user_data")) {
-      const user = JSON.parse(localStorage.getItem("user_data"))
-      const response = await APISERVICE.get(url + "?id_user=" + user.id)
+    let url = 'api/solicitud_reserva_aula'
+    if (localStorage.getItem('user_data')) {
+      const user = JSON.parse(localStorage.getItem('user_data'))
+      const response = await APISERVICE.get(url + '?id_user=' + user.id)
       setUsers(response)
     }
   }

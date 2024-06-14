@@ -1,4 +1,5 @@
-const APIURL = 'http://localhost:8000/'
+const APIURL = `${process.env.PATH_API}/`
+import { createBitacora } from "../views/pages/bitacora.service"
 export const APISERVICE = {
   get: async (url) => {
     try {
@@ -15,20 +16,16 @@ export const APISERVICE = {
   post: async (url, body) => {
     try {
       const response = await fetch(`${APIURL + url}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'content-type': 'application/json',
+          "content-type": "application/json",
         },
         body: JSON.stringify(body),
       })
-      if (!response.ok) {
-        // throw new Error(response)
-        let err = new Error('HTTP status code: ' + response.status)
-        err.response = response
-        err.status = response.status
-        throw err
-      }
+    
       const data = await response.json()
+      let newBody = JSON.stringify(body).substring(0,100)
+      await createBitacora(newBody, "Created", 0)
       return data
     } catch (error) {
       return Promise.reject(error)
@@ -37,9 +34,9 @@ export const APISERVICE = {
   put: async (url, body) => {
     try {
       const response = await fetch(`${APIURL + url}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'content-type': 'application/json',
+          "content-type": "application/json",
         },
         body: JSON.stringify(body),
       })
@@ -47,6 +44,12 @@ export const APISERVICE = {
         throw new Error(await response.json())
       }
       const data = await response.json()
+      let id_updated = 0
+      if (body.id) id_updated = body.id
+      if (data.id) id_updated = data.id
+      if (data.data && data.data.id) id_updated = data.data.id
+      let newData = JSON.stringify(body).substring(0,100)
+      await createBitacora(newData, "Updated", id_updated)
       return data
     } catch (error) {
       return Promise.reject(error)
@@ -55,9 +58,14 @@ export const APISERVICE = {
   delete: async (url) => {
     try {
       const response = await fetch(`${APIURL + url}`, {
-        method: 'DELETE',
+        method: "DELETE",
       })
       const data = await response.json()
+      const split_info = url.split("/")
+      let id_deleted = 0
+      if (split_info && !isNaN(Number(split_info[split_info.length - 1])))
+        id_deleted = split_info[split_info.length - 1]
+      await createBitacora(url, "Deleted", id_deleted)
       return data
     } catch (error) {
       return Promise.reject(error)

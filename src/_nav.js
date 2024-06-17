@@ -79,12 +79,6 @@ let _nav = [
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
   {
-    component: CNavItem,
-    name: 'Backup',
-    to: '/backups',
-    icon: <CIcon icon={cilLibrary} customClassName="nav-icon" />,
-  },
-  {
     component: CNavTitle,
     name: 'Administracion',
   },
@@ -106,7 +100,12 @@ let _nav = [
     to: '/administracion/bitacora',
     icon: <CIcon icon={cilHistory} customClassName="nav-icon" />,
   },
-
+  {
+    component: CNavItem,
+    name: 'Backup',
+    to: '/backups',
+    icon: <CIcon icon={cilLibrary} customClassName="nav-icon" />,
+  },
   {
     component: CNavItem,
     name: 'Agregar Materia',

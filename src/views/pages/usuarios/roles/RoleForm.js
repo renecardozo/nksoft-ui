@@ -131,7 +131,7 @@ export default function RoleForm() {
         placement="bottom-end"
         style={{ marginBottom: '50px' }}
       />
-      <h2 className="text-center mb-4">{id ? 'Editar Role' : 'Crear Nuevo Rol'}</h2>
+      <h2 className="text-center mb-4">{id ? 'Editar Rol' : 'Crear Nuevo Rol'}</h2>
       <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-md-6">

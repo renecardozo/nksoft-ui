@@ -91,6 +91,11 @@ const DetallesNotificacion = () => {
     }
   }, [id])
 
+  const formatearFecha = (fecha) => {
+    const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Intl.DateTimeFormat('es-ES', opciones).format(new Date(fecha));
+  };
+
   if (!notificacion || !solicitud || !nombreAula || !nombreMateria) {
     return <div>Cargando...</div>
   }
@@ -127,14 +132,8 @@ const DetallesNotificacion = () => {
                 </div>
                 */}
               </div>
-              <p>
-                <strong>Fecha de Reserva: </strong>
-                {solicitud.fecha_hora_reserva}
-              </p>
-              <p>
-                <strong>Estado de la solicitud: </strong>
-                {solicitud.estado}
-              </p>
+              <p><strong>Fecha de Reserva: </strong>{formatearFecha(solicitud.fecha_hora_reserva)}</p> {/* Formatear y mostrar la fecha */}
+              <p><strong>Estado de la solicitud: </strong>{solicitud.estado}</p>
               <p>{notificacion.respuesta}</p>
             </CCardBody>
           </CCard>

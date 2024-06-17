@@ -34,13 +34,13 @@ let _nav = [
   },
   {
     component: CNavItem,
-    name: 'Buscar Aulas',
+    name: 'Aulas',
     to: '/reservas/buscar-aulas',
     icon: <CIcon icon={cilSearch} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'reserva',
+    name: 'Reserva',
     to: '/reservas/crear-reservas',
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },

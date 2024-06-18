@@ -1,5 +1,5 @@
 {
-  "homepage": "https://renecardozo.github.io/reservations-app",
+  "homepage": "https://renecardozo.github.io/nksoft-ui/",
   "name": "nksoft-ui",
   "version": "0.1.0",
   "private": true,
@@ -35,12 +35,12 @@
     "cross-env": "^7.0.3"
   },
   "scripts": {
-    "build": "cross-env PATH_API=http://nksoft.tis.cs.umss.edu.bo vite build",
+    "build": "cross-env PATH_API=http://newknowledge.tis.cs.umss.edu.bo vite build",
     "lint": "eslint \"src/**/*.js\"",
     "serve": "vite preview",
     "start": "cross-env PATH_API=http://localhost:8000 vite",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -b dev -d build"
+    "deploy": "gh-pages -b deploy_ui_emergency -d build"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",

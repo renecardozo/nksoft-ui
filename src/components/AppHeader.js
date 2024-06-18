@@ -41,6 +41,8 @@ const AppHeader = () => {
     if (user_data !== null) {
       const { permissions, role } = JSON.parse(user_data)
       return permissions.filter((p) => p.name === 'notificaciones')
+    } else {
+      return []
     }
   }
   useEffect(() => {

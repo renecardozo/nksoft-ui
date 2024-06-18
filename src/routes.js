@@ -13,7 +13,7 @@ const EditarRole = React.lazy(() => import('./views/pages/usuarios/roles/RoleFor
 const Calendario = React.lazy(() => import('./components/calendario/Calendario'))
 const AgregarMateria = React.lazy(() => import('./views/pages/agregar-materia/AgregarMateria'))
 const verMateria = React.lazy(() => import('./views/pages/GestionarDocentes/ver-materias'))
-const notificacion = React.lazy(() => import('./views/pages/notificacion/notificacion'))
+const Notificacion = React.lazy(() => import('./views/pages/notificacion/notificacion.js'))
 const detallesNotificacion = React.lazy(
   () => import('./views/pages/notificacion/detallesNotificacion'),
 )
@@ -77,7 +77,7 @@ const routes = [
     name: 'Detalles de Notificacion',
     element: detallesNotificacion,
   },
-  { path: '/docente/notificacion', name: 'Notificaciones', element: notificacion },
+  { path: '/docente/notificacion', name: 'Notificaciones', element: Notificacion },
   //USUARIOS
   { path: '/users', name: 'Usuarios', element: ListUser },
   { path: '/users/create', name: 'Crear Usuario', element: FormUser },

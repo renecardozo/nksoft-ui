@@ -15,7 +15,8 @@ import Select from 'react-select';
 import { getMaterias, saveMateriaGrupo, getMateriasDocente } from './servicios';
 
 function VerMaterias() {
-  const { usuarioId } = useParams(); 
+  const { usuarioId } = useParams();
+  const [usuarioNombre, setUsuarioNombre] = useState(''); // Asumiendo que también quieres mostrar el nombre del usuario
   const [showAssignFields, setShowAssignFields] = useState(false);
   const [materiaSeleccionada, setMateriaSeleccionada] = useState(null);
   const [grupo, setGrupo] = useState('');
@@ -131,7 +132,7 @@ function VerMaterias() {
           <CCard>
             <CCardBody>
               <div className="d-flex justify-content-between align-items-center mb-3">
-                <h3>Materias del docente {usuarioId}</h3>
+                <h3>Materias del docente {usuarioNombre}</h3>
                 <button className="btn btn-primary" onClick={handleAsignarMateria}>
                   Asignar materia
                 </button>
@@ -155,17 +156,17 @@ function VerMaterias() {
                           placeholder="Seleccione una materia"
                           onChange={handleSelectChange}
                           value={materiaSeleccionada}
-                          menuPosition="fixed" 
+                          menuPosition="fixed"
                           styles={{
                             menu: (provided) => ({
                               ...provided,
-                              width: '100%', 
-                              zIndex: 9999, 
+                              width: '100%',
+                              zIndex: 9999,
                             }),
                             menuList: (provided) => ({
                               ...provided,
                               maxHeight: '200px',
-                              overflowY: 'auto', 
+                              overflowY: 'auto',
                             }),
                           }}
                         />

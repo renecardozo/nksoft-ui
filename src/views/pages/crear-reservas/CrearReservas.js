@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { getPeriodos, postSolicitud, getMaterias, getMateriasGrupos, getAulas } from './servicios'
-import { useLocation } from 'react-router-dom'
 
 function CrearReservas() {
   const location = useLocation()
@@ -17,11 +16,12 @@ function CrearReservas() {
   const [cantidad, setCantidad] = useState(data.capacidadAulas || '')
   const [motivo, setMotivo] = useState('')
   const [fecha, setFecha] = useState(data.fecha || '')
-  const [aulaSeleccionada, setAulaSeleccionada] = useState(data.id || '') // New state for selected classroom
-  const [aulasDisponibles, setAulasDisponibles] = useState([]) // New state for available classrooms
+  const [aulaSeleccionada, setAulaSeleccionada] = useState(data.id || '')
+  const [aulasDisponibles, setAulasDisponibles] = useState([])
   const [periodosSeleccionados, setPeriodosSeleccionados] = useState([])
   const [periodosDisponibles, setPeriodosDisponibles] = useState([])
   const [periodoSeleccionado, setPeriodoSeleccionado] = useState('')
+  const [aulasFiltradas, setAulasFiltradas] = useState([])
 
   useEffect(() => {
     const fetchPeriodos = async () => {
@@ -45,10 +45,10 @@ function CrearReservas() {
     const fetchMaterias = async () => {
       try {
         const data = await getMaterias()
-        setMaterias(Array.isArray(data) ? data : []) // Ensure data is an array
+        setMaterias(Array.isArray(data) ? data : [])
       } catch (error) {
         console.error('Error al obtener las materias:', error)
-        setMaterias([]) // Set an empty array on error
+        setMaterias([])
       }
     }
 
@@ -57,9 +57,8 @@ function CrearReservas() {
 
   useEffect(() => {
     const fetchMateriasGrupos = async () => {
-      // Cambia a getMateriasGrupos
       try {
-        const data = await getMateriasGrupos() // Usa getMateriasGrupos
+        const data = await getMateriasGrupos()
         setMateriasGrupos(data)
       } catch (error) {
         console.error('Error al obtener las materias y grupos:', error)
@@ -84,11 +83,11 @@ function CrearReservas() {
     const fetchAulas = async () => {
       try {
         const data = await getAulas()
-        console.log('Datos de aulas obtenidos:', data) // Log the data
-        setAulasDisponibles(Array.isArray(data) ? data : []) // Ensure data is an array
+        console.log('Datos de aulas obtenidos:', data)
+        setAulasDisponibles(Array.isArray(data) ? data : [])
       } catch (error) {
         console.error('Error al obtener las aulas:', error)
-        setAulasDisponibles([]) // Set an empty array on error
+        setAulasDisponibles([])
       }
     }
 
@@ -104,10 +103,24 @@ function CrearReservas() {
     }
   }, [])
 
+  useEffect(() => {
+    const filtrarAulasPorCapacidad = () => {
+      if (cantidad === '') {
+        setAulasFiltradas(aulasDisponibles)
+      } else {
+        const capacidad = parseInt(cantidad, 10)
+        const aulasFiltradas = aulasDisponibles.filter((aula) => aula.capacidadAulas >= capacidad)
+        setAulasFiltradas(aulasFiltradas)
+      }
+    }
+
+    filtrarAulasPorCapacidad()
+  }, [cantidad, aulasDisponibles])
+
   const handleRegistro = async () => {
     try {
       const data = {
-        id_user: userData.id, // Asumiendo que userData contiene la información del usuario
+        id_user: userData.id,
         id_materia: parseInt(materiaSeleccionada),
         periodos: periodosSeleccionados.map((item) => item.id),
         id_aula: aulaSeleccionada,
@@ -116,8 +129,7 @@ function CrearReservas() {
         motivo_reserva: motivo,
         observaciones: document.getElementById('observaciones').value,
       }
-      await postSolicitud(data) // Utiliza la función postSolicitud
-      // Restablecer los estados después de enviar la solicitud
+      await postSolicitud(data)
       setMateriaSeleccionada('')
       setGrupoSeleccionado('')
       setCantidad('')
@@ -138,14 +150,37 @@ function CrearReservas() {
       return
     }
 
-    if (periodosSeleccionados.some((periodo) => periodo.id === parseInt(periodoSeleccionado))) {
-      alert('Este período ya ha sido seleccionado.')
-      return
+    const selectedPeriod = periodosDisponibles.find(
+      (periodo) => periodo.id === parseInt(periodoSeleccionado)
+    )
+
+    if (!selectedPeriod) return
+
+    const updatedPeriodosSeleccionados = [...periodosSeleccionados, selectedPeriod]
+    updatedPeriodosSeleccionados.sort((a, b) => a.id - b.id)
+
+    setPeriodosSeleccionados(updatedPeriodosSeleccionados)
+    setPeriodoSeleccionado('')
+  }
+
+  const getFilteredPeriodosDisponibles = () => {
+    if (periodosSeleccionados.length === 0) {
+      return periodosDisponibles
     }
 
-    const periodo = periodosDisponibles.find((p) => p.id === parseInt(periodoSeleccionado))
-    setPeriodosSeleccionados([...periodosSeleccionados, periodo])
-    setPeriodoSeleccionado('')
+    const lastSelectedPeriod = periodosSeleccionados[periodosSeleccionados.length - 1]
+    const lastSelectedIndex = periodosDisponibles.findIndex(
+      (periodo) => periodo.id === lastSelectedPeriod.id
+    )
+
+    return periodosDisponibles
+      .filter(
+        (_, index) =>
+          index === lastSelectedIndex - 1 || index === lastSelectedIndex + 1
+      )
+      .filter(
+        (periodo) => !periodosSeleccionados.some((selectedPeriodo) => selectedPeriodo.id === periodo.id)
+      )
   }
 
   return (
@@ -159,32 +194,21 @@ function CrearReservas() {
             <div className="card-body">
               <form>
                 <div className="form-group mb-3">
-                  <label htmlFor="nombre" className="fw-bold">
-                    Nombre
-                  </label>
-                  <input
-                    type="text"
-                    id="nombre"
-                    className="form-control"
-                    value={nombreUsuario}
-                    disabled
-                  />
+                  <label htmlFor="nombre" className="fw-bold">Nombre</label>
+                  <input type="text" id="nombre" className="form-control" value={nombreUsuario} disabled />
                 </div>
 
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group mb-3">
-                      <label htmlFor="materia" className="fw-bold">
-                        Materia
-                      </label>
+                      <label htmlFor="materia" className="fw-bold">Materia</label>
                       <select
                         id="materia"
                         className="form-select"
                         value={materiaSeleccionada}
                         onChange={(e) => {
                           setMateriaSeleccionada(e.target.value)
-                          const grupos =
-                            materias.find((materia) => materia.id === e.target.value)?.grupos || []
+                          const grupos = materias.find((materia) => materia.id === e.target.value)?.grupos || []
                           setGruposRelacionados(grupos)
                         }}
                         placeholder="Seleccione la materia"
@@ -204,9 +228,7 @@ function CrearReservas() {
                   </div>
                   <div className="col-md-6">
                     <div className="form-group mb-3">
-                      <label htmlFor="grupos" className="fw-bold">
-                        Grupos de la materia
-                      </label>
+                      <label htmlFor="grupos" className="fw-bold">Grupos de la materia</label>
                       <select
                         id="grupo"
                         className="form-select"
@@ -224,12 +246,11 @@ function CrearReservas() {
                     </div>
                   </div>
                 </div>
+
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group mb-3">
-                      <label htmlFor="cantidad" className="fw-bold">
-                        Número estimado de estudiantes
-                      </label>
+                      <label htmlFor="cantidad" className="fw-bold">Número estimado de estudiantes</label>
                       <input
                         type="number"
                         id="cantidad"
@@ -242,9 +263,7 @@ function CrearReservas() {
                   </div>
                   <div className="col-md-6">
                     <div className="form-group mb-3">
-                      <label htmlFor="motivo" className="fw-bold">
-                        Motivo
-                      </label>
+                      <label htmlFor="motivo" className="fw-bold">Motivo</label>
                       <select
                         id="motivo"
                         className="form-select"
@@ -264,9 +283,7 @@ function CrearReservas() {
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group mb-3">
-                      <label htmlFor="fecha" className="fw-bold">
-                        Fecha
-                      </label>
+                      <label htmlFor="fecha" className="fw-bold">Fecha</label>
                       <input
                         type="date"
                         id="fecha"
@@ -279,9 +296,7 @@ function CrearReservas() {
                   </div>
                   <div className="col-md-6">
                     <div className="form-group mb-3">
-                      <label htmlFor="aula" className="fw-bold">
-                        Aula
-                      </label>
+                      <label htmlFor="aula" className="fw-bold">Aula</label>
                       <select
                         id="aula"
                         className="form-select"
@@ -289,7 +304,7 @@ function CrearReservas() {
                         onChange={(e) => setAulaSeleccionada(e.target.value)}
                       >
                         <option value="">Seleccione un aula</option>
-                        {aulasDisponibles.map((aula) => (
+                        {aulasFiltradas.map((aula) => (
                           <option key={aula.id} value={aula.id}>
                             {aula.nombreAulas}
                           </option>
@@ -300,9 +315,7 @@ function CrearReservas() {
                 </div>
 
                 <div className="form-group mb-3">
-                  <label htmlFor="periodo" className="fw-bold">
-                    Período
-                  </label>
+                  <label htmlFor="periodo" className="fw-bold">Período</label>
                   <div className="d-flex align-items-center">
                     <select
                       id="periodo"
@@ -311,15 +324,11 @@ function CrearReservas() {
                       onChange={(e) => setPeriodoSeleccionado(e.target.value)}
                     >
                       <option value="">Seleccione un período</option>
-                      {periodosDisponibles
-                        .filter(
-                          (periodo) => !periodosSeleccionados.some((p) => p.id === periodo.id),
-                        )
-                        .map((periodo) => (
-                          <option key={periodo.id} value={periodo.id}>
-                            {periodo.nombreCompleto}
-                          </option>
-                        ))}
+                      {getFilteredPeriodosDisponibles().map((periodo) => (
+                        <option key={periodo.id} value={periodo.id}>
+                          {periodo.nombreCompleto}
+                        </option>
+                      ))}
                     </select>
                     <button
                       type="button"

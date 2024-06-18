@@ -37,15 +37,14 @@ export const getMateriasGrupos = async () => {
     const response = await axios.get(`${process.env.PATH_API}/api/materias`)
     const materias = response.data
 
-    // Verificar si materias es un array antes de llamar a map
     if (!Array.isArray(materias)) {
       console.error('Error: materias no es un array')
-      return [] // Retorna un array vacío o maneja el error según sea necesario
+      return [] 
     }
 
     const grupos = materias.map((materia) => ({
       id: materia.id,
-      nombre: materia.grupo, // Aquí tomamos directamente el atributo "grupo" de la materia
+      nombre: materia.grupo,
       materiaId: materia.id,
     }))
     return grupos
@@ -69,11 +68,9 @@ export const getAulas = async () => {
   }
 }
 
-// servicios.js
 export const saveMateriaGrupo = async (materiaGrupoData) => {
   try {
-    const response = await axios.post(
-      `${process.env.PATH_API}/api/docente_materia`,
+    const response = await axios.post(`${process.env.PATH_API}/api/docente_materia`,
       materiaGrupoData,
     )
     await createBitacora(materiaGrupoData, 'Created', 0)
@@ -83,3 +80,17 @@ export const saveMateriaGrupo = async (materiaGrupoData) => {
     throw error
   }
 }
+
+export const getMateriasDocente = async (usuarioId) => {
+  try {
+    const response = await fetch(`${process.env.PATH_API}/api/docente_materia/${usuarioId}`);
+    if (!response.ok) {
+      throw new Error('Error al obtener las materias del docente');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error al obtener las materias del docente:', error);
+    throw error;
+  }
+};

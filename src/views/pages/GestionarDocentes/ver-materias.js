@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { cilBook } from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import {
   CCard,
   CCardBody,
@@ -12,87 +10,118 @@ import {
   CTableHeaderCell,
   CTableRow,
   CFormInput,
-} from '@coreui/react'
-import { getMaterias, getMateriasGrupos, saveMateriaGrupo } from './servicios'
-import Select from 'react-select'
+} from '@coreui/react';
+import Select from 'react-select';
+import { getMaterias, saveMateriaGrupo, getMateriasDocente } from './servicios';
 
 function VerMaterias() {
-  const [materias, setMaterias] = useState([])
-  const [showEditFields, setShowEditFields] = useState(false)
-  const [editableMateria, setEditableMateria] = useState({
-    nombre: '',
-    codigo: '',
-    grupos: '',
-  })
-  const [materiasGrupos, setMateriasGrupos] = useState([])
-  const [materiaSeleccionada, setMateriaSeleccionada] = useState('')
-  const [gruposRelacionados, setGruposRelacionados] = useState([])
-  const [grupoSeleccionado, setGrupoSeleccionado] = useState('')
-  const options = materias.map((materia) => ({
-    value: materia.id,
-    label: materia.materia,
-  }))
-  const [codigoMateriaSeleccionada, setCodigoMateriaSeleccionada] = useState('')
+  const { usuarioId } = useParams(); 
+  const [showAssignFields, setShowAssignFields] = useState(false);
+  const [materiaSeleccionada, setMateriaSeleccionada] = useState(null);
+  const [grupo, setGrupo] = useState('');
+  const [materias, setMaterias] = useState([]);
+  const [materiasDocente, setMateriasDocente] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [materiasCargadas, setMateriasCargadas] = useState(false);
 
   useEffect(() => {
     const fetchMaterias = async () => {
       try {
-        const data = await getMaterias()
-        setMaterias(Array.isArray(data) ? data : [])
+        const data = await getMaterias();
+        console.log('Materias obtenidas:', data);
+        setMaterias(
+          data.map((materia) => ({
+            value: materia.id,
+            label: materia.materia,
+            codigo: materia.codigo,
+          }))
+        );
+        setLoading(false);
       } catch (error) {
-        console.error('Error al obtener las materias:', error)
-        setMaterias([])
+        console.error('Error al obtener las materias:', error);
+        setError('Error al obtener las materias');
+        setLoading(false);
       }
-    }
-    fetchMaterias()
-  }, [])
+    };
+
+    fetchMaterias();
+  }, []);
 
   useEffect(() => {
-    const fetchMateriasGrupos = async () => {
+    const fetchMateriasDocente = async () => {
       try {
-        const data = await getMateriasGrupos()
-        setMateriasGrupos(data)
+        const data = await getMateriasDocente(usuarioId);
+        console.log('Materias del docente obtenidas:', data);
+        setMateriasDocente(data);
+        setMateriasCargadas(true);
+        setLoading(false);
       } catch (error) {
-        console.error('Error al obtener las materias y grupos:', error)
+        console.error('Error al obtener las materias del docente:', error);
+        setError('Error al obtener las materias del docente');
+        setLoading(false);
       }
-    }
-    fetchMateriasGrupos()
-  }, [])
+    };
 
-  useEffect(() => {
-    if (materiaSeleccionada) {
-      const grupos = materiasGrupos.filter(
-        (grupo) => grupo.materiaId === parseInt(materiaSeleccionada),
-      )
-      setGruposRelacionados(grupos)
-      const materiaSeleccionadaObj = materias.find(
-        (materia) => materia.id === parseInt(materiaSeleccionada),
-      )
-      if (materiaSeleccionadaObj) {
-        setCodigoMateriaSeleccionada(materiaSeleccionadaObj.codigo)
-      }
-    } else {
-      setGruposRelacionados([])
-      setCodigoMateriaSeleccionada('')
-    }
-  }, [materiaSeleccionada, materias, materiasGrupos])
+    fetchMateriasDocente();
+  }, [usuarioId]);
 
-  const handleAddMateria = () => {
-    setShowEditFields(true)
-  }
+  const handleAsignarMateria = () => {
+    setShowAssignFields(true);
+  };
 
-  const handleSave = async () => {
-    setShowEditFields(false)
-    const selectedMateriaGrupo = {
-      materiaId: materiaSeleccionada,
-      grupoId: grupoSeleccionado,
+  const handleSelectChange = (selectedOption) => {
+    setMateriaSeleccionada(selectedOption);
+  };
+
+  const handleChangeGrupo = (e) => {
+    setGrupo(e.target.value);
+  };
+
+  const handleGuardar = async () => {
+    if (!materiaSeleccionada || !grupo) {
+      console.error('Debe seleccionar una materia y proporcionar un grupo');
+      return;
     }
+
+    const { value: materia_id, label: materia, codigo } = materiaSeleccionada;
+    console.log('Datos a guardar:', usuarioId, materia_id, grupo);
+
     try {
-      await saveMateriaGrupo(selectedMateriaGrupo)
-      console.log('Materia y grupo guardados exitosamente')
+      await saveMateriaGrupo({
+        docente_id: usuarioId,
+        materia_id: materia_id,
+        grupo: grupo,
+      });
+
+      console.log(`Nueva materia ${materia} asignada correctamente para el docente ${usuarioId}`);
+
+      const newMateria = {
+        id: Date.now(), // Genera un ID único temporal
+        nombre: materiaSeleccionada.label,
+        codigo: materiaSeleccionada.codigo,
+        grupo: grupo,
+      };
+
+      setMateriasDocente([...materiasDocente, newMateria]);
+
+      // Limpiar campos y estados después de guardar
+      setMateriaSeleccionada(null);
+      setGrupo('');
+      setShowAssignFields(false);
     } catch (error) {
-      console.error('Error al guardar la materia y grupo:', error)
+      console.error('Error al asignar la nueva materia:', error);
     }
+  };
+
+  const handleCancelar = () => {
+    setMateriaSeleccionada(null);
+    setGrupo('');
+    setShowAssignFields(false);
+  };
+
+  if (loading) {
+    return <div>Cargando...</div>;
   }
 
   return (
@@ -102,8 +131,8 @@ function VerMaterias() {
           <CCard>
             <CCardBody>
               <div className="d-flex justify-content-between align-items-center mb-3">
-                <h3>Materias</h3>
-                <button className="btn btn-primary" onClick={handleAddMateria}>
+                <h3>Materias del docente {usuarioId}</h3>
+                <button className="btn btn-primary" onClick={handleAsignarMateria}>
                   Asignar materia
                 </button>
               </div>
@@ -112,55 +141,92 @@ function VerMaterias() {
                   <CTableRow>
                     <CTableHeaderCell>Nombre</CTableHeaderCell>
                     <CTableHeaderCell>Código</CTableHeaderCell>
-                    <CTableHeaderCell>Grupos</CTableHeaderCell>
+                    <CTableHeaderCell>Grupo</CTableHeaderCell>
                     <CTableHeaderCell>Acciones</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {showEditFields && (
+                  {showAssignFields && (
                     <CTableRow>
-                      <CTableDataCell style={{ width: '40%' }}>
+                      <CTableDataCell>
                         <Select
-                          options={options}
-                          placeholder="Seleccione una materia..."
-                          onChange={(selectedOption) => {
-                            setMateriaSeleccionada(selectedOption.value)
+                          name="materia"
+                          options={materias}
+                          placeholder="Seleccione una materia"
+                          onChange={handleSelectChange}
+                          value={materiaSeleccionada}
+                          menuPosition="fixed" 
+                          styles={{
+                            menu: (provided) => ({
+                              ...provided,
+                              width: '100%', 
+                              zIndex: 9999, 
+                            }),
+                            menuList: (provided) => ({
+                              ...provided,
+                              maxHeight: '200px',
+                              overflowY: 'auto', 
+                            }),
                           }}
-                          menuPosition="fixed"
                         />
                       </CTableDataCell>
                       <CTableDataCell>
                         <CFormInput
+                          name="codigo"
                           placeholder="Código"
-                          value={codigoMateriaSeleccionada}
+                          value={materiaSeleccionada ? materiaSeleccionada.codigo : ''}
                           disabled
-                          onChange={(e) => {
-                            /* No necesitas hacer cambios aquí */
-                          }}
                         />
                       </CTableDataCell>
                       <CTableDataCell>
-                        <Select
-                          options={gruposRelacionados.map((grupo) => ({
-                            value: grupo.id,
-                            label: grupo.nombre,
-                          }))}
-                          placeholder="Seleccione un grupo..."
-                          onChange={(selectedOption) => setGrupoSeleccionado(selectedOption.value)} // Actualizar directamente grupoSeleccionado
-                          menuPosition="fixed"
+                        <CFormInput
+                          name="grupo"
+                          placeholder="Grupo"
+                          value={grupo}
+                          onChange={handleChangeGrupo}
                         />
                       </CTableDataCell>
                       <CTableDataCell>
-                        <button className="btn btn-primary" onClick={handleSave}>
-                          Guardar
-                        </button>
+                        <div className="d-flex">
+                          <button className="btn btn-primary me-2" onClick={handleGuardar}>
+                            Guardar
+                          </button>
+                          <button className="btn btn-secondary" onClick={handleCancelar}>
+                            Cancelar
+                          </button>
+                        </div>
+                      </CTableDataCell>
+                    </CTableRow>
+                  )}
+                  {materiasDocente.length > 0 ? (
+                    materiasDocente.map((materia) => (
+                      <CTableRow key={materia.id}>
+                        <CTableDataCell style={{ width: '40%' }}>{materia.nombre}</CTableDataCell>
+                        <CTableDataCell>{materia.codigo}</CTableDataCell>
+                        <CTableDataCell>{materia.grupo}</CTableDataCell>
+                        <CTableDataCell>
+                          <div className="d-flex">
+                            <button className="btn btn-primary me-2" onClick={() => handleEditarMateria(materia.id)}>
+                              Editar
+                            </button>
+                            <button className="btn btn-danger" onClick={() => handleEliminarMateria(materia.id)}>
+                              Eliminar
+                            </button>
+                          </div>
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))
+                  ) : (
+                    <CTableRow>
+                      <CTableDataCell colSpan="4" className="text-center">
+                        No hay materias asignadas
                       </CTableDataCell>
                     </CTableRow>
                   )}
                 </CTableBody>
               </CTable>
             </CCardBody>
-            <div className="text-center mt-3">
+            <div className="text-center mt-3 mb-3">
               <Link to="/configurar/administrar" className="btn btn-primary">
                 Volver
               </Link>
@@ -169,7 +235,7 @@ function VerMaterias() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default VerMaterias
+export default VerMaterias;

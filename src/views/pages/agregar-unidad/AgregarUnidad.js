@@ -82,7 +82,6 @@ const Unidades = () => {
         horaCierreUnidades: horaCierreEditada,
       })
 
-      // Actualizar el estado local de la unidad
       const unidadesActualizadas = unidades.map((unidad) => {
         if (unidad.id === unidadId) {
           return {

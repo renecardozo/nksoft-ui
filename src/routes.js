@@ -12,7 +12,7 @@ const CrearRoles = React.lazy(() => import('./views/pages/usuarios/roles/RoleFor
 const EditarRole = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
 const Calendario = React.lazy(() => import('./components/calendario/Calendario'))
 const AgregarMateria = React.lazy(() => import('./views/pages/agregar-materia/AgregarMateria'))
-const verMateria = React.lazy(() => import('./views/pages/GestionarDocentes/ver-materias'))
+const verMateria = React.lazy(() => import('./views/pages/ver-materia/verMateria'))
 const notificacion = React.lazy(() => import('./views/pages/notificacion/notificacion'))
 const detallesNotificacion = React.lazy(() => import('./views/pages/notificacion/detallesNotificacion'))
 const registrarMateria = React.lazy(
@@ -79,7 +79,7 @@ const routes = [
   //formulario
   { path: '/registro-solicitud', name:'Formulario de reserva', element: CrearReservas},
   //materias de docentes
-  { path: '/configurar/docentes/:usuarioId/materias', name: 'Materias', element: verMateria },
+  { path: '/configurar/docentes/:usuarioId/materias', name: 'Materias', element: verMaterias },
   //backups
   { path: '/backups', name: 'Backups', element: Backup },
   { path: '/administracion/bitacora', name:'Bitacora', element: bitacora},

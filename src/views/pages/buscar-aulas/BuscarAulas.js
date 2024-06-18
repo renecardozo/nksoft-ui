@@ -24,12 +24,12 @@ function removeDuplicates(array, key) {
 }
 
 function BuscarAulas() {
-  const [unidad, setUnidad] = useState([])
+  const [criterioSeleccionado, setCriterioSeleccionado] = useState('')
   const [unidades, setUnidades] = useState([])
   const [aula, setAula] = useState([])
   const [aulas, setAulas] = useState([])
   const [capacidad, setCapacidad] = useState(0)
-  const [fecha, setFecha] = useState(Date.now())
+  const [fecha, setFecha] = useState('')
   const [listResult, setListResult] = useState([])
   const [periodosSeleccionados, setPeriodosSeleccionados] = useState([])
   const [periodosDisponibles, setPeriodosDisponibles] = useState([])
@@ -39,8 +39,6 @@ function BuscarAulas() {
   const navigate = useNavigate()
 
   const onClearForm = () => {
-    setUnidad([])
-    setUnidades([])
     setAula([])
     setAulas([])
     setCapacidad(0)
@@ -51,20 +49,7 @@ function BuscarAulas() {
   }
   const onBuscarAulasHandler = async (e) => {
     e.preventDefault()
-    if (unidad && !unidad.length) {
-      alertMessages('Seleccione al menos una unidad')
-      return
-    }
-    if (aula && !aula.length) {
-      alertMessages('Seleccione al menos una aula')
-      return
-    }
-    if (periodosSeleccionados && !periodosSeleccionados.length) {
-      alertMessages('Seleccione al menos un periodo')
-      return
-    }
     const data = {
-      unidadId: unidad && unidad.length ? unidad[0].id.toString() : '',
       aulaId: aula && aula.length ? aula[0].id.toString() : '',
       aula: aula && aula.length ? aula[0].label : '',
       capacidad: parseInt(capacidad) || 0,
@@ -107,32 +92,21 @@ function BuscarAulas() {
     }
   }
 
-  const getAulas = async (unidadId) => {
-    const listAulas = await getAulasByUnidad(unidadId)
-    setAulas(
-      listAulas.map((aula) => {
+  const getAulas = async () => {
+    const listUnidades = await getAllUnidades()
+    for (const unit of listUnidades) {
+      const listAulas = await getAulasByUnidad(unit.id)
+      const newAulasList = listAulas.map((aula) => {
         return {
           id: aula.id,
           label: aula.nombreAulas,
           capacidadAulas: aula.capacidadAulas,
         }
-      }),
-    )
+      })
+      setAulas((prevList) => [...prevList, ...newAulasList])
+    }
   }
-  const getUnidades = async () => {
-    const listUnidades = await getAllUnidades()
-    setUnidades(
-      listUnidades.map((unidad) => {
-        return {
-          id: unidad.id,
-          label: unidad.nombreUnidades,
-        }
-      }),
-    )
-  }
-  const onHandlerSelectedUnidad = (selected) => {
-    setUnidad(selected)
-  }
+
   const handleAgregarPeriodo = () => {
     if (!periodoSeleccionado) {
       alertMessages('Debe seleccionar un período primero.')
@@ -152,10 +126,10 @@ function BuscarAulas() {
     navigate('/reservas/crear-reservas', { state: { ...data, fecha } })
   }
   useEffect(() => {
-    getAulas(unidad && unidad[0]?.id)
-    getUnidades()
+    getAulas()
+    // getUnidades()
     fetchPeriodos()
-  }, [unidad])
+  }, [])
 
   useEffect(() => {
     const capca = aulas
@@ -181,23 +155,8 @@ function BuscarAulas() {
         <div className="row justify-content-center">
           <div className="col-md-6 col-sm-12">
             <div className="mb-3">
-              <CFormLabel htmlFor="unidad-list" className="fw-bold">
-                Unidades
-              </CFormLabel>
-              <Typeahead
-                id="unidad-list"
-                onChange={onHandlerSelectedUnidad}
-                options={unidades}
-                placeholder="Escoge una unidad..."
-                selected={unidad}
-                clearButton={true}
-              />
-            </div>
-          </div>
-          <div className="col-md-6 col-sm-12">
-            <div className="mb-3">
               <CFormLabel htmlFor="aula-list" className="fw-bold">
-                Aulas
+                Aulas (*)
               </CFormLabel>
               <Typeahead
                 id="aula-list"
@@ -208,8 +167,6 @@ function BuscarAulas() {
               />
             </div>
           </div>
-        </div>
-        <div className="row justify-content-center">
           <div className="col-md-6 col-sm-12">
             <div className="mb-3">
               <CFormLabel htmlFor="capacidad-list" className="fw-bold">
@@ -224,10 +181,12 @@ function BuscarAulas() {
               />
             </div>
           </div>
+        </div>
+        <div className="row justify-content-center">
           <div className="col-md-6 col-sm-12">
             <div className="mb-3">
               <CFormLabel htmlFor="fecha" className="fw-bold">
-                Fecha
+                Fecha (*)
               </CFormLabel>
               <input
                 type="date"
@@ -239,8 +198,6 @@ function BuscarAulas() {
               />
             </div>
           </div>
-        </div>
-        <div className="row">
           <div className="col-md-6 col-sm-12">
             <div className="mb-3">
               <div className="form-group mb-3">
@@ -287,6 +244,7 @@ function BuscarAulas() {
             </div>
           </div>
         </div>
+
         <div className="row justify-content-center">
           <div className="col-md-6 col-sm-12">
             <div className="mb-3">

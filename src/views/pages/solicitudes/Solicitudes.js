@@ -195,13 +195,12 @@ function Solicitudes() {
                     </>
                   ) : (
                     ''
-                  )                  
-                  }
-                  {
-                    sol.estado === 'Rechazado' && ( <CButton color="info" onClick={() => getRecomendation(sol)}>
-                    {<CIcon icon={cilCommentSquare} />}
-                  </CButton>)
-                  }
+                  )}
+                  {sol.estado === 'Rechazado' && (
+                    <CButton color="info" onClick={() => getRecomendation(sol)}>
+                      {<CIcon icon={cilCommentSquare} />}
+                    </CButton>
+                  )}
                 </CTableDataCell>
               </CTableRow>
             ))}
@@ -229,7 +228,7 @@ function Solicitudes() {
           {solicitud ? (
             <>
               <p>Usuario : {solicitud.users.name}</p>
-              
+
               <p>Motivo : {solicitud.motivo_reserva}</p>
               <p>Fecha reserva : {solicitud.fecha_hora_reserva.split(' ')[0]}</p>
               <p>Materia : {solicitud.materia.materia}</p>

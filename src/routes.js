@@ -12,9 +12,14 @@ const CrearRoles = React.lazy(() => import('./views/pages/usuarios/roles/RoleFor
 const EditarRole = React.lazy(() => import('./views/pages/usuarios/roles/RoleForm'))
 const Calendario = React.lazy(() => import('./components/calendario/Calendario'))
 const AgregarMateria = React.lazy(() => import('./views/pages/agregar-materia/AgregarMateria'))
-const verMateria = React.lazy(() => import('./views/pages/ver-materia/verMateria'))
-const notificacion = React.lazy(() => import('./views/pages/notificacion/notificacion'))
-const detallesNotificacion = React.lazy(() => import('./views/pages/notificacion/detallesNotificacion'))
+
+//const verMateria = React.lazy(() => import('./views/pages/ver-materia/verMateria'))
+//const detallesNotificacion = React.lazy(() => import('./views/pages/notificacion/detallesNotificacion'))
+const verMateria = React.lazy(() => import('./views/pages/GestionarDocentes/ver-materias'))
+const Notificacion = React.lazy(() => import('./views/pages/notificacion/notificacion.js'))
+const detallesNotificacion = React.lazy(
+  () => import('./views/pages/notificacion/detallesNotificacion'),
+)
 const registrarMateria = React.lazy(
   () => import('./views/pages/registrar-materias/registrarMateria'),
 )
@@ -50,7 +55,7 @@ const routes = [
   { path: '/reservas/buscar-aulas', name: 'Buscar Aulas', element: BuscarAulas, exact: true },
   { path: '/reservas/crear-reservas', name: 'Solicitar reserva', element: CrearReservas },
   { path: '/configurar/solicitudes', name: 'Solicitudes', element: Solicitudes },
-  { path: '/configurar/historial_solicitudes', name: 'Solicitudes', element: HistorialSolicitudes }, 
+  { path: '/configurar/historial_solicitudes', name: 'Solicitudes', element: HistorialSolicitudes },
   { path: '/configurar/administrar', name: 'Docentes', element: Administrar },
   { path: '/configurar/roles', name: 'Roles', element: Roles },
   { path: '/configurar/crear-roles', name: 'Crear Role', element: CrearRoles },
@@ -60,10 +65,22 @@ const routes = [
   { path: '/administracion/crear-feriados', name: 'Crear Feriado', element: CrearFeriados },
   { path: '/administracion/agregar-materia', name: 'Agregar Materia', element: AgregarMateria },
   { path: '/administracion/ver-materia', name: 'Ver Materia', element: verMateria },
-  { path: '/administracion/feriados/:id/details',name: 'Detalles Feriado', element: DetailsFeriado,},
-  { path: '/administracion/registrar-materias',name: 'Agregar Materia',element: registrarMateria, },
-  { path: '/docente/detallesNotificacion', name: 'Detalles de Notificacion', element: detallesNotificacion },
-  { path: '/docente/notificacion', name: 'Notificaciones', element: notificacion },
+  {
+    path: '/administracion/feriados/:id/details',
+    name: 'Detalles Feriado',
+    element: DetailsFeriado,
+  },
+  {
+    path: '/administracion/registrar-materias',
+    name: 'Agregar Materia',
+    element: registrarMateria,
+  },
+  {
+    path: '/docente/detallesNotificacion',
+    name: 'Detalles de Notificacion',
+    element: detallesNotificacion,
+  },
+  { path: '/docente/notificacion', name: 'Notificaciones', element: Notificacion },
   //USUARIOS
   { path: '/users', name: 'Usuarios', element: ListUser },
   { path: '/users/create', name: 'Crear Usuario', element: FormUser },
@@ -72,17 +89,20 @@ const routes = [
   { path: '/administracion/agregar-unidad', name: 'Unidades', element: AgregarUnidad },
   { path: '/administracion/registrar-unidad', name: 'Agregar unidad', element: registrarUnidad },
   { path: '/administracion/Departamentos', name: 'Departamentos', element: AgregarDepartamento },
-  { path: '/administracion/registrar-departamentos',name: 'Agregar Departamento',element: RegistrarDepartamento, },
+  {
+    path: '/administracion/registrar-departamentos',
+    name: 'Agregar Departamento',
+    element: RegistrarDepartamento,
+  },
   { path: '/administracion/unidades/:unidadId/aulas', name: 'Aulas', element: verAulas },
   // Login
-  { path: '/login', name: 'Login', element: Login, },  
+  { path: '/login', name: 'Login', element: Login },
   //formulario
-  { path: '/registro-solicitud', name:'Formulario de reserva', element: CrearReservas},
+  { path: '/registro-solicitud', name: 'Formulario de reserva', element: CrearReservas },
   //materias de docentes
   { path: '/configurar/docentes/:usuarioId/materias', name: 'Materias', element: verMaterias },
   //backups
   { path: '/backups', name: 'Backups', element: Backup },
-  { path: '/administracion/bitacora', name:'Bitacora', element: bitacora},
-
+  { path: '/administracion/bitacora', name: 'Bitacora', element: bitacora },
 ]
 export default routes

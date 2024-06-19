@@ -228,7 +228,7 @@ export default function ListUser() {
                 <CFormInput
                   type="text"
                   onKeyPress={validOnlyNumbers}
-                  maxLength={8}
+                  maxLength={9}
                   name="code_sis"
                   id="code_sis"
                   invalid={verify.code_sis.errors.length > 0}

@@ -30,7 +30,16 @@ const Notificacion = () => {
   const fetchNotificaciones = async () => {
     const response = await fetch(`${process.env.PATH_API}/api/notificaciones`) // Ajusta la URL de tu API
     const data = await response.json()
-    setNotificaciones(data)
+    const filterDataByUser = []
+    for (const notificacion of data) {
+      if (
+        notificacion.solicitud &&
+        notificacion.solicitud.id_user.toString() === idUsuario.toString()
+      ) {
+        filterDataByUser.push(notificacion)
+      }
+    }
+    setNotificaciones(filterDataByUser)
   }
 
   useEffect(() => {

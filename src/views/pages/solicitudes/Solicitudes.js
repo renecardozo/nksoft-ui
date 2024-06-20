@@ -70,6 +70,9 @@ function Solicitudes() {
         return setError('Campo obligatorio')
       }
     }
+    if (updateData.value === 'Rechazado' && !motivoRechazo.value) {
+      return setError('Campo obligatorio')
+    }
 
     if (solicitud) {
       let url = `api/solicitud/${solicitud?.id}`

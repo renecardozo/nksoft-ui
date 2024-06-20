@@ -12,27 +12,27 @@ import {
   CToast,
   CToastBody,
   CToaster,
-} from "@coreui/react"
+} from '@coreui/react'
 import { cilTrash } from '@coreui/icons'
-import React, { useEffect, useRef, useState } from "react"
-import { APISERVICE } from "../../../services/api.service"
-import CIcon from "@coreui/icons-react"
-import { setInterval } from "core-js"
+import React, { useEffect, useRef, useState } from 'react'
+import { APISERVICE } from '../../../services/api.service'
+import CIcon from '@coreui/icons-react'
+import { setInterval } from 'core-js'
 
 function Backup() {
   const [backups, setBackups] = useState([])
-  const [interval, setIntervalo] = useState("")
+  const [interval, setIntervalo] = useState('')
   const [toast, addToast] = useState(null)
   const toaster = useRef()
 
   const getBackups = async () => {
-    let url = "api/backup"
+    let url = 'api/backup'
     const response = await APISERVICE.get(url)
     setBackups(response.data)
   }
   const createBackup = async () => {
-    let url = "api/backup"
-    const response = await APISERVICE.put(url, "")
+    let url = 'api/backup'
+    const response = await APISERVICE.put(url, '')
     getBackups()
     console.log(response)
   }
@@ -40,7 +40,7 @@ function Backup() {
     let body = {
       filename: name,
     }
-    let url = "api/backup"
+    let url = 'api/backup'
     const { success, message } = await APISERVICE.post(url, body)
     success && addToast(mesageToast(message))
   }
@@ -48,7 +48,7 @@ function Backup() {
     let body = {
       filename: name,
     }
-    let url = "api/backup-delete"
+    let url = 'api/backup-delete'
     const response = await APISERVICE.post(url, body)
     getBackups()
     console.log(response)
@@ -57,20 +57,20 @@ function Backup() {
     setIntervalo(e.target.value)
   }
   const defineInterval = () => {
-    localStorage.setItem("interval", interval)
+    localStorage.setItem('interval', interval)
   }
-  let valor = parseInt(localStorage.getItem("interval"))
+  let valor = parseInt(localStorage.getItem('interval'))
   let inter = valor ? valor : 604800000
   //  setInterval(createBackup, inter)
   const nameIterval = () => {
     if (inter === 86400000) {
-      return "Diario"
+      return 'Diario'
     }
     if (inter === 604800000) {
-      return "Semanal"
+      return 'Semanal'
     }
     if (inter === 2629785600) {
-      return "Mensual"
+      return 'Mensual'
     }
   }
   const mesageToast = (message) => (
@@ -88,13 +88,13 @@ function Backup() {
         ref={toaster}
         push={toast}
         placement="bottom-end"
-        style={{ marginBottom: "50px" }}
+        style={{ marginBottom: '50px' }}
       />
       <div className="d-flex mb-5">
         <p className="me-5">Establecer tiempo de backups:</p>
         <CFormSelect
           size="mb"
-          style={{ width: "20%" }}
+          style={{ width: '20%' }}
           aria-label="Large select example"
           onChange={handleChange}
         >
@@ -113,21 +113,25 @@ function Backup() {
       <CTable>
         <CTableHead>
           <CTableRow>
-            <CTableHeaderCell className="col-4" scope="col">Nombre</CTableHeaderCell>
-            <CTableHeaderCell className="col-1" scope="col">Acciones</CTableHeaderCell>
+            <CTableHeaderCell className="col-4" scope="col">
+              Nombre
+            </CTableHeaderCell>
+            <CTableHeaderCell className="col-1" scope="col">
+              Acciones
+            </CTableHeaderCell>
           </CTableRow>
         </CTableHead>
         <CTableBody>
           {backups &&
             backups.map((backup) => (
               <CTableRow key={backup}>
-                <CTableHeaderCell scope="row">{backup.split(".")[0]}</CTableHeaderCell>
+                <CTableHeaderCell scope="row">{backup.split('.')[0]}</CTableHeaderCell>
                 <CTableDataCell>
                   <CButton className="me-2" color="primary" onClick={() => restoreBackup(backup)}>
                     Restaurar
                   </CButton>
                   <CButton color="info" onClick={() => deleteBackup(backup)}>
-                    {<CIcon style={{ color: "red" }} icon={cilTrash} />}
+                    {<CIcon style={{ color: 'red' }} icon={cilTrash} />}
                   </CButton>
                 </CTableDataCell>
               </CTableRow>

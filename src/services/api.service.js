@@ -22,9 +22,11 @@ export const APISERVICE = {
         },
         body: JSON.stringify(body),
       })
-    
       const data = await response.json()
-      let newBody = JSON.stringify(body).substring(0,100)
+      if (!response.ok) {
+        throw data
+      }
+      let newBody = JSON.stringify(body).substring(0, 100)
       await createBitacora(newBody, "Created", 0)
       return data
     } catch (error) {
@@ -36,19 +38,20 @@ export const APISERVICE = {
       const response = await fetch(`${APIURL + url}`, {
         method: "PUT",
         headers: {
-          "content-type": "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify(body),
       })
-      if (!response.ok) {
-        throw new Error(await response.json())
-      }
       const data = await response.json()
+      if (!response.ok) {
+        throw data
+      }
       let id_updated = 0
       if (body.id) id_updated = body.id
       if (data.id) id_updated = data.id
       if (data.data && data.data.id) id_updated = data.data.id
-      let newData = JSON.stringify(body).substring(0,100)
+      let newData = JSON.stringify(body).substring(0, 100)
       await createBitacora(newData, "Updated", id_updated)
       return data
     } catch (error) {

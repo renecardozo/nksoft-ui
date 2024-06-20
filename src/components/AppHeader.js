@@ -36,12 +36,13 @@ const AppHeader = () => {
 
   // const dispatch = useDispatch()
   // const sidebarShow = useSelector(state) => state.sidebarShow)
-  const notificationShow=()=>{
+  const notificationShow = () => {
     const user_data = localStorage.getItem('user_data')
     if (user_data !== null) {
       const { permissions, role } = JSON.parse(user_data)
       return permissions.filter((p) => p.name === 'notificaciones')
-
+    } else {
+      return []
     }
   }
   useEffect(() => {
@@ -74,13 +75,13 @@ const AppHeader = () => {
           </CNavItem> */}
         </CHeaderNav>
         <CHeaderNav className="ms-auto">
-         {notificationShow().length>0 && (
-           <CNavItem>
-            <CNavLink href="/docente/notificacion"> 
-              <CIcon icon={cilBell} size="lg" />
-            </CNavLink>
-          </CNavItem>
-        )}
+          {notificationShow().length > 0 && (
+            <CNavItem>
+              <CNavLink href="/docente/notificacion">
+                <CIcon icon={cilBell} size="lg" />
+              </CNavLink>
+            </CNavItem>
+          )}
           <CNavItem>
             <CNavLink href="#">
               <CIcon icon={cilList} size="lg" />

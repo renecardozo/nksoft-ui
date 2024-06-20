@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { cilPen } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { CTableBody, CTableRow, CTableDataCell, CButton } from '@coreui/react'
@@ -12,7 +13,7 @@ export default function RoleTableBody({ roles, updateStateRole }) {
       {roles &&
         roles.map((role, index) => (
           <CTableRow key={role.id} className="py-5">
-            <CTableDataCell className="col-1">{index+1}</CTableDataCell>
+            <CTableDataCell className="col-1">{index + 1}</CTableDataCell>
             <CTableDataCell className="col-4">{role.name}</CTableDataCell>
             <CTableDataCell className="col-2">
               {role.name !== 'SuperAdmin' ? (
@@ -31,10 +32,7 @@ export default function RoleTableBody({ roles, updateStateRole }) {
             </CTableDataCell>
             <CTableDataCell className="col-1">
               {role.name !== 'SuperAdmin' ? (
-                <Link
-                  to={`/configurar/editar-role/${role.id}`}
-                  className="btn btn-primary mb-2"
-                >
+                <Link to={`/configurar/editar-role/${role.id}`} className="btn btn-primary mb-2">
                   <CIcon icon={cilPen} />
                 </Link>
               ) : (

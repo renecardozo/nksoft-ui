@@ -1,4 +1,2 @@
-import CrearReservas from './CrearReservas';
-export {
-  CrearReservas
-}
+import CrearReservas from './CrearReservas'
+export { CrearReservas }

@@ -40,6 +40,10 @@ const Login = () => {
         setLoading(false)
       })
   }
+  const loginAsAdmin = (event) => {
+    event.preventDefault()
+    navigate('/admin')
+  }
   useEffect(() => {
     if (localStorage.getItem('user_data')) {
       navigate('/administracion/calendario')
@@ -98,6 +102,15 @@ const Login = () => {
                           disabled={loading}
                         >
                           Ingresar
+                        </CButton>
+                      </CCol>
+                      <CCol xs={6}>
+                        <CButton
+                          color="secondary"
+                          onClick={(e) => loginAsAdmin(e)}
+                          disabled={loading}
+                        >
+                          Admin
                         </CButton>
                       </CCol>
                     </CRow>

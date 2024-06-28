@@ -35,7 +35,7 @@
     "cross-env": "^7.0.3"
   },
   "scripts": {
-    "build": "cross-env PATH_API=http://newknowledge.tis.cs.umss.edu.bo vite build",
+    "build": "cross-env PATH_API=http://newksoft.tis.cs.umss.edu.bo vite build",
     "lint": "eslint \"src/**/*.js\"",
     "serve": "vite preview",
     "start": "cross-env PATH_API=http://localhost:8000 vite",

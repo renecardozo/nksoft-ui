@@ -76,7 +76,7 @@ function BuscarAulas() {
     }, 3000)
   }
   const makeNameUnits = (id) => {
-    return unidades.find((unit) => unit.id == id).label
+    return unidades.find((unit) => unit.id == id).nombreUnidades
   }
   const fetchPeriodos = async () => {
     try {
@@ -125,9 +125,17 @@ function BuscarAulas() {
   const goToBookingRooms = (data) => {
     navigate('/reservas/crear-reservas', { state: { ...data, fecha } })
   }
+  const getUnidades = async () => {
+    try {
+      const response = await getAllUnidades()
+      setUnidades(response)
+    } catch (error) {
+      console.error('Error al obtener las unidades:', error)
+    }
+  }
   useEffect(() => {
     getAulas()
-    // getUnidades()
+    getUnidades()
     fetchPeriodos()
   }, [])
 
